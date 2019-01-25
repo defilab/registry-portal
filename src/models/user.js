@@ -24,7 +24,7 @@ export default {
         type: 'saveCurrentUser',
         payload: {
           name: tokenDecoded.username,
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'
+          avatar: 'https://png.pngtree.com/svg/20160506/anonymous_avatar_182327.png'
         },
       });
     },
