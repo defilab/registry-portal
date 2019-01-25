@@ -1,6 +1,6 @@
 English | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md)
 
-<h1 align="center">Ant Design Pro</h1>
+<h1 align="center">Defi</h1>
 
 <div align="center">
 
@@ -26,7 +26,7 @@ An out-of-box UI solution for enterprise applications as a React boilerplate.
 - Mirror Site in China: http://ant-design-pro.gitee.io
 
 ## 2.0 Released Now! 🎉🎉🎉
-[Announcing Ant Design Pro 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
+[Announcing Defi 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
 
 ## Translation Recruitment :loudspeaker:
 
@@ -132,6 +132,6 @@ Modern browsers and IE11.
 
 Any type of contribution is welcome, here are some examples of how you may contribute to this project:
 
-- Use Ant Design Pro in your daily work.
+- Use Defi in your daily work.
 - Submit [issues](http://github.com/ant-design/ant-design-pro/issues) to report bugs or ask questions.
 - Propose [pull requests](http://github.com/ant-design/ant-design-pro/pulls) to improve our code.

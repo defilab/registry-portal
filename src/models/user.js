@@ -1,4 +1,6 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
+import { query as queryUsers } from '@/services/user';
+import { getToken } from '@/utils/token';
+import jwtDecode from 'jwt-decode';
 
 export default {
   namespace: 'user',
@@ -16,11 +18,14 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    *fetchCurrent(_, { put }) {
+      const tokenDecoded = jwtDecode(getToken());
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: {
+          name: tokenDecoded.username,
+          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'
+        },
       });
     },
   },
