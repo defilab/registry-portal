@@ -3,6 +3,7 @@ import { notification } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
+import { getToken } from './token';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -101,6 +102,10 @@ export default function request(url, option) {
         ...newOptions.headers,
       };
     }
+    const token = getToken();
+    if (token) {
+      newOptions.headers.Authorization = token;
+    }
   }
 
   const expirys = options.expirys && 60;
@@ -118,7 +123,7 @@ export default function request(url, option) {
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  return fetch(url, newOptions)
+  return fetch(`${API_BASE_URL}${url}`, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {

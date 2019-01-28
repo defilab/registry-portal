@@ -105,28 +105,34 @@ export async function updateFakeList (params) {
 }
 
 export async function login (params) {
-  const body = new FormData();
-  body.append('grant_type', 'password');
-  body.append('username', params.userName);
-  body.append('password', params.password);
-
-  return request('http://127.0.0.1:5000/oauth/tokens', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${Base64.encode('admin:secret')}`,
-    },
-    body,
-  }).then((data) => {
-    if (data) {
-      return {
-        status: 'ok',
-        type: params.type,
-        currentAuthority: 'admin',
-        token: data.access_token
-      };
-    }
-    throw new Error('Login failed');
+  return Promise.resolve({
+    status: 'ok',
+    type: params.type,
+    currentAuthority: 'admin',
+    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJjcmVhdGVkX2F0IjoiMjAxOS0wMS0yMlQxMjoyMzo1MyswMDowMCIsInBhc3N3b3JkX2hhc2giOiJwYmtkZjI6c2hhMjU2OjUwMDAwJEFxZGEydGpMJGFmNDMxMTAzYTVhNjgxNTMwYmFiZTc3YWIyZDViMGUyNjFlYzI0NmU3ZTYzMGFhNTZiNDMxOTgzMWIwMjNkYTIiLCJmaXJzdF9uYW1lIjpudWxsLCJ1c2VybmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjpudWxsLCJuYW1lc3BhY2UiOiJwdHMiLCJpZCI6MSwidG9rZW5fdXNlIjoiYWNjZXNzIiwic3ViIjoxLCJpc3MiOiJodHRwczovL3BvaW50cy5vcmciLCJpYXQiOjE1NDg2NDM5MzksImV4cCI6MTU0OTI0ODczOSwiYXVkIjoicmVnaXN0cnktcG9ydGFsIn0.vuYKAcMV-_o5ShUZqGtWjAenkW_14QCKO3M0UmxNT1x2gdViawtjPR6GRzxraueVm0D2QKkYU_mWZsRxdkUDkABwhGQ_5tOyGaP-sDslDNedjIFvAutcHIkk3ZNTctm4DvAT3b346Mqqg_Zk0n85HYvJxKYVKamO8wKyMu-nlJo-vrMzbZhSxxeX4-m6dUa4nkF5m0a7Sz7yP9BdlhgUyGFWRaBkZRIwh_7cMTpO_a5v9r4CDjVuvsj3srhnh3ViKoUt_kP6eOqq6APuWwsgvNxyAEY-K20mPpSjt5t77vcaPceQsVVJdneFK6ZLyG5T5RIFl05CUaK1htQL7Bb2jw'
   });
+  // const body = new FormData();
+  // body.append('grant_type', 'password');
+  // body.append('username', params.userName);
+  // body.append('password', params.password);
+  //
+  // return request('http://127.0.0.1:5000/oauth/tokens', {
+  //   method: 'POST',
+  //   headers: {
+  //     Authorization: `Basic ${Base64.encode('admin:secret')}`,
+  //   },
+  //   body,
+  // }).then((data) => {
+  //   if (data) {
+  //     return {
+  //       status: 'ok',
+  //       type: params.type,
+  //       currentAuthority: 'admin',
+  //       token: data.access_token
+  //     };
+  //   }
+  //   throw new Error('Login failed');
+  // });
 }
 
 export async function fakeRegister (params) {

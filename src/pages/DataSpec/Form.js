@@ -56,7 +56,7 @@ class DataSpecForm extends PureComponent {
       <Card bordered={false} title="New Data Spec">
         <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
           <FormItem {...formItemLayout} label="Name">
-            <Input value="Philippines Blacklist" disabled />
+            <Input value="Philippines Blacklist" />
           </FormItem>
           <FormItem {...formItemLayout} label="Spec">
             <Input value="PH-Blacklist" disabled />

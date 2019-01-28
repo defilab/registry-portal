@@ -41,6 +41,10 @@ export default [
         path: '/data-specs',
         name: 'data-specs',
         icon: 'api',
+        component: './DataSpec/List'
+      },
+      {
+        path: '/data-specs/new',
         component: './DataSpec/Form'
       },
       {
