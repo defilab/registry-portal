@@ -1,5 +1,4 @@
-import { fakeRegister } from '@/services/api';
-import { setAuthority } from '@/utils/authority';
+import { register } from '@/services/api';
 import { reloadAuthorized } from '@/utils/Authorized';
 
 export default {
@@ -11,7 +10,7 @@ export default {
 
   effects: {
     *submit({ payload }, { call, put }) {
-      const response = yield call(fakeRegister, payload);
+      const response = yield call(register, payload);
       yield put({
         type: 'registerHandle',
         payload: response,
@@ -21,7 +20,6 @@ export default {
 
   reducers: {
     registerHandle(state, { payload }) {
-      setAuthority('user');
       reloadAuthorized();
       return {
         ...state,

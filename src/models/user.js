@@ -19,12 +19,13 @@ export default {
       });
     },
     *fetchCurrent(_, { put }) {
-      const tokenDecoded = jwtDecode(getToken());
+      const tokenObj = jwtDecode(getToken());
       yield put({
         type: 'saveCurrentUser',
         payload: {
-          name: tokenDecoded.username,
-          avatar: 'https://png.pngtree.com/svg/20160506/anonymous_avatar_182327.png'
+          name: tokenObj.username,
+          avatar: 'https://png.pngtree.com/svg/20160506/anonymous_avatar_182327.png',
+          namespace: tokenObj.namespace
         },
       });
     },

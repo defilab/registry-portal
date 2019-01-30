@@ -15,7 +15,7 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
-    authority: ['admin', 'user'],
+    authority: ['requester', 'both'],
     routes: [
       // dashboard
       { path: '/', redirect: '/account' },
@@ -41,17 +41,20 @@ export default [
         path: '/data-specs',
         name: 'data-specs',
         icon: 'api',
-        component: './DataSpec/List'
+        component: './DataSpec/List',
+        authority: ['both'],
       },
       {
         path: '/data-specs/new',
-        component: './DataSpec/Form'
+        component: './DataSpec/Form',
+        authority: ['both'],
       },
       {
         path: '/data-usage',
         name: 'data-usage',
         icon: 'bars',
-        component: './DataUsage/List'
+        component: './DataUsage/List',
+        authority: ['both'],
       },
       {
         component: '404',
