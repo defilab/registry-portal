@@ -17,6 +17,7 @@ class View extends PureComponent {
       properties: {
         scale: 0,
       },
+      state: 'offline'
     },
   };
 
@@ -55,7 +56,7 @@ class View extends PureComponent {
                   {data.properties.scenario}
                 </Description>
                 <Description term={formatMessage({ id: 'spec.scale' })}>
-                  {data.properties.scale.toLocaleString()}
+                  {data.properties.scale ? data.properties.scale.toLocaleString() : ''}
                 </Description>
                 <Description term={formatMessage({ id: 'spec.update-frequency' })}>
                   {data.properties.updateFrequency}
