@@ -200,8 +200,8 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('state')
             (
               <Radio.Group>
-                <Radio value="online">Online</Radio>
-                <Radio value="offline">Offline</Radio>
+                <Radio value="online">{formatMessage({id: 'spec.status-online'})}</Radio>
+                <Radio value="offline">{formatMessage({id: 'spec.status-offline'})}</Radio>
               </Radio.Group>
             )}
           </FormItem>
