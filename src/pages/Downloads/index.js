@@ -41,7 +41,7 @@ class Account extends PureComponent {
             >
               <DescriptionList style={{ marginBottom: 24 }} col="1">
                 <Description term={formatMessage({ id: 'account.ledger-files' })}>
-                  <Button onClick={() => this.downloadFile(ledgerFilesAddress)} loading={loading}>
+                  <Button size="small" onClick={() => this.downloadFile(ledgerFilesAddress)} loading={loading}>
                     {formatMessage({ id: 'download' })}
                   </Button>
                 </Description>
