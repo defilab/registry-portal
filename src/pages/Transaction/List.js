@@ -42,7 +42,7 @@ class List extends PureComponent {
         key: item.transaction_id,
         id: item.transaction_id,
         name: formatMessage ({ id: `spec.transaction-${item.action}` }),
-        amount: `${item.balance_after - item.balance_before} PTS`,
+        amount: `${item.balance_after - item.balance_before} DFT`,
         state: formatMessage ({ id: 'spec.transaction-success' }),
       })),
     })).finally(() => this.setState({
