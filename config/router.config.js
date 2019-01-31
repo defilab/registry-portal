@@ -67,6 +67,13 @@ export default [
         authority: ['both'],
       },
       {
+        path: '/downloads',
+        name: 'downloads',
+        icon: 'file',
+        component: './Downloads',
+        authority: ['both'],
+      },
+      {
         component: '404',
       },
     ],

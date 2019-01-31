@@ -9,5 +9,6 @@ export default {
   'account.income-today': 'Today\'s income',
   'account.income-this-month': 'Income of this month',
   'account.income-total': 'Accumulated income',
-  'account.cert': 'Certificate'
+  'account.cert': 'Certificate',
+  'account.ledger-files': 'Ledger Files'
 };

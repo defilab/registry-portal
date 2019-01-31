@@ -38,5 +38,6 @@ export default {
   'menu.requests': 'Request Records',
   'menu.transactions': 'Transaction Records',
   'menu.data-specs': 'Data Management',
-  'menu.data-usage': 'Response Records'
+  'menu.data-usage': 'Response Records',
+  'menu.downloads': 'Downloads'
 };

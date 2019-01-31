@@ -18,6 +18,7 @@ export default {
   'view': 'View',
   'edit': 'Edit',
   'new': 'New',
+  'download': 'Download',
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',

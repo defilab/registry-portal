@@ -123,7 +123,11 @@ export default function request (url, option) {
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  return fetch(`${API_BASE_URL}${url}`, newOptions)
+  let baseUrl = '';
+  if (!url.startsWith('http')) {
+    baseUrl = API_BASE_URL;
+  }
+  return fetch(`${baseUrl}${url}`, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
@@ -131,6 +135,9 @@ export default function request (url, option) {
       // using .json will report an error.
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();
+      }
+      if (response.headers.get('Content-Type').indexOf('json') === -1) {
+        return response.blob()
       }
       return response.json();
     });

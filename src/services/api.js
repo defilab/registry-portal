@@ -102,3 +102,7 @@ export async function updateDataSpec (data) {
 export async function fetchPlatformDataSpecs () {
   return request(`/organizations/platform/specs`).then((data) => data.items);
 }
+
+export async function downloadFile(url) {
+  return request(url).then((data) => URL.createObjectURL(data));
+}

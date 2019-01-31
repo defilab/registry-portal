@@ -9,5 +9,6 @@ export default {
   'account.income-today': '今日收益',
   'account.income-this-month': '本月收益',
   'account.income-total': '累计收益',
-  'account.cert': '证书'
+  'account.cert': '证书',
+  'account.ledger-files': '账本文件'
 };

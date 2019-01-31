@@ -18,6 +18,7 @@ export default {
   'view': '查看',
   'edit': '编辑',
   'new': '新建',
+  'download': '下载',
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',

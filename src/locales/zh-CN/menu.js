@@ -38,5 +38,6 @@ export default {
   'menu.requests': '请求记录',
   'menu.transactions': '交易记录',
   'menu.data-specs': '数据管理',
-  'menu.data-usage': '响应记录'
+  'menu.data-usage': '响应记录',
+  'menu.downloads': '下载',
 };
