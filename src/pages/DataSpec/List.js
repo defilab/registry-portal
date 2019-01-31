@@ -51,10 +51,11 @@ class List extends PureComponent {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
         <Fragment>
-          <Link to={`/data-specs/${record.spec}`}>{formatMessage({ id: 'view' })}</Link>
           {
             record.reviewState === 'accepted' ?
-              <Fragment><Divider type="vertical" />
+              <Fragment>
+                <Link to={`/data-specs/${record.spec}`}>{formatMessage({ id: 'view' })}</Link>
+                <Divider type="vertical" />
                 <Link to={`/data-specs/${record.spec}/edit`}>{formatMessage(
                   { id: 'edit' })}
                 </Link>

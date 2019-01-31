@@ -39,5 +39,5 @@ export default {
   'menu.transactions': '交易记录',
   'menu.data-specs': '数据管理',
   'menu.data-usage': '响应记录',
-  'menu.downloads': '下载',
+  'menu.downloads': '文件下载',
 };
