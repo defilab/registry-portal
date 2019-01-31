@@ -46,7 +46,17 @@ export default [
       },
       {
         path: '/data-specs/new',
-        component: './DataSpec/Form',
+        component: './DataSpec/New',
+        authority: ['both'],
+      },
+      {
+        path: '/data-specs/:spec',
+        component: './DataSpec/View',
+        authority: ['both'],
+      },
+      {
+        path: '/data-specs/:spec/edit',
+        component: './DataSpec/Edit',
         authority: ['both'],
       },
       {

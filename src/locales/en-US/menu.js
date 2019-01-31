@@ -35,8 +35,8 @@ export default {
   'menu.account.settings': 'Account Settings',
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'Logout',
-  'menu.requests': 'Requests',
-  'menu.transactions': 'Transactions',
-  'menu.data-specs': 'Data Specs',
-  'menu.data-usage': 'Data Usage'
+  'menu.requests': 'Request Records',
+  'menu.transactions': 'Transaction Records',
+  'menu.data-specs': 'Data Management',
+  'menu.data-usage': 'Response Records'
 };

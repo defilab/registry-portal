@@ -9,8 +9,15 @@ import result from './zh-CN/result';
 import settingDrawer from './zh-CN/settingDrawer';
 import settings from './zh-CN/settings';
 import pwa from './zh-CN/pwa';
+import account from './zh-CN/account';
+import dataSpec from './zh-CN/dataSpec';
 
 export default {
+  'yes': '是',
+  'no': '否',
+  'view': '查看',
+  'edit': '编辑',
+  'new': '新建',
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',
@@ -30,4 +37,6 @@ export default {
   ...settingDrawer,
   ...settings,
   ...pwa,
+  ...account,
+  ...dataSpec
 };

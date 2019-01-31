@@ -1,77 +1,100 @@
-import React, { PureComponent } from 'react';
-import { Button, Card, Table } from 'antd';
+import React, { Fragment, PureComponent } from 'react';
+import { Button, Card, Divider, Table } from 'antd';
+import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
+import Link from 'umi/link';
+import { connect } from 'dva';
 import styles from './TableList.less';
 
+@connect(({ dataSpec, loading }) => ({
+  dataSpec,
+  loading: loading.effects['dataSpec/list'],
+}))
 class List extends PureComponent {
   columns = [
     {
-      title: 'Spec Name',
-      key: 'spec-name',
+      title: 'ID',
+      key: 'id',
+      dataIndex: 'id',
     },
     {
-      title: 'Field Count',
-      key: 'field-count',
+      title: formatMessage({ id: 'spec.name' }),
+      key: 'name',
+      dataIndex: 'name',
     },
     {
-      title: 'Data Type',
-      key: 'data-type',
+      title: formatMessage({ id: 'spec.data-type' }),
+      key: 'spec',
+      render: () => formatMessage({ id: `spec.blacklist` }),
     },
     {
-      title: 'Creation Time',
+      title: formatMessage({ id: 'spec.status' }),
+      key: 'state',
+      dataIndex: 'state',
+    },
+    {
+      title: formatMessage({ id: 'spec.public' }),
+      key: 'public',
+      dataIndex: 'public',
+    },
+    {
+      title: formatMessage({ id: 'spec.creation-time' }),
       key: 'creation-time',
+      dataIndex: 'creationTime',
     },
     {
-      title: 'Response State',
-      key: 'response-state',
+      title: formatMessage({ id: 'spec.review-status' }),
+      key: 'review-state',
+      render: (text, record) => formatMessage({ id: `spec.review-${record.reviewState}` }),
     },
     {
-      title: 'Response Time',
-      key: 'response-time',
-    },
-    {
-      title: 'Response Count',
-      key: 'response-count',
-    },
-    {
-      title: 'Requester Count',
-      key: 'requester-count',
-    },
-    {
-      title: 'Sales Amount',
-      key: 'sales-amount',
-    },
-    {
-      title: 'State',
-      key: 'state'
-    },
-    {
-      title: 'Review submission time',
-      key: 'review-submission-time',
-    },
-    {
-      title: 'Review Status',
-      key: 'review-status',
-    },
-    {
-      title: 'Operations',
-      key: 'operations',
+      title: formatMessage({ id: 'spec.operations' }),
+      render: (text, record) => (
+        <Fragment>
+          <Link to={`/data-specs/${record.spec}`}>{formatMessage({ id: 'view' })}</Link>
+          {
+            record.reviewState === 'accepted' ?
+              <Fragment><Divider type="vertical" />
+                <Link to={`/data-specs/${record.spec}/edit`}>{formatMessage(
+                  { id: 'edit' })}
+                </Link>
+              </Fragment> :
+              ''
+          }
+        </Fragment>
+      ),
     },
   ];
 
-  data = [];
+  componentDidMount () {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'dataSpec/list',
+    });
+  }
 
   render () {
     const showNewSpecForm = () => router.push('/data-specs/new');
+    const { dataSpec, loading } = this.props;
+    const dataSource = dataSpec.dataSpecs.map((item) => ({
+      key: item.id,
+      id: item.id,
+      spec: 'blacklist',
+      name: item.name,
+      state: formatMessage({ id: `spec.status-${item.state}` }),
+      public: item.public ? formatMessage({ id: `yes` }) : formatMessage({ id: `no` }),
+      creationTime: new Date(item.created_at).toLocaleString(),
+      reviewState: item.reviewState,
+    }));
     return (
-      <Card title="Data Usage">
+      <Card title={formatMessage({ id: 'menu.data-specs' })}>
         <div className={styles.tableList}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={showNewSpecForm}>
-              New
+              {formatMessage({ id: 'new' })}
             </Button>
           </div>
-          <Table columns={this.columns} data={this.data} />
+          <Table columns={this.columns} dataSource={dataSource} loading={loading} />
         </div>
       </Card>);
   }

@@ -1,40 +1,60 @@
 import React, { PureComponent } from 'react';
 import { Card, Table } from 'antd';
+import { formatMessage } from 'umi/locale';
+import { fetchTransactions } from '../../services/api';
 
 class List extends PureComponent {
+  state = {
+    dataSource: [],
+    loading: false,
+  };
+
   columns = [
     {
-      title: 'Time',
-      key: 'time'
+      title: 'ID',
+      key: 'id',
+      dataIndex: 'id',
     },
     {
-      title: 'Name',
-      key: 'name'
+      title: formatMessage ({ id: 'spec.transaction-name' }),
+      key: 'name',
+      dataIndex: 'name',
     },
     {
-      title: 'Type',
-      key: 'type'
+      title: formatMessage ({ id: 'spec.transaction-amount' }),
+      key: 'amount',
+      dataIndex: 'amount',
     },
     {
-      title: 'Amount',
-      key: 'amount'
+      title: formatMessage ({ id: 'spec.transaction-status' }),
+      key: 'state',
+      dataIndex: 'state',
     },
-    {
-      title: 'State',
-      key: 'state'
-    },
-    {
-      title: 'Category',
-      key: 'category'
-    }
   ];
 
-  data = [];
+  componentDidMount () {
+    this.setState({
+      loading: true,
+    });
+
+    fetchTransactions().then((data) => this.setState({
+      dataSource: data.map((item) => ({
+        key: item.transaction_id,
+        id: item.transaction_id,
+        name: formatMessage ({ id: `spec.transaction-${item.action}` }),
+        amount: `${item.balance_after - item.balance_before} PHP`,
+        state: formatMessage ({ id: 'spec.transaction-success' }),
+      })),
+    })).finally(() => this.setState({
+      loading: false,
+    }));
+  }
 
   render () {
+    const { dataSource, loading } = this.state;
     return (
-      <Card title="Transactions">
-        <Table columns={this.columns} data={this.data} />
+      <Card title={formatMessage({ id: 'menu.transactions' })}>
+        <Table columns={this.columns} dataSource={dataSource} loading={loading} />
       </Card>);
   }
 }

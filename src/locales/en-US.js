@@ -9,8 +9,15 @@ import result from './en-US/result';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import pwa from './en-US/pwa';
+import account from './en-US/account';
+import dataSpec from './en-US/dataSpec'
 
 export default {
+  'yes': 'Yes',
+  'no': 'No',
+  'view': 'View',
+  'edit': 'Edit',
+  'new': 'New',
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',
@@ -30,4 +37,6 @@ export default {
   ...settingDrawer,
   ...settings,
   ...pwa,
+  ...account,
+  ...dataSpec
 };
