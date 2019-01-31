@@ -84,7 +84,7 @@ class List extends PureComponent {
       name: item.name,
       state: formatMessage({ id: `spec.status-${item.state}` }),
       public: item.public ? formatMessage({ id: `yes` }) : formatMessage({ id: `no` }),
-      creationTime: new Date(item.created_at * 1000).toLocaleString(),
+      creationTime: new Date(item.created_at).toLocaleString(),
       reviewState: item.reviewState,
     }));
     return (

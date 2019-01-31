@@ -31,7 +31,7 @@ class List extends PureComponent {
       key: 'request-time',
     },
     {
-      title: formatMessage({id: 'spec.request-status'}),
+      title: formatMessage({id: 'spec.response-status'}),
       dataIndex: 'state',
       key: 'state',
     },
@@ -60,7 +60,7 @@ class List extends PureComponent {
           dataSpec: item.put_offer_tx.offer_body.data_spec,
           dataType: formatMessage({id: 'spec.blacklist'}),
           requestTime: new Date(item.created_at * 1000).toLocaleString(),
-          state: item.responded_at ? formatMessage({id: 'spec.request-success'}) : formatMessage({id: 'spec.request-error'}),
+          state: item.responded_at ? formatMessage({id: 'spec.response-success'}) : formatMessage({id: 'spec.response-error'}),
           responseTime: item.responded_at ? new Date(item.responded_at * 1000).toLocaleString() : '-',
           transactionAmount: item.responded_at ? `${item.put_offer_tx.offer_body.price} PTS` : '-',
         })),
