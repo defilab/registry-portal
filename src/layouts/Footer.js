@@ -8,7 +8,7 @@ const FooterView = () => (
     <GlobalFooter
       copyright={
         <Fragment>
-          Copyright <Icon type="copyright" /> 2019 Guangzhishu
+          Copyright <Icon type="copyright" /> 2019 Defi
         </Fragment>
       }
     />
