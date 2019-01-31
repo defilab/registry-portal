@@ -59,10 +59,10 @@ class List extends PureComponent {
           orderNo: item.offer_id,
           dataSpec: item.put_offer_tx.offer_body.data_spec,
           dataType: formatMessage({id: 'spec.blacklist'}),
-          requestTime: new Date(item.created_at).toLocaleString(),
+          requestTime: new Date(item.created_at * 1000).toLocaleString(),
           state: item.responded_at ? formatMessage({id: 'spec.request-success'}) : formatMessage({id: 'spec.request-error'}),
-          responseTime: item.responded_at ? new Date(item.responded_at).toLocaleString() : '-',
-          transactionAmount: item.responded_at ? `${item.put_offer_tx.offer_body.price} PHP` : '-',
+          responseTime: item.responded_at ? new Date(item.responded_at * 1000).toLocaleString() : '-',
+          transactionAmount: item.responded_at ? `${item.put_offer_tx.offer_body.price} PTS` : '-',
         })),
       });
     }).finally(() => this.setState({

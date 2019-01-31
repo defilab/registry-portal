@@ -106,13 +106,13 @@ class Account extends PureComponent {
               loading={loading}
             >
               <DescriptionList style={{ marginBottom: 24 }} col="2">
-                <Description term={formatMessage({ id: 'account.balance' })}>{organization.balance} PHP</Description>
-                <Description term={formatMessage({ id: 'account.expense-today' })}>{organization.expense.today} PHP</Description>
-                <Description term={formatMessage({ id: 'account.expense-this-month' })}>{organization.income.today} PHP</Description>
-                <Description term={formatMessage({ id: 'account.expense-total' })}>{organization.expense.month} PHP</Description>
-                <Description term={formatMessage({ id: 'account.income-today' })}>{organization.income.month} PHP</Description>
-                <Description term={formatMessage({ id: 'account.income-this-month' })}>{organization.expense.total} PHP</Description>
-                <Description term={formatMessage({ id: 'account.income-total' })}>{organization.income.total} PHP</Description>
+                <Description term={formatMessage({ id: 'account.balance' })}>{organization.balance} PTS</Description>
+                <Description term={formatMessage({ id: 'account.expense-today' })}>{organization.expense.today} PTS</Description>
+                <Description term={formatMessage({ id: 'account.expense-this-month' })}>{organization.income.today} PTS</Description>
+                <Description term={formatMessage({ id: 'account.expense-total' })}>{organization.expense.month} PTS</Description>
+                <Description term={formatMessage({ id: 'account.income-today' })}>{organization.income.month} PTS</Description>
+                <Description term={formatMessage({ id: 'account.income-this-month' })}>{organization.expense.total} PTS</Description>
+                <Description term={formatMessage({ id: 'account.income-total' })}>{organization.income.total} PTS</Description>
               </DescriptionList>
             </Card>
           </Col>
