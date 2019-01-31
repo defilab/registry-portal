@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Icon } from 'antd';
 import Link from 'umi/link';
 import Debounce from 'lodash-decorators/debounce';
 import styles from './index.less';

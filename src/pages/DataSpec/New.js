@@ -166,7 +166,17 @@ class DataSpecForm extends PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('scale')(<Input />)}
+            {getFieldDecorator('scale')(
+              <Select>
+                <Option value="1000">1,000</Option>
+                <Option value="10000">10,000</Option>
+                <Option value="100000">100,000</Option>
+                <Option value="1000000">1,000,000</Option>
+                <Option value="10000000">10,000,000</Option>
+                <Option value="100000000">100,000,000</Option>
+                <Option value="1000000000">1,000,000,000</Option>
+              </Select>
+            )}
           </FormItem>
           <FormItem
             {...formItemLayout}
