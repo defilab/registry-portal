@@ -9,6 +9,7 @@ export default {
   'account.income-today': 'Today\'s income',
   'account.income-this-month': 'Income of this month',
   'account.income-total': 'Accumulated income',
-  'account.cert': 'Certificate',
-  'account.ledger-files': 'Ledger Files'
+  'account.cert': 'CSR Certificate',
+  'account.ledger-files': 'Hyperledger configuration files',
+  'account.ledger-files-description': 'Required for both data consumers and providers'
 };

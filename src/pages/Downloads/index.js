@@ -1,36 +1,84 @@
 import React, { PureComponent } from 'react';
-import { Card, Col, Row, Button } from 'antd';
+import { Card, Col, Row, Button, Upload, message, Divider } from 'antd';
 import { formatMessage } from 'umi/locale';
-import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import { downloadFile } from '@/services/api';
+import { downloadFile, fetchActiveCert } from '@/services/api';
+import styles from './style.less';
+import { getToken } from '../../utils/token';
 
-const { Description } = DescriptionList;
 const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-const ledgerFilesAddress = `/organizations/${namespace}/ledger_files`;
+const certFileUrl = `/organizations/${namespace}/certs/active`;
+const certFileUploadUrl = `/organizations/${namespace}/certs`;
+const ledgerFilesUrl = `/organizations/${namespace}/ledger_files`;
 
 class Account extends PureComponent {
   state = {
-    loading: false,
+    downloadingCertFile: false,
+    downloadingLedgerFiles: false,
+    certUploaded: undefined,
+    uploadingCertFile: false,
   };
 
   componentDidMount () {
-
+    fetchActiveCert().then((certs) => this.setState({
+      certUploaded: certs.length > 0,
+    }));
   }
 
-  downloadFile = url => {
+  uploadProps = (url) => ({
+    name: 'file',
+    action: `${API_BASE_URL}${url}`,
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+    showUploadList: false,
+    beforeUpload: () => {
+      this.setState({
+        uploadingCertFile: true,
+      });
+      return true;
+    },
+    onChange: (info) => {
+      const { status } = info.file;
+      if (status === 'done') {
+        this.setState({
+          certUploaded: true,
+          uploadingCertFile: false,
+        });
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        this.setState({
+          uploadingCertFile: false,
+        });
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  });
+
+  downloadCertFile = () => {
     this.setState({
-      loading: true,
+      downloadingCertFile: true,
     });
-    downloadFile(url).then((blobUrl) => {
+    downloadFile(certFileUrl).then((blobUrl) => {
       window.location = blobUrl;
     }).finally(() => this.setState({
-      loading: false,
+      downloadingCertFile: false,
+    }));
+  };
+
+  downloadLedgerFiles = () => {
+    this.setState({
+      downloadingLedgerFiles: true,
+    });
+    downloadFile(ledgerFilesUrl).then((blobUrl) => {
+      window.location = blobUrl;
+    }).finally(() => this.setState({
+      downloadingLedgerFiles: false,
     }));
   };
 
   render () {
-    const { loading } = this.state;
+    const { certUploaded, downloadingCertFile, downloadingLedgerFiles, uploadingCertFile } = this.state;
     return (
       <GridContent>
         <Row gutter={24}>
@@ -39,13 +87,29 @@ class Account extends PureComponent {
               title={formatMessage({ id: 'menu.downloads' })}
               bordered={false}
             >
-              <DescriptionList style={{ marginBottom: 24 }} col="1">
-                <Description term={formatMessage({ id: 'account.ledger-files' })}>
-                  <Button size="small" onClick={() => this.downloadFile(ledgerFilesAddress)} loading={loading}>
+              <div className={styles.title}>{formatMessage({ id: 'account.cert' })}:</div>
+              <div>
+                {certUploaded ?
+                  <Button size="small" style={{ marginRight: '8px' }} onClick={() => this.downloadCertFile()}
+                          loading={downloadingCertFile}>
                     {formatMessage({ id: 'download' })}
-                  </Button>
-                </Description>
-              </DescriptionList>
+                  </Button> : ''}
+                {!certUploaded && certUploaded !== undefined ?
+                  <Upload {...this.uploadProps(certFileUploadUrl)}>
+                    <Button size="small" loading={uploadingCertFile}>
+                      {formatMessage({ id: 'upload' })}
+                    </Button>
+                  </Upload> : ''}
+                <div className={styles.description}> {formatMessage({ id: 'refer-doc' })}</div>
+              </div>
+              <Divider />
+              <div className={styles.title}>{formatMessage({ id: 'account.ledger-files' })}:</div>
+              <div>
+                <Button size="small" onClick={() => this.downloadLedgerFiles()} loading={downloadingLedgerFiles}>
+                  {formatMessage({ id: 'download' })}
+                </Button>
+                <div className={styles.description}> {formatMessage({ id: 'account.ledger-files-description' })}</div>
+              </div>
             </Card>
           </Col>
         </Row>

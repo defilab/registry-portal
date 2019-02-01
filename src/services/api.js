@@ -55,11 +55,11 @@ export async function fetchDataSpecs () {
         state: item.content.state,
         name: item.content.name,
         canonical_name: item.content.canonical_name,
-        public: item.content.public
+        public: item.content.public,
       }))),
     request(`/organizations/${namespace}/specs`).then((data) => data.items.map((item) => ({
       ...item,
-      reviewState: 'accepted'
+      reviewState: 'accepted',
     })))])
     .then((data) => [...data[0], ...data[1]].sort((a, b) => {
       if (a.created_at > b.created_at) {
@@ -91,7 +91,6 @@ export async function createDataSpec (data) {
 }
 
 export async function updateDataSpec (data) {
-  console.log(data);
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/specs/blacklist`, {
     method: 'PATCH',
@@ -103,6 +102,11 @@ export async function fetchPlatformDataSpecs () {
   return request(`/organizations/platform/specs`).then((data) => data.items);
 }
 
-export async function downloadFile(url) {
+export async function downloadFile (url) {
   return request(url).then((data) => URL.createObjectURL(data));
+}
+
+export async function fetchActiveCert () {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+  return request(`/organizations/${namespace}/certs`).then((data) => data.items)
 }

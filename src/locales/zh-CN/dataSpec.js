@@ -34,5 +34,15 @@ export default {
   'spec.update-frequency': '更新频率',
   'spec.new': '新建数据接口',
   'spec.edit': '编辑数据接口',
-  'spec.every-n-days': '天/次'
+  'spec.every-n-days': '天/次',
+  'spec.description-hint': '如：【返回参数说明】A02：名下公司税务重大违法  B01：失联 B02：贷款不良（逾期90天以上未还）',
+  'spec.scenario-hint': '如：1.贷前审核：根据黑名单情况，可有效降低个人信贷风险，对个人更加清楚的了解和认知，进而辅助金融机构进行下一步的决策。 2.金融风控：根据黑名单内的不同类型，发现个人潜在风险，采取不同决策。',
+  'spec.scale-1000': '千',
+  'spec.scale-10000': '万',
+  'spec.scale-100000': '十万',
+  'spec.scale-1000000': '百万',
+  'spec.scale-10000000': '千万',
+  'spec.scale-100000000': '亿',
+  'spec.scale-1000000000': '十亿',
+  'spec.edit-error': '您提交的修改申请正在审核中，审核完成后可进行修改。'
 };

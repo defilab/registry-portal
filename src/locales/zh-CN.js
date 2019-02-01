@@ -19,6 +19,8 @@ export default {
   'edit': '编辑',
   'new': '新建',
   'download': '下载',
+  'upload': '上传',
+  'refer-doc': '注：详见开发文档进行配置，上传CSR文件后需下载。',
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',

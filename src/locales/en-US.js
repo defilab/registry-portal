@@ -19,6 +19,8 @@ export default {
   'edit': 'Edit',
   'new': 'New',
   'download': 'Download',
+  'upload': 'Upload',
+  'refer-doc': 'Please refer to development docs for details',
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
   'layout.user.link.privacy': 'Privacy',

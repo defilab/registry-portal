@@ -1,5 +1,5 @@
 export default {
   define: {
-    API_BASE_URL: 'http://47.95.206.117:5000'
+    API_BASE_URL: 'https://registry.test.defilab.com'
   },
 };

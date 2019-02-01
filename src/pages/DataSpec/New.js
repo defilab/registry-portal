@@ -24,6 +24,7 @@ const { Option } = Select;
 class DataSpecForm extends PureComponent {
   state = {
     platformDataSpecs: [],
+    state: 'online'
   };
 
   componentDidMount () {
@@ -76,7 +77,7 @@ class DataSpecForm extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { platformDataSpecs } = this.state;
+    const { platformDataSpecs, state } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -130,7 +131,7 @@ class DataSpecForm extends PureComponent {
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.description'})} />
+                <FormattedMessage id="spec.description" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
@@ -140,26 +141,31 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('description')(<TextArea
               style={{ minHeight: 32 }}
               rows={4}
+              placeholder={formatMessage({id: 'spec.description-hint'})}
             />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.scenario'})} />
+                <FormattedMessage id="spec.scenario" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
               </span>
             }
           >
-            {getFieldDecorator('scenario')(<Input />)}
+            {getFieldDecorator('scenario')(<TextArea
+              style={{ minHeight: 32 }}
+              rows={4}
+              placeholder={formatMessage({id: 'spec.scenario-hint'})}
+            />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.scale'})} />
+                <FormattedMessage id="spec.scale" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
@@ -168,13 +174,13 @@ class DataSpecForm extends PureComponent {
           >
             {getFieldDecorator('scale')(
               <Select>
-                <Option value="1000">1,000</Option>
-                <Option value="10000">10,000</Option>
-                <Option value="100000">100,000</Option>
-                <Option value="1000000">1,000,000</Option>
-                <Option value="10000000">10,000,000</Option>
-                <Option value="100000000">100,000,000</Option>
-                <Option value="1000000000">1,000,000,000</Option>
+                <Option value="1000">{formatMessage({id: 'spec.scale-1000'})}</Option>
+                <Option value="10000">{formatMessage({id: 'spec.scale-10000'})}</Option>
+                <Option value="100000">{formatMessage({id: 'spec.scale-100000'})}</Option>
+                <Option value="1000000">{formatMessage({id: 'spec.scale-1000000'})}</Option>
+                <Option value="10000000">{formatMessage({id: 'spec.scale-10000000'})}</Option>
+                <Option value="100000000">{formatMessage({id: 'spec.scale-100000000'})}</Option>
+                <Option value="1000000000">{formatMessage({id: 'spec.scale-1000000000'})}</Option>
               </Select>
             )}
           </FormItem>
@@ -182,7 +188,7 @@ class DataSpecForm extends PureComponent {
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.update-frequency'})} />
+                <FormattedMessage id="spec.update-frequency" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
@@ -194,7 +200,7 @@ class DataSpecForm extends PureComponent {
           <FormItem {...formItemLayout} label={formatMessage({id: 'spec.status'})}>
             {getFieldDecorator('state')
             (
-              <Radio.Group>
+              <Radio.Group onChange={(e) => this.setState({ state: e.target.value })}>
                 <Radio value="online">{formatMessage({id: 'spec.status-online'})}</Radio>
                 <Radio value="offline">{formatMessage({id: 'spec.status-offline'})}</Radio>
               </Radio.Group>,
@@ -203,7 +209,7 @@ class DataSpecForm extends PureComponent {
           <FormItem {...formItemLayout} label={formatMessage({id: 'spec.public'})}>
             {getFieldDecorator('public')
             (
-              <Radio.Group>
+              <Radio.Group disabled={state === 'offline'}>
                 <Radio value>{formatMessage({id: 'yes'})}</Radio>
                 <Radio value={false}>{formatMessage({id: 'no'})}</Radio>
               </Radio.Group>,

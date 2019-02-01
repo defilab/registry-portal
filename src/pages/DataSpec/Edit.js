@@ -135,7 +135,7 @@ class DataSpecForm extends PureComponent {
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.description'})} />
+                <FormattedMessage id="spec.description" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
@@ -145,26 +145,31 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('description')(<TextArea
               style={{ minHeight: 32 }}
               rows={4}
+              placeholder={formatMessage({id: 'spec.description-hint'})}
             />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.scenario'})} />
+                <FormattedMessage id="spec.scenario" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
               </span>
             }
           >
-            {getFieldDecorator('scenario')(<Input />)}
+            {getFieldDecorator('scenario')(<TextArea
+              style={{ minHeight: 32 }}
+              rows={4}
+              placeholder={formatMessage({id: 'spec.scenario-hint'})}
+            />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.scale'})} />
+                <FormattedMessage id="spec.scale" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>
@@ -173,13 +178,13 @@ class DataSpecForm extends PureComponent {
           >
             {getFieldDecorator('scale')(
               <Select>
-                <Option value="1000">1,000</Option>
-                <Option value="10000">10,000</Option>
-                <Option value="100000">100,000</Option>
-                <Option value="1000000">1,000,000</Option>
-                <Option value="10000000">10,000,000</Option>
-                <Option value="100000000">100,000,000</Option>
-                <Option value="1000000000">1,000,000,000</Option>
+                <Option value="1000">{formatMessage({id: 'spec.scale-1000'})}</Option>
+                <Option value="10000">{formatMessage({id: 'spec.scale-10000'})}</Option>
+                <Option value="100000">{formatMessage({id: 'spec.scale-100000'})}</Option>
+                <Option value="1000000">{formatMessage({id: 'spec.scale-1000000'})}</Option>
+                <Option value="10000000">{formatMessage({id: 'spec.scale-10000000'})}</Option>
+                <Option value="100000000">{formatMessage({id: 'spec.scale-100000000'})}</Option>
+                <Option value="1000000000">{formatMessage({id: 'spec.scale-1000000000'})}</Option>
               </Select>
             )}
           </FormItem>
@@ -187,7 +192,7 @@ class DataSpecForm extends PureComponent {
             {...formItemLayout}
             label={
               <span>
-                <FormattedMessage id={formatMessage({id: 'spec.update-frequency'})} />
+                <FormattedMessage id="spec.update-frequency" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
                 </em>

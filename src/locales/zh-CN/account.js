@@ -9,6 +9,7 @@ export default {
   'account.income-today': '今日收益',
   'account.income-this-month': '本月收益',
   'account.income-total': '累计收益',
-  'account.cert': '证书',
-  'account.ledger-files': '账本文件'
+  'account.cert': 'CSR证书',
+  'account.ledger-files': 'Hyperledger配置文件',
+  'account.ledger-files-description': '注：数据请求方和提供方需先下载该文件后，才能进行数据请求/响应。'
 };

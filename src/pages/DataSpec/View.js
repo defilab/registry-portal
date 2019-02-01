@@ -15,7 +15,6 @@ class View extends PureComponent {
     data: {
       public: false,
       properties: {
-        scale: 0,
       },
       state: 'offline'
     },
@@ -27,7 +26,10 @@ class View extends PureComponent {
       type: 'dataSpec/single',
       payload: { spec: match.params.spec },
       callback: (data) => this.setState({
-        data,
+        data: {
+          ...data,
+          properties: data.properties ? data.properties : {}
+        },
       }),
     });
   }
@@ -56,7 +58,7 @@ class View extends PureComponent {
                   {data.properties.scenario}
                 </Description>
                 <Description term={formatMessage({ id: 'spec.scale' })}>
-                  {data.properties.scale ? data.properties.scale.toLocaleString() : ''}
+                  {data.properties.scale ? formatMessage({ id: `spec.scale-${data.properties.scale}` }) : ''}
                 </Description>
                 <Description term={formatMessage({ id: 'spec.update-frequency' })}>
                   {data.properties.updateFrequency}

@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { formatMessage } from 'umi/locale';
 import { fetchDataSpec, fetchDataSpecs, createDataSpec, updateDataSpec } from '@/services/api';
 
 export default {
@@ -21,20 +22,28 @@ export default {
       });
     },
     * create ({ payload, callback }, { call }) {
-      yield call(createDataSpec, {
-        ...payload,
-        reference: payload.canonical_name,
-      });
-      callback();
-      message.success('Success');
+      try {
+        yield call(createDataSpec, {
+          ...payload,
+          reference: payload.canonical_name,
+        });
+        callback();
+        message.success('Success');
+      } catch (error) {
+        message.error('Sorry, this spec type can only be created once');
+      }
     },
     * update ({ payload, callback }, { call }) {
-      yield call(updateDataSpec, {
-        ...payload,
-        reference: payload.canonical_name,
-      });
-      callback();
-      message.success('Success');
+      try {
+        yield call(updateDataSpec, {
+          ...payload,
+          reference: payload.canonical_name,
+        });
+        callback();
+        message.success('Success');
+      } catch (error) {
+        message.error(formatMessage({id : 'spec.edit-error'}));
+      }
     },
   },
 
