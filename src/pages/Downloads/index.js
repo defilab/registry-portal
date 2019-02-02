@@ -7,9 +7,9 @@ import styles from './style.less';
 import { getToken } from '../../utils/token';
 
 const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-const certFileUrl = `/organizations/${namespace}/certs/active`;
+const certFileUrl = `/organizations/${namespace}/certs/active/download`;
 const certFileUploadUrl = `/organizations/${namespace}/certs`;
-const ledgerFilesUrl = `/organizations/${namespace}/ledger_files`;
+const ledgerFilesUrl = `/organizations/${namespace}/ledger/files/download`;
 
 class Account extends PureComponent {
   state = {
@@ -55,12 +55,39 @@ class Account extends PureComponent {
     },
   });
 
+  triggerBlobDownload = (blob, fileName) => {
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+      window.navigator.msSaveBlob(blob, fileName);
+      return;
+    }
+
+    const blobURL = window.URL.createObjectURL(blob);
+    const tempLink = document.createElement('a');
+    tempLink.style.display = 'none';
+    tempLink.href = blobURL;
+    tempLink.setAttribute('download', fileName);
+    // Safari thinks _blank anchor are pop ups. We only want to set _blank
+    // target if the browser does not support the HTML5 download attribute.
+    // This allows you to download files in desktop safari if pop up blocking
+    // is enabled.
+    if (typeof tempLink.download === 'undefined') {
+      tempLink.setAttribute('target', '_blank');
+    }
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+    setTimeout(() => {
+      // For Firefox it is necessary to delay revoking the ObjectURL
+      window.URL.revokeObjectURL(blobURL);
+    }, 100);
+  };
+
   downloadCertFile = () => {
     this.setState({
       downloadingCertFile: true,
     });
-    downloadFile(certFileUrl).then((blobUrl) => {
-      window.location = blobUrl;
+    downloadFile(certFileUrl).then((blob) => {
+      this.triggerBlobDownload(blob, 'cert.pem');
     }).finally(() => this.setState({
       downloadingCertFile: false,
     }));
@@ -70,8 +97,8 @@ class Account extends PureComponent {
     this.setState({
       downloadingLedgerFiles: true,
     });
-    downloadFile(ledgerFilesUrl).then((blobUrl) => {
-      window.location = blobUrl;
+    downloadFile(ledgerFilesUrl).then((blob) => {
+      this.triggerBlobDownload(blob, 'ledger_files.zip');
     }).finally(() => this.setState({
       downloadingLedgerFiles: false,
     }));

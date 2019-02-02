@@ -103,7 +103,7 @@ export async function fetchPlatformDataSpecs () {
 }
 
 export async function downloadFile (url) {
-  return request(url).then((data) => URL.createObjectURL(data));
+  return request(url);
 }
 
 export async function fetchActiveCert () {

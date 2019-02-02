@@ -30,6 +30,11 @@ class List extends PureComponent {
       key: 'state',
       dataIndex: 'state',
     },
+    {
+      title: formatMessage ({ id: 'spec.transaction-time' }),
+      key: 'time',
+      dataIndex: 'time',
+    },
   ];
 
   componentDidMount () {
@@ -43,6 +48,7 @@ class List extends PureComponent {
         id: item.transaction_id,
         name: formatMessage ({ id: `spec.transaction-${item.action}` }),
         amount: `${item.balance_after - item.balance_before} DFT`,
+        time: new Date(item.timestamp * 1000).toLocaleString(),
         state: formatMessage ({ id: 'spec.transaction-success' }),
       })),
     })).finally(() => this.setState({
