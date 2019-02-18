@@ -87,15 +87,15 @@ class Account extends PureComponent {
                 <Description
                   term={formatMessage({ id: 'account.expense-today' })}>{organization.expense.today} DFT</Description>
                 <Description term={formatMessage(
-                  { id: 'account.expense-this-month' })}>{organization.income.today} DFT</Description>
+                  { id: 'account.expense-this-month' })}>{organization.expense.month} DFT</Description>
                 <Description
-                  term={formatMessage({ id: 'account.expense-total' })}>{organization.expense.month} DFT</Description>
+                  term={formatMessage({ id: 'account.expense-total' })}>{organization.expense.total} DFT</Description>
                 <Description
-                  term={formatMessage({ id: 'account.income-today' })}>{organization.income.month} DFT</Description>
-                <Description term={formatMessage(
-                  { id: 'account.income-this-month' })}>{organization.expense.total} DFT</Description>
+                  term={formatMessage({ id: 'account.income-today' })}>{organization.income.today} DFT</Description>
+                <Description term={formatMessage({ id: 'account.income-this-month' })}>{organization.income.month} DFT
+                </Description>
                 <Description
-                  term={formatMessage({ id: 'account.income-total' })}>{organization.income.total} PTS</Description>
+                  term={formatMessage({ id: 'account.income-total' })}>{organization.income.total} DFT</Description>
               </DescriptionList>
             </Card>
           </Col>
