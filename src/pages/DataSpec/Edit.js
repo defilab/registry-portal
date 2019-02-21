@@ -24,6 +24,7 @@ const { Option } = Select;
 class DataSpecForm extends PureComponent {
   state = {
     platformDataSpecs: [],
+    scaleUnit: '1000',
   };
 
   componentDidMount () {
@@ -33,16 +34,22 @@ class DataSpecForm extends PureComponent {
       payload: {
         spec: match.params.spec,
       },
-      callback: (data) => {form.setFieldsValue({
-        name: data.name,
-        canonical_name: data.canonical_name,
-        description: data.properties ? data.properties.description : '',
-        scenario: data.properties ? data.properties.scenario : '',
-        scale: data.properties ? data.properties.scale: '',
-        updateFrequency: data.properties ? data.properties.updateFrequency: '',
-        state: data.state,
-        public: data.public,
-      })},
+      callback: (data) => {
+        form.setFieldsValue({
+          name: data.name,
+          canonical_name: data.canonical_name,
+          price: data.price,
+          description: data.properties ? data.properties.description : '',
+          scenario: data.properties ? data.properties.scenario : '',
+          scale: data.properties ? data.properties.scale : '',
+          updateFrequency: data.properties ? data.properties.updateFrequency : '',
+          state: data.state,
+          public: data.public,
+        });
+        if (data.properties && data.properties.scaleUnit) {
+          this.setState({ scaleUnit: data.properties.scaleUnit });
+        }
+      },
     });
 
     fetchPlatformDataSpecs().then((data) => {
@@ -53,6 +60,7 @@ class DataSpecForm extends PureComponent {
   }
 
   handleSubmit = e => {
+    const { scaleUnit } = this.state;
     const { dispatch, form } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
@@ -63,14 +71,16 @@ class DataSpecForm extends PureComponent {
             name: values.name,
             public: values.public,
             state: values.state,
+            price: values.price,
             properties: {
               description: values.description,
               scenario: values.scenario,
               scale: values.scale,
-              updateFrequency: values.updateFrequency
-            }
+              scaleUnit,
+              updateFrequency: values.updateFrequency,
+            },
           },
-          callback: () => router.goBack()
+          callback: () => router.goBack(),
         });
       }
     });
@@ -81,7 +91,7 @@ class DataSpecForm extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { platformDataSpecs } = this.state;
+    const { platformDataSpecs, scaleUnit } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -102,10 +112,22 @@ class DataSpecForm extends PureComponent {
       },
     };
 
+    const scales = (
+      <Select
+        defaultValue={scaleUnit}
+        style={{ width: '160px' }}
+        onChange={(unit) => this.setState({ scaleUnit: unit })}
+      >
+        <Option value="1000">{formatMessage({ id: 'spec.scale-1000' })}</Option>
+        <Option value="1000000">{formatMessage({ id: 'spec.scale-1000000' })}</Option>
+        <Option value="1000000000">{formatMessage({ id: 'spec.scale-1000000000' })}</Option>
+      </Select>
+    );
+
     return (
-      <Card bordered={false} title={formatMessage({id: 'spec.edit'})}>
+      <Card bordered={false} title={formatMessage({ id: 'spec.edit' })}>
         <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.name'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.name' })}>
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -115,7 +137,7 @@ class DataSpecForm extends PureComponent {
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.canonical-name'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.canonical-name' })}>
             {getFieldDecorator('canonical_name', {
               rules: [
                 {
@@ -135,6 +157,16 @@ class DataSpecForm extends PureComponent {
             {...formItemLayout}
             label={
               <span>
+                <FormattedMessage id="spec.price" />
+              </span>
+            }
+          >
+            {getFieldDecorator('price')(<InputNumber />)} DFT
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={
+              <span>
                 <FormattedMessage id="spec.description" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
@@ -145,7 +177,7 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('description')(<TextArea
               style={{ minHeight: 32 }}
               rows={4}
-              placeholder={formatMessage({id: 'spec.description-hint'})}
+              placeholder={formatMessage({ id: 'spec.description-hint' })}
             />)}
           </FormItem>
           <FormItem
@@ -162,7 +194,7 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('scenario')(<TextArea
               style={{ minHeight: 32 }}
               rows={4}
-              placeholder={formatMessage({id: 'spec.scenario-hint'})}
+              placeholder={formatMessage({ id: 'spec.scenario-hint' })}
             />)}
           </FormItem>
           <FormItem
@@ -176,17 +208,7 @@ class DataSpecForm extends PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('scale')(
-              <Select>
-                <Option value="1000">{formatMessage({id: 'spec.scale-1000'})}</Option>
-                <Option value="10000">{formatMessage({id: 'spec.scale-10000'})}</Option>
-                <Option value="100000">{formatMessage({id: 'spec.scale-100000'})}</Option>
-                <Option value="1000000">{formatMessage({id: 'spec.scale-1000000'})}</Option>
-                <Option value="10000000">{formatMessage({id: 'spec.scale-10000000'})}</Option>
-                <Option value="100000000">{formatMessage({id: 'spec.scale-100000000'})}</Option>
-                <Option value="1000000000">{formatMessage({id: 'spec.scale-1000000000'})}</Option>
-              </Select>
-            )}
+            {getFieldDecorator('scale')(<Input addonAfter={scales} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -199,24 +221,24 @@ class DataSpecForm extends PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('updateFrequency')(<InputNumber />)} {formatMessage({id: 'spec.every-n-days'})}
+            {getFieldDecorator('updateFrequency')(<InputNumber />)} {formatMessage({ id: 'spec.every-n-days' })}
           </FormItem>
           <FormItem {...formItemLayout} label="State">
             {getFieldDecorator('state')
             (
               <Radio.Group>
-                <Radio value="online">{formatMessage({id: 'spec.status-online'})}</Radio>
-                <Radio value="offline">{formatMessage({id: 'spec.status-offline'})}</Radio>
-              </Radio.Group>
+                <Radio value="online">{formatMessage({ id: 'spec.status-online' })}</Radio>
+                <Radio value="offline">{formatMessage({ id: 'spec.status-offline' })}</Radio>
+              </Radio.Group>,
             )}
           </FormItem>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.public'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.public' })}>
             {getFieldDecorator('public')
             (
               <Radio.Group>
-                <Radio value>{formatMessage({id: 'yes'})}</Radio>
-                <Radio value={false}>{formatMessage({id: 'no'})}</Radio>
-              </Radio.Group>
+                <Radio value>{formatMessage({ id: 'yes' })}</Radio>
+                <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
+              </Radio.Group>,
             )}
           </FormItem>
           <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>

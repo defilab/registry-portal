@@ -10,7 +10,7 @@ export default class SelectLang extends PureComponent {
     setLocale(key);
   };
 
-  render() {
+  render () {
     const { className } = this.props;
     const selectedLang = getLocale();
     const locales = ['en-US', 'zh-CN'];
@@ -20,7 +20,7 @@ export default class SelectLang extends PureComponent {
     };
     const languageIcons = {
       'en-US': '🇺🇸',
-      'zh-CN': '🇨🇳'
+      'zh-CN': '🇨🇳',
     };
     const langMenu = (
       <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={this.changeLang}>
@@ -37,7 +37,7 @@ export default class SelectLang extends PureComponent {
     return (
       <HeaderDropdown overlay={langMenu} placement="bottomRight">
         <span className={classNames(styles.dropDown, className)}>
-          <Icon type="global" title={formatMessage({ id: 'navBar.lang' })} />
+          <Icon type="global" title={formatMessage({ id: 'navBar.lang' })} style={{ color: 'white' }} />
         </span>
       </HeaderDropdown>
     );

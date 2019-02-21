@@ -32,7 +32,7 @@ export default {
   'spec.interface': 'Data Interface',
   'spec.description': 'Data Description',
   'spec.scenario': 'Application Scenarios',
-  'spec.scale': 'Magnitude',
+  'spec.scale': 'Amount of data',
   'spec.update-frequency': 'Update Frequency',
   'spec.new': 'New Data Interface',
   'spec.edit': 'Edit Data Interface',

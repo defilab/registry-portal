@@ -24,7 +24,8 @@ const { Option } = Select;
 class DataSpecForm extends PureComponent {
   state = {
     platformDataSpecs: [],
-    state: 'online'
+    state: 'online',
+    scaleUnit: '1000',
   };
 
   componentDidMount () {
@@ -45,7 +46,7 @@ class DataSpecForm extends PureComponent {
   }
 
   handleSubmit = e => {
-    const { platformDataSpecs: { price } } = this.state;
+    const { platformDataSpecs: { price }, scaleUnit } = this.state;
     const { dispatch, form } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
@@ -58,15 +59,16 @@ class DataSpecForm extends PureComponent {
             reference: values.canonical_name,
             state: values.state,
             public: values.public,
-            price,
+            price: values.price,
             properties: {
               description: values.description,
               scenario: values.scenario,
               scale: values.scale,
-              updateFrequency: values.updateFrequency
-            }
+              scaleUnit,
+              updateFrequency: values.updateFrequency,
+            },
           },
-          callback: () => router.goBack()
+          callback: () => router.goBack(),
         });
       }
     });
@@ -98,10 +100,18 @@ class DataSpecForm extends PureComponent {
       },
     };
 
+    const scales = (
+      <Select defaultValue="1000" style={{ width: '160px' }} onChange={(scaleUnit) => this.setState({ scaleUnit })}>
+        <Option value="1000">{formatMessage({ id: 'spec.scale-1000' })}</Option>
+        <Option value="1000000">{formatMessage({ id: 'spec.scale-1000000' })}</Option>
+        <Option value="1000000000">{formatMessage({ id: 'spec.scale-1000000000' })}</Option>
+      </Select>
+    );
+
     return (
-      <Card bordered={false} title={formatMessage({id: 'spec.new'})}>
+      <Card bordered={false} title={formatMessage({ id: 'spec.new' })}>
         <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.name'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.name' })}>
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -111,7 +121,7 @@ class DataSpecForm extends PureComponent {
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.canonical-name'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.canonical-name' })}>
             {getFieldDecorator('canonical_name', {
               rules: [
                 {
@@ -131,6 +141,16 @@ class DataSpecForm extends PureComponent {
             {...formItemLayout}
             label={
               <span>
+                <FormattedMessage id="spec.price" />
+              </span>
+            }
+          >
+            {getFieldDecorator('price')(<InputNumber />)} DFT
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={
+              <span>
                 <FormattedMessage id="spec.description" />
                 <em className={styles.optional}>
                   <FormattedMessage id="form.optional" />
@@ -141,7 +161,7 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('description')(<TextArea
               style={{ minHeight: 32 }}
               rows={4}
-              placeholder={formatMessage({id: 'spec.description-hint'})}
+              placeholder={formatMessage({ id: 'spec.description-hint' })}
             />)}
           </FormItem>
           <FormItem
@@ -158,7 +178,7 @@ class DataSpecForm extends PureComponent {
             {getFieldDecorator('scenario')(<TextArea
               style={{ minHeight: 32 }}
               rows={4}
-              placeholder={formatMessage({id: 'spec.scenario-hint'})}
+              placeholder={formatMessage({ id: 'spec.scenario-hint' })}
             />)}
           </FormItem>
           <FormItem
@@ -172,17 +192,7 @@ class DataSpecForm extends PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('scale')(
-              <Select>
-                <Option value="1000">{formatMessage({id: 'spec.scale-1000'})}</Option>
-                <Option value="10000">{formatMessage({id: 'spec.scale-10000'})}</Option>
-                <Option value="100000">{formatMessage({id: 'spec.scale-100000'})}</Option>
-                <Option value="1000000">{formatMessage({id: 'spec.scale-1000000'})}</Option>
-                <Option value="10000000">{formatMessage({id: 'spec.scale-10000000'})}</Option>
-                <Option value="100000000">{formatMessage({id: 'spec.scale-100000000'})}</Option>
-                <Option value="1000000000">{formatMessage({id: 'spec.scale-1000000000'})}</Option>
-              </Select>
-            )}
+            {getFieldDecorator('scale')(<Input addonAfter={scales} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -195,23 +205,23 @@ class DataSpecForm extends PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('updateFrequency')(<InputNumber />)} {formatMessage({id: 'spec.every-n-days'})}
+            {getFieldDecorator('updateFrequency')(<InputNumber />)} {formatMessage({ id: 'spec.every-n-days' })}
           </FormItem>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.status'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.status' })}>
             {getFieldDecorator('state')
             (
               <Radio.Group onChange={(e) => this.setState({ state: e.target.value })}>
-                <Radio value="online">{formatMessage({id: 'spec.status-online'})}</Radio>
-                <Radio value="offline">{formatMessage({id: 'spec.status-offline'})}</Radio>
+                <Radio value="online">{formatMessage({ id: 'spec.status-online' })}</Radio>
+                <Radio value="offline">{formatMessage({ id: 'spec.status-offline' })}</Radio>
               </Radio.Group>,
             )}
           </FormItem>
-          <FormItem {...formItemLayout} label={formatMessage({id: 'spec.public'})}>
+          <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.public' })}>
             {getFieldDecorator('public')
             (
               <Radio.Group disabled={state === 'offline'}>
-                <Radio value>{formatMessage({id: 'yes'})}</Radio>
-                <Radio value={false}>{formatMessage({id: 'no'})}</Radio>
+                <Radio value>{formatMessage({ id: 'yes' })}</Radio>
+                <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
               </Radio.Group>,
             )}
           </FormItem>

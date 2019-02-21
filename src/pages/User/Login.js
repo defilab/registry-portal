@@ -146,7 +146,7 @@ class LoginPage extends Component {
               <FormattedMessage id="app.login.forgot-password" />
             </a> */}
           </div>
-          <Submit loading={submitting}>
+          <Submit loading={submitting} style={{backgroundColor: '#4A70B7'}}>
             <FormattedMessage id="app.login.login" />
           </Submit>
           {/* <div className={styles.other}>

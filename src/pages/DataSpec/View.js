@@ -50,7 +50,7 @@ class View extends PureComponent {
                 <Description term="ID">{data.id}</Description>
                 <Description term={formatMessage({ id: 'spec.name' })}>{data.name}</Description>
                 <Description term={formatMessage({ id: 'spec.canonical-name' })}>{data.canonical_name}</Description>
-                <Description term={formatMessage({ id: 'spec.price' })}>{data.price}</Description>
+                <Description term={formatMessage({ id: 'spec.price' })}>{data.price} DFT</Description>
                 <Description term={formatMessage({ id: 'spec.description' })}>
                   {data.properties.description}
                 </Description>

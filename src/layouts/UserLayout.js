@@ -5,6 +5,7 @@ import GlobalFooter from '@/components/GlobalFooter';
 import SelectLang from '@/components/SelectLang';
 import styles from './UserLayout.less';
 import logo from '../assets/logo_dark.png';
+import authBg from '../assets/auth_bg.png';
 
 const links = [
   // {
@@ -42,11 +43,11 @@ class UserLayout extends React.PureComponent {
   //   return title;
   // }
 
-  render() {
+  render () {
     const { children } = this.props;
     return (
       // @TODO <DocumentTitle title={this.getPageTitle()}>
-      <div className={styles.container}>
+      <div className={styles.container} style={{ backgroundImage: `url(${authBg})` }}>
         <div className={styles.lang}>
           <SelectLang />
         </div>
@@ -60,7 +61,9 @@ class UserLayout extends React.PureComponent {
           </div>
           {children}
         </div>
-        <GlobalFooter links={links} copyright={copyright} />
+        <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
+          <GlobalFooter links={links} copyright={copyright} />
+        </div>
       </div>
     );
   }

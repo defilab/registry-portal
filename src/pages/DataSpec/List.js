@@ -23,9 +23,9 @@ class List extends PureComponent {
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'spec.data-type' }),
+      title: formatMessage({ id: 'spec.canonical-name' }),
       key: 'spec',
-      render: () => formatMessage({ id: `spec.blacklist` }),
+      dataIndex: 'canonicalName',
     },
     {
       title: formatMessage({ id: 'spec.status' }),
@@ -85,6 +85,7 @@ class List extends PureComponent {
       state: formatMessage({ id: `spec.status-${item.state}` }),
       public: item.public ? formatMessage({ id: `yes` }) : formatMessage({ id: `no` }),
       creationTime: new Date(item.created_at).toLocaleString(),
+      canonicalName: item.canonical_name,
       reviewState: item.reviewState,
     }));
     return (
