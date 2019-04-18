@@ -9,5 +9,5 @@ module.exports = {
   menu: {
     disableLocal: false,
   },
-  title: 'Defi',
+  title: '',
 };

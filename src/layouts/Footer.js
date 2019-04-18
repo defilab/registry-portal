@@ -1,17 +1,12 @@
-import React, { Fragment } from 'react';
-import { Layout, Icon } from 'antd';
+import React from 'react';
+import { Layout } from 'antd';
+import targets from '../targets';
 import GlobalFooter from '@/components/GlobalFooter';
 
 const { Footer } = Layout;
 const FooterView = () => (
   <Footer style={{ padding: 0 }}>
-    <GlobalFooter
-      copyright={
-        <Fragment>
-          Copyright <Icon type="copyright" /> 2019 Defi
-        </Fragment>
-      }
-    />
+    <GlobalFooter copyright={targets.target.copyright} />
   </Footer>
 );
 export default FooterView;
