@@ -46,5 +46,6 @@ export default {
   'spec.scale-10000000': 'Ten Million',
   'spec.scale-100000000': 'Hundred Million',
   'spec.scale-1000000000': 'Billion',
-  'spec.edit-error': 'The request for modification submitted by you is under review and can be modified after the review is completed'
+  'spec.edit-error': 'The request for modification submitted by you is under review and can be modified after the review is completed',
+  'spec.region': 'Region'
 };
