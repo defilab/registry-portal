@@ -75,7 +75,7 @@ class List extends PureComponent {
   }
 
   render () {
-    const showNewSpecForm = () => router.push('/data-specs/new');
+    const showNewSpecForm = () => router.push('/data-specs/create');
     const { dataSpec, loading } = this.props;
     const dataSource = dataSpec.dataSpecs.map((item) => ({
       key: item.id,

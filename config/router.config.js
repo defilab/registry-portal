@@ -45,8 +45,8 @@ export default [
         authority: ['both'],
       },
       {
-        path: '/data-specs/new',
-        component: './DataSpec/New',
+        path: '/data-specs/create',
+        component: './DataSpec/Create',
         authority: ['both'],
       },
       {
