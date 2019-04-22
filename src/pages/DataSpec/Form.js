@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import * as api from '../../services/api';
 import targets from '../../targets';
-import styles from '../Forms/style.less';
+import styles from './form.less';
 
 const { target } = targets;
 const FormItem = Form.Item;
