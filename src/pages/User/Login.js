@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
-import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Checkbox, Alert } from 'antd';
 import Login from '@/components/Login';
+import { Alert, Checkbox } from 'antd';
+import { connect } from 'dva';
+import React, { Component } from 'react';
+import { formatMessage, FormattedMessage } from 'umi/locale';
 import styles from './Login.less';
 
 const { UserName, Password, Submit } = Login;
@@ -146,7 +146,7 @@ class LoginPage extends Component {
               <FormattedMessage id="app.login.forgot-password" />
             </a> */}
           </div>
-          <Submit loading={submitting} style={{backgroundColor: '#4A70B7'}}>
+          <Submit loading={submitting} style={{ backgroundColor: '#4A70B7' }}>
             <FormattedMessage id="app.login.login" />
           </Submit>
           {/* <div className={styles.other}>

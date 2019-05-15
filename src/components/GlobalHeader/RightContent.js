@@ -2,11 +2,10 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'umi/locale';
 import { Spin, Menu, Icon, Avatar } from 'antd';
 import HeaderDropdown from '../HeaderDropdown';
-import SelectLang from '../SelectLang';
 import styles from './index.less';
 
 export default class GlobalHeaderRight extends PureComponent {
-  render () {
+  render() {
     const {
       currentUser,
       onMenuClick,
@@ -39,9 +38,8 @@ export default class GlobalHeaderRight extends PureComponent {
             </span>
           </HeaderDropdown>
         ) : (
-          <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
-        )}
-        <SelectLang className={styles.action} />
+            <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
+          )}
       </div>
     );
   }

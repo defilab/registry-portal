@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'umi/link';
 import GlobalFooter from '@/components/GlobalFooter';
-import SelectLang from '@/components/SelectLang';
 import styles from './UserLayout.less';
 import logo from '../assets/logo_dark.png';
 import authBg from '../assets/auth_bg.png';
@@ -14,9 +13,6 @@ class UserLayout extends React.PureComponent {
     return (
       // @TODO <DocumentTitle title={this.getPageTitle()}>
       <div className={styles.container} style={{ backgroundImage: `url(${authBg})` }}>
-        <div className={styles.lang}>
-          <SelectLang />
-        </div>
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
