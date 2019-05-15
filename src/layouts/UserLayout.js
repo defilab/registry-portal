@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'umi/link';
 import GlobalFooter from '@/components/GlobalFooter';
 import SelectLang from '@/components/SelectLang';
-import targets from '../targets';
 import styles from './UserLayout.less';
 import logo from '../assets/logo_dark.png';
 import authBg from '../assets/auth_bg.png';
@@ -29,7 +28,7 @@ class UserLayout extends React.PureComponent {
           {children}
         </div>
         <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
-          <GlobalFooter links={links} copyright={targets.target.copyright} />
+          <GlobalFooter links={links} copyright="中原银行" />
         </div>
       </div>
     );
