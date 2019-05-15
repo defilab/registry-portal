@@ -15,8 +15,8 @@ const plugins = [
       },
       locale: {
         enable: true, // default false
-        default: 'en-US', // default zh-CN
-        baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
+        default: 'zh-CN', // default zh-CN,en-US
+        baseNavigator: false, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
