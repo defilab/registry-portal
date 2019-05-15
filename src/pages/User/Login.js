@@ -62,7 +62,7 @@ class LoginPage extends Component {
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
 
-  render () {
+  render() {
     const { login, submitting } = this.props;
     const { type, autoLogin } = this.state;
     return (

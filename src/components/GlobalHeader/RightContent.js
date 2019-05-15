@@ -5,7 +5,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 export default class GlobalHeaderRight extends PureComponent {
-  render () {
+  render() {
     const {
       currentUser,
       onMenuClick,
@@ -38,8 +38,8 @@ export default class GlobalHeaderRight extends PureComponent {
             </span>
           </HeaderDropdown>
         ) : (
-          <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
-        )}
+            <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
+          )}
       </div>
     );
   }
