@@ -3,7 +3,6 @@ import Link from 'umi/link';
 import RightContent from '../GlobalHeader/RightContent';
 import BaseMenu from '../SiderMenu/BaseMenu';
 import { getFlatMenuKeys } from '../SiderMenu/SiderMenuUtils';
-import targets from '../../targets';
 import styles from './index.less';
 
 export default class TopNavHeader extends PureComponent {
@@ -33,7 +32,6 @@ export default class TopNavHeader extends PureComponent {
             <div className={styles.logo} key="logo" id="logo">
               <Link to="/">
                 <img src={logo} alt="logo" />
-                <h1>{targets.target.title}</h1>
               </Link>
             </div>
             <div

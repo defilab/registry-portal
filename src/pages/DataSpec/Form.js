@@ -3,10 +3,8 @@ import { Button, Card, Form, Input, InputNumber, Radio, Select, notification } f
 import React, { useEffect } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import * as api from '@/services/api';
-import targets from '@/targets';
 import styles from './form.less';
 
-const { target } = targets;
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -192,12 +190,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
               }
             ]
           })(
-            <Select>
-              {
-                target.regions.map(
-                  (item) => (<Option value={item.code} key={item.code}>{item.name}</Option>))
-              }
-            </Select>
+            <Select />
           )}
         </FormItem>
         <FormItem
