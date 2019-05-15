@@ -10,16 +10,17 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import pwa from './en-US/pwa';
 import account from './en-US/account';
-import dataSpec from './en-US/dataSpec'
+import dataSpec from './en-US/dataSpec';
+import organization from './en-US/organization';
 
 export default {
-  'yes': 'Yes',
-  'no': 'No',
-  'view': 'View',
-  'edit': 'Edit',
-  'new': 'New',
-  'download': 'Download',
-  'upload': 'Upload',
+  yes: 'Yes',
+  no: 'No',
+  view: 'View',
+  edit: 'Edit',
+  new: 'New',
+  download: 'Download',
+  upload: 'Upload',
   'refer-doc': 'Please refer to development docs for details',
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
@@ -41,5 +42,6 @@ export default {
   ...settings,
   ...pwa,
   ...account,
-  ...dataSpec
+  ...dataSpec,
+  ...organization,
 };

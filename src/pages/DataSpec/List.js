@@ -51,33 +51,35 @@ class List extends PureComponent {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
         <Fragment>
-          {
-            record.reviewState === 'accepted' ?
-              <Fragment>
-                <Link to={`/data-specs/${record.spec}`}>{formatMessage({ id: 'view' })}</Link>
-                <Divider type="vertical" />
-                <Link to={`/data-specs/${record.spec}/edit`}>{formatMessage(
-                  { id: 'edit' })}
-                </Link>
-              </Fragment> :
-              ''
-          }
+          {record.reviewState === 'accepted' ? (
+            <Fragment>
+              <Link to={`/data-management/data-spec/${record.spec}`}>
+                {formatMessage({ id: 'view' })}
+              </Link>
+              <Divider type="vertical" />
+              <Link to={`/data-management/data-spec/${record.spec}/edit`}>
+                {formatMessage({ id: 'edit' })}
+              </Link>
+            </Fragment>
+          ) : (
+            ''
+          )}
         </Fragment>
       ),
     },
   ];
 
-  componentDidMount () {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'dataSpec/list',
     });
   }
 
-  render () {
-    const showNewSpecForm = () => router.push('/data-specs/create');
+  render() {
+    const showNewSpecForm = () => router.push('data-management/data-specs/create');
     const { dataSpec, loading } = this.props;
-    const dataSource = dataSpec.dataSpecs.map((item) => ({
+    const dataSource = dataSpec.dataSpecs.map(item => ({
       key: item.id,
       id: item.id,
       spec: 'blacklist',
@@ -89,7 +91,7 @@ class List extends PureComponent {
       reviewState: item.reviewState,
     }));
     return (
-      <Card title={formatMessage({ id: 'menu.data-specs' })}>
+      <Card title={formatMessage({ id: 'menu.data-management.data-spec' })}>
         <div className={styles.tableList}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={showNewSpecForm}>
@@ -98,7 +100,8 @@ class List extends PureComponent {
           </div>
           <Table columns={this.columns} dataSource={dataSource} loading={loading} />
         </div>
-      </Card>);
+      </Card>
+    );
   }
 }
 

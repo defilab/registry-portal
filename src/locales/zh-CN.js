@@ -11,15 +11,16 @@ import settings from './zh-CN/settings';
 import pwa from './zh-CN/pwa';
 import account from './zh-CN/account';
 import dataSpec from './zh-CN/dataSpec';
+import organization from './zh-CN/organization';
 
 export default {
-  'yes': '是',
-  'no': '否',
-  'view': '查看',
-  'edit': '编辑',
-  'new': '新建',
-  'download': '下载',
-  'upload': '上传',
+  yes: '是',
+  no: '否',
+  view: '查看',
+  edit: '编辑',
+  new: '新建',
+  download: '下载',
+  upload: '上传',
   'refer-doc': '注：详见开发文档进行配置，上传CSR文件后需下载。',
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
@@ -41,5 +42,6 @@ export default {
   ...settings,
   ...pwa,
   ...account,
-  ...dataSpec
+  ...dataSpec,
+  ...organization,
 };

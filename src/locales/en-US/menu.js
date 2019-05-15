@@ -37,7 +37,10 @@ export default {
   'menu.account.logout': 'Logout',
   'menu.requests': 'Request Records',
   'menu.transactions': 'Transaction Records',
-  'menu.data-specs': 'Data Management',
+  'menu.data-management': 'Data Management',
+  'menu.data-management.data-spec': 'Data Spec',
+  'menu.data-management.spec-field': 'Spec Field',
   'menu.data-usage': 'Response Records',
-  'menu.downloads': 'Downloads'
+  'menu.downloads': 'Downloads',
+  'menu.organization': 'Organization',
 };
