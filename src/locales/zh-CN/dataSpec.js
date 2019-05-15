@@ -47,5 +47,6 @@ export default {
   'spec.scale-100000000': '亿',
   'spec.scale-1000000000': '十亿',
   'spec.edit-error': '您提交的修改申请正在审核中，审核完成后可进行修改。',
-  'spec.region': '国家/地区'
+  'spec.region': '国家/地区',
+  'spec.use-custom-fields': '是否使用自定义字段'
 };

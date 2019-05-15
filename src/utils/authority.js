@@ -1,11 +1,11 @@
-import { getToken } from './token';
 import jwtDecode from 'jwt-decode';
+import { getToken } from './token';
 
 export function getAuthority() {
   let authority = null;
   const token = getToken();
   if (token) {
-    authority = jwtDecode(token).organization_role;
+    authority = jwtDecode(token).organization.roles;
   }
 
   if (typeof authority === 'string') {

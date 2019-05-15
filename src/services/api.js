@@ -47,29 +47,7 @@ export async function fetchResponses () {
 
 export async function fetchDataSpecs () {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-  return Promise.all([
-    request(`/organizations/${namespace}/requests?state=reviewing&request_type=create_spec`)
-      .then((data) => data.items.map((item) => ({
-        ...item,
-        reviewState: item.state,
-        state: item.content.state,
-        name: item.content.name,
-        canonical_name: item.content.canonical_name,
-        public: item.content.public,
-      }))),
-    request(`/organizations/${namespace}/specs`).then((data) => data.items.map((item) => ({
-      ...item,
-      reviewState: 'accepted',
-    })))])
-    .then((data) => [...data[0], ...data[1]].sort((a, b) => {
-      if (a.created_at > b.created_at) {
-        return -1;
-      }
-      if (a.created_at < b.created_at) {
-        return 1;
-      }
-      return 0;
-    }));
+  return request(`/organizations/${namespace}/specs`).then((data) => data.items);
 }
 
 export async function fetchDataSpec (canonicalName) {
@@ -109,4 +87,17 @@ export async function downloadFile (url) {
 export async function fetchActiveCert () {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/certs`).then((data) => data.items)
+}
+
+export async function fetchFields () {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+  return request(`/organizations/${namespace}/fields`).then((data) => data.items);
+}
+
+export async function createField (data) {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState(); 
+  return request(`/organizations/${namespace}/fields`, {
+    method: 'POST',
+    body: data
+  })
 }

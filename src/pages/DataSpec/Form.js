@@ -2,8 +2,8 @@ import { usePromise } from '@/utils/hooks';
 import { Button, Card, Form, Input, InputNumber, Radio, Select, notification } from 'antd';
 import React, { useEffect } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import * as api from '../../services/api';
-import targets from '../../targets';
+import * as api from '@/services/api';
+import targets from '@/targets';
 import styles from './form.less';
 
 const { target } = targets;
@@ -30,10 +30,10 @@ const submitFormLayout = {
   }
 };
 
-const DataSpecForm = Form.create()(({ form, onSubmit, spec }) => {
+const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName }) => {
   const [platformDataSpecs, fetchingPlatformDataSpecs, fetchPlatformDataSpecs] =
     usePromise(api.fetchPlatformDataSpecs, []);
-  const [dataSpec, fetchingDataSpec, fetchDataSpec] = usePromise(() => api.fetchDataSpec(spec));
+  const [dataSpec, fetchingDataSpec, fetchDataSpec] = usePromise(() => api.fetchDataSpec(canonicalName));
   const [, submitting, submit] = usePromise(onSubmit, undefined, (error) => {
     notification.error({
       message: error.message
@@ -42,13 +42,13 @@ const DataSpecForm = Form.create()(({ form, onSubmit, spec }) => {
 
   useEffect(() => {
     fetchPlatformDataSpecs();
-    if (spec) {
+    if (mode === 'edit') {
       fetchDataSpec();
     }
   }, []);
 
   useEffect(() => {
-    if (spec && dataSpec) {
+    if (mode === 'edit' && dataSpec) {
       const { properties } = dataSpec;
       form.setFieldsValue({
         name: dataSpec.name,
@@ -100,7 +100,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, spec }) => {
   return (
     <Card
       bordered={false}
-      title={formatMessage({ id: 'spec.new' })}
+      title={formatMessage({ id: mode === 'create' ? 'spec.new' : 'spec.edit' })}
       loading={fetchingPlatformDataSpecs || fetchingDataSpec}
     >
       <Form onSubmit={handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
@@ -113,6 +113,15 @@ const DataSpecForm = Form.create()(({ form, onSubmit, spec }) => {
               }
             ]
           })(<Input />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.use-custom-fields' })}>
+          {getFieldDecorator('useCustomFields', { initialValue: false })
+          (
+            <Radio.Group>
+              <Radio value>{formatMessage({ id: 'yes' })}</Radio>
+              <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
+            </Radio.Group>
+          )}
         </FormItem>
         <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.canonical-name' })}>
           {getFieldDecorator('canonical_name', {

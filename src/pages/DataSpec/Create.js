@@ -7,6 +7,7 @@ const Create = ({ history }) => (
     onSubmit={(data) =>
       createDataSpec(data).then(() => history.push('/data-specs'))
     }
+    mode="create"
   />
 );
 

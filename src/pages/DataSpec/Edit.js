@@ -7,6 +7,7 @@ const Create = ({ match, history }) => (
     onSubmit={(data) =>
       updateDataSpec(data).then(() => history.push('/data-specs'))
     }
+    mode="edit"
     spec={match.params.spec}
   />
 );

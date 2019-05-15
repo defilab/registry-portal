@@ -37,6 +37,7 @@ export default {
   'menu.account.logout': '退出登录',
   'menu.requests': '请求记录',
   'menu.transactions': '交易记录',
+  'menu.fields': '字段管理',
   'menu.data-specs': '数据管理',
   'menu.data-usage': '响应记录',
   'menu.downloads': '文件下载',
