@@ -24,6 +24,7 @@ export default {
       yield put({
         type: 'saveCurrentUser',
         payload: {
+          id: tokenObj.id,
           name: tokenObj.username,
           avatar,
           namespace: tokenObj.namespace

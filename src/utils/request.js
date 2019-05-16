@@ -1,5 +1,4 @@
 import fetch from 'dva/fetch';
-import { notification } from 'antd';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
 import { getToken } from './token';
@@ -26,10 +25,12 @@ const checkStatus = response => {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+
   const errortext = codeMessage[response.status] || response.statusText;
   const error = new Error(errortext);
   error.name = response.status;
   error.response = response;
+
   throw error;
 };
 
@@ -121,6 +122,7 @@ export default function request (url, option) {
   }
   let baseUrl = '';
   if (!url.startsWith('http')) {
+    // eslint-disable-next-line no-undef
     baseUrl = API_BASE_URL;
   }
   return fetch(`${baseUrl}${url}`, newOptions)

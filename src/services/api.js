@@ -31,6 +31,17 @@ export async function register() {
   return null;
 }
 
+export async function changePassword(oldPassword, newPassword) {
+  const { user: { currentUser: { id, namespace } } } = window.g_app._store.getState();
+  return request(`/organizations/${namespace}/users/${id}`, {
+    method: 'PATCH',
+    body: {
+      old_password: oldPassword,
+      password: newPassword
+    }
+  });
+}
+
 export async function fetchOrganization() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}`);
@@ -111,10 +122,10 @@ export async function updateField(id, data) {
   return request(`/fields/${id}`, {
     method: 'PATCH',
     body: data
-  }); 
+  });
 }
 
 export async function fetchAllFields() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-  return request(`/organizations/${namespace}/fields?include=platform`).then((data) => data.items); 
+  return request(`/organizations/${namespace}/fields?include=platform`).then((data) => data.items);
 }

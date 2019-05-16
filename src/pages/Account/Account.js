@@ -1,16 +1,16 @@
 import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, message } from 'antd';
 import { connect } from 'dva';
 import React, { PureComponent } from 'react';
 import { formatMessage } from 'umi/locale';
-import router from 'umi/router';
-import { fetchOrganization } from '../../services/api';
+import { fetchOrganization, changePassword } from '../../services/api';
 import styles from './Account.less';
+import PasswordResetForm from './PasswordResetForm';
 
 const { Description } = DescriptionList;
 // eslint-disable-next-line no-underscore-dangle
-const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+const { user: { currentUser: { name, namespace } } } = window.g_app._store.getState();
 
 @connect(({ loading, user, project }) => ({
   currentUser: user.currentUser,
@@ -24,7 +24,10 @@ class Account extends PureComponent {
       income: {},
     },
     loading: false,
+    isPasswordDialogVisible: false
   };
+
+  passwordFormRef = React.createRef();
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -42,78 +45,99 @@ class Account extends PureComponent {
     });
   }
 
-  onTabChange = key => {
-    const { match } = this.props;
-    switch (key) {
-      case 'articles':
-        router.push(`${match.url}/articles`);
-        break;
-      case 'applications':
-        router.push(`${match.url}/applications`);
-        break;
-      case 'projects':
-        router.push(`${match.url}/projects`);
-        break;
-      default:
-        break;
-    }
+  showChangePasswordDialog = () => {
+    this.setState({
+      isPasswordDialogVisible: true
+    });
+  }
+
+  hidePasswordDialog = () => {
+    this.setState({
+      isPasswordDialogVisible: false
+    });
+    this.passwordFormRef.current.resetFields();
+  }
+
+  savePassword = () => {
+    const form = this.passwordFormRef.current;
+
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+
+      changePassword(values.oldPassword, values.newPassword)
+        .then(() => message.success('密码修改成功'))
+      this.hidePasswordDialog();
+    });
   };
 
   render() {
-    const { loading, organization } = this.state;
+    const { loading, organization, isPasswordDialogVisible } = this.state;
     return (
-      <GridContent>
-        <Row gutter={24}>
-          <Col>
-            <Card
-              title={formatMessage({ id: 'account.basic-info' })}
-              bordered={false}
-              loading={loading}
-            >
-              <DescriptionList style={{ marginBottom: 24 }} col="1">
-                <Description term={formatMessage({ id: 'account.organization' })}>{organization.name}</Description>
-              </DescriptionList>
-            </Card>
-          </Col>
-        </Row>
-        {
-          namespace !== 'platform' &&
+      <div>
+        <GridContent>
           <Row gutter={24}>
             <Col>
               <Card
-                title={formatMessage({ id: 'account.financial-info' })}
+                title={formatMessage({ id: 'account.basic-info' })}
                 bordered={false}
-                className={styles.card}
                 loading={loading}
               >
-                <DescriptionList style={{ marginBottom: 24 }} col="2">
-                  <Description term={formatMessage({ id: 'account.balance' })}>
-                    {organization.balance} DFT
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.expense-today' })}>
-                    {organization.expense.today} DFT
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.expense-this-month' })}>
-                    {organization.expense.month} DFT
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.expense-total' })}>
-                    {organization.expense.total} DFT
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.income-today' })}>
-                    {organization.income.today} DFT
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.income-this-month' })}>
-                    {organization.income.month} DFT
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.income-total' })}>
-                    {organization.income.total} DFT
+                <DescriptionList style={{ marginBottom: 24 }} col="1">
+                  <Description term={formatMessage({ id: 'account.organization' })}>{organization.name}</Description>
+                  <Description term="当前用户">
+                    {name} <a onClick={this.showChangePasswordDialog} style={{ marginLeft: '10px' }}>修改密码</a>
                   </Description>
                 </DescriptionList>
               </Card>
             </Col>
           </Row>
-        }
-      </GridContent>
+          {
+            namespace !== 'platform' &&
+            <Row gutter={24}>
+              <Col>
+                <Card
+                  title={formatMessage({ id: 'account.financial-info' })}
+                  bordered={false}
+                  className={styles.card}
+                  loading={loading}
+                >
+                  <DescriptionList style={{ marginBottom: 24 }} col="2">
+                    <Description term={formatMessage({ id: 'account.balance' })}>
+                      {organization.balance} 元
+                    </Description>
+                    <Description term={formatMessage({ id: 'account.expense-today' })}>
+                      {organization.expense.today} 元
+                    </Description>
+                    <Description term={formatMessage({ id: 'account.expense-this-month' })}>
+                      {organization.expense.month} 元
+                    </Description>
+                    <Description term={formatMessage({ id: 'account.expense-total' })}>
+                      {organization.expense.total} 元
+                    </Description>
+                    <Description term={formatMessage({ id: 'account.income-today' })}>
+                      {organization.income.today} 元
+                    </Description>
+                    <Description term={formatMessage({ id: 'account.income-this-month' })}>
+                      {organization.income.month} 元
+                    </Description>
+                    <Description term={formatMessage({ id: 'account.income-total' })}>
+                      {organization.income.total} 元
+                    </Description>
+                  </DescriptionList>
+                </Card>
+              </Col>
+            </Row>
+          }
+          <PasswordResetForm
+            visible={isPasswordDialogVisible}
+            ref={this.passwordFormRef}
+            onSubmit={this.savePassword}
+            onCancel={this.hidePasswordDialog}
+          />
+        </GridContent>
+      </div>
     );
   }
 }
