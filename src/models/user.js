@@ -1,6 +1,7 @@
 import { query as queryUsers } from '@/services/user';
 import { getToken } from '@/utils/token';
 import jwtDecode from 'jwt-decode';
+import avatar from '../assets/avatar.png'
 
 export default {
   namespace: 'user',
@@ -24,7 +25,7 @@ export default {
         type: 'saveCurrentUser',
         payload: {
           name: tokenObj.username,
-          avatar: 'https://png.pngtree.com/svg/20160506/anonymous_avatar_182327.png',
+          avatar,
           namespace: tokenObj.namespace
         },
       });
