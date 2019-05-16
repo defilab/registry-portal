@@ -6,6 +6,7 @@ import { downloadFile, fetchActiveCert } from '@/services/api';
 import styles from './style.less';
 import { getToken } from '../../utils/token';
 
+// eslint-disable-next-line no-underscore-dangle
 const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
 const certFileUrl = `/organizations/${namespace}/certs/active/download`;
 const certFileUploadUrl = `/organizations/${namespace}/certs`;
@@ -19,7 +20,7 @@ class Account extends PureComponent {
     uploadingCertFile: false,
   };
 
-  componentDidMount () {
+  componentDidMount() {
     fetchActiveCert().then((certs) => this.setState({
       certUploaded: certs.length > 0,
     }));
@@ -27,6 +28,7 @@ class Account extends PureComponent {
 
   uploadProps = (url) => ({
     name: 'file',
+    // eslint-disable-next-line no-undef
     action: `${API_BASE_URL}${url}`,
     headers: {
       Authorization: `Bearer ${getToken()}`,
@@ -104,7 +106,7 @@ class Account extends PureComponent {
     }));
   };
 
-  render () {
+  render() {
     const { certUploaded, downloadingCertFile, downloadingLedgerFiles, uploadingCertFile } = this.state;
     return (
       <GridContent>
@@ -117,13 +119,17 @@ class Account extends PureComponent {
               <div className={styles.title}>{formatMessage({ id: 'account.cert' })}:</div>
               <div>
                 {certUploaded ?
-                  <Button size="small" style={{ marginRight: '8px' }} onClick={() => this.downloadCertFile()}
-                          loading={downloadingCertFile}>
+                  <Button
+                    size="small"
+                    style={{ marginRight: '8px' }}
+                    onClick={() => this.downloadCertFile()}
+                    loading={downloadingCertFile}
+                  >
                     {formatMessage({ id: 'download' })}
                   </Button> : ''}
                 {!certUploaded && certUploaded !== undefined ?
                   <Upload {...this.uploadProps(certFileUploadUrl)}>
-                    <Button size="small" loading={uploadingCertFile}>
+                    <Button size="small" loading={uploadingCertFile} style={{ marginTop: '8px', marginBottom: '8px' }}>
                       {formatMessage({ id: 'upload' })}
                     </Button>
                   </Upload> : ''}
@@ -132,7 +138,12 @@ class Account extends PureComponent {
               <Divider />
               <div className={styles.title}>{formatMessage({ id: 'account.ledger-files' })}:</div>
               <div>
-                <Button size="small" onClick={() => this.downloadLedgerFiles()} loading={downloadingLedgerFiles}>
+                <Button
+                  size="small"
+                  onClick={() => this.downloadLedgerFiles()}
+                  loading={downloadingLedgerFiles}
+                  style={{ marginTop: '8px', marginBottom: '8px' }}
+                >
                   {formatMessage({ id: 'download' })}
                 </Button>
                 <div className={styles.description}> {formatMessage({ id: 'account.ledger-files-description' })}</div>

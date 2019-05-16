@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Card, Table } from 'antd';
+import { fetchAllFields } from '@/services/api';
+import { Button, Card, Divider, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
+import Link from 'umi/link';
 import { formatMessage } from 'umi/locale';
-import { fetchFields } from '@/services/api';
 import router from 'umi/router';
 import styles from './List.less';
 
@@ -31,12 +32,26 @@ const List = () => {
       title: '创建时间',
       key: 'createdAt',
       dataIndex: 'created_at'
+    },
+    {
+      title: formatMessage({ id: 'spec.operations' }),
+      render: (text, record) => (
+        <>
+          <Link to={`/fields/${record.id}`}>
+            {formatMessage({ id: 'view' })}
+          </Link>
+          <Divider type="vertical" />
+          <Link to={`/fields/${record.id}/edit`}>
+            {formatMessage({ id: 'edit' })}
+          </Link>
+        </>
+      ),
     }
   ];
 
   useEffect(() => {
     setLoading(true);
-    fetchFields().then(setFields).finally(() => setLoading(false));
+    fetchAllFields().then(setFields).finally(() => setLoading(false));
   }, []);
 
   return (
@@ -47,7 +62,7 @@ const List = () => {
             {formatMessage({ id: 'new' })}
           </Button>
         </div>
-        <Table columns={columns} dataSource={fields} loading={loading} />
+        <Table columns={columns} dataSource={fields} loading={loading} rowKey="canonical_name" />
       </div>
     </Card>
   )

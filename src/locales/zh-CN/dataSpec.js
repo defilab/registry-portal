@@ -48,5 +48,12 @@ export default {
   'spec.scale-1000000000': '十亿',
   'spec.edit-error': '您提交的修改申请正在审核中，审核完成后可进行修改。',
   'spec.region': '国家/地区',
-  'spec.use-custom-fields': '是否使用自定义字段'
+  'spec.use-custom-fields': '是否使用自定义字段',
+  'spec.field.type.number': '数字',
+  'spec.field.type.string': '字符串',
+  'spec.field.type.boolean': '布尔值',
+  'spec.field.type.date': '日期',
+  'spec.field.type.timestamp': '时间戳',
+  'spec.field.type.object': '对象',
+  'spec.field.type.reference': '引用'
 };

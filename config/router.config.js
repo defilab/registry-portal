@@ -34,6 +34,14 @@ export default [
         component: './Field/Create'
       },
       {
+        path: '/fields/:id',
+        component: './Field/View'
+      },
+      {
+        path: '/fields/:id/edit',
+        component: './Field/Edit'
+      },
+      {
         path: '/data-specs',
         name: 'data-specs',
         icon: 'api',
