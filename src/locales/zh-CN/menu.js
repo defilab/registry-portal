@@ -41,5 +41,9 @@ export default {
   'menu.data-specs': '数据管理',
   'menu.data-usage': '响应记录',
   'menu.downloads': '文件下载',
-  'menu.organization': '企业管理'
+  'menu.organization': '企业管理',
+  'menu.view': '查看',
+  'menu.view.info': '基本信息',
+  'menu.view.management': '用户管理',
+
 };

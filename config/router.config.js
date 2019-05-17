@@ -28,13 +28,36 @@ export default [
         component: './Organization/Create'
       },
       {
-        path: '/organization/:spec/edit',
+        path: '/organization/:organization/edit',
         component: './Organization/Edit'
       },
       {
         path: '/organization/:organization',
-        component: './Organization/View'
+        component: './Organization/View',
+        hideInMenu: true,
+        name:'view',
+        routes:[
+          {
+            path: '/organization/:organization',
+
+            redirect: '/organization/:organization/info',
+          },
+          {
+            path: '/organization/:organization/info',
+            name:'info',
+            hideInMenu: true,
+            component: './Organization/Info'
+          },
+          {
+            path: '/organization/:organization/management',
+            name:'management',
+            hideInMenu: true,
+            component: './Organization/Edit'
+          },
+
+        ]
       },
+    
       {
         path: '/account',
         name: 'account',
