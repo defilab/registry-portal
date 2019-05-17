@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { Base64 } from 'js-base64';
+import { stringify } from 'qs';
 
 export async function login (params) {
   const body = new FormData();
@@ -33,6 +34,13 @@ export async function register () {
 export async function fetchOrganization () {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}`);
+}
+
+export async function fetchOrganizations() {
+  const params = {
+    page_size: 100,
+  };
+  return request(`/organizations?${stringify(params)}`).then(data => data.items);
 }
 
 export async function fetchRequests () {

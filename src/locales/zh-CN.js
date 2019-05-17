@@ -11,6 +11,7 @@ import settings from './zh-CN/settings';
 import pwa from './zh-CN/pwa';
 import account from './zh-CN/account';
 import dataSpec from './zh-CN/dataSpec';
+import organization from './zh-CN/organization';
 
 export default {
   'yes': '是',
@@ -41,5 +42,6 @@ export default {
   ...settings,
   ...pwa,
   ...account,
-  ...dataSpec
+  ...dataSpec,
+  ...organization
 };

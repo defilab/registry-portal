@@ -11,6 +11,7 @@ import settings from './en-US/settings';
 import pwa from './en-US/pwa';
 import account from './en-US/account';
 import dataSpec from './en-US/dataSpec'
+import organization from './en-US/organization';
 
 export default {
   'yes': 'Yes',
@@ -41,5 +42,6 @@ export default {
   ...settings,
   ...pwa,
   ...account,
-  ...dataSpec
+  ...dataSpec,
+  ...organization
 };

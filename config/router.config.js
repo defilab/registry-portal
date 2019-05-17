@@ -16,7 +16,25 @@ export default [
     authority: ['requester', 'provider', 'admin'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/account' },
+      { path: '/', redirect: '/organization' },
+      {
+        path: '/organization',
+        name: 'organization',
+        icon: 'user',
+        component: './Organization/List'
+      },
+      {
+        path: '/organization/create',
+        component: './Organization/Create'
+      },
+      {
+        path: '/organization/:spec/edit',
+        component: './Organization/Edit'
+      },
+      {
+        path: '/organization/:organization',
+        component: './Organization/View'
+      },
       {
         path: '/account',
         name: 'account',

@@ -39,5 +39,6 @@ export default {
   'menu.transactions': 'Transaction Records',
   'menu.data-specs': 'Data Management',
   'menu.data-usage': 'Response Records',
-  'menu.downloads': 'Downloads'
+  'menu.downloads': 'Downloads',
+  'menu.organization': 'Organization'
 };
