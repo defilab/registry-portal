@@ -53,9 +53,11 @@ class List extends PureComponent {
     this.setState({
       loading: true,
     });
-
     fetchOrganizations()
       .then(data => {
+        this.setState({
+          loading: false,
+        })
         this.setState({
           dataSource: data.map((item, index) => ({
             key: index,
@@ -67,13 +69,7 @@ class List extends PureComponent {
           })),
         });
       })
-      .finally(() =>
-        this.setState({
-          loading: false,
-        })
-      );
   }
-
 
   render() {
     const { dataSource, loading } = this.state;

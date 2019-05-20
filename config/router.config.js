@@ -35,8 +35,8 @@ export default [
         path: '/organization/:organization',
         component: './Organization/View',
         hideInMenu: true,
-        name:'view',
-        routes:[
+        name: 'view',
+        routes: [
           {
             path: '/organization/:organization',
 
@@ -44,20 +44,32 @@ export default [
           },
           {
             path: '/organization/:organization/info',
-            name:'info',
+            name: 'info',
             hideInMenu: true,
             component: './Organization/Info'
           },
           {
-            path: '/organization/:organization/management',
-            name:'management',
+            path: '/organization/:organization/users',
+            name: 'users',
             hideInMenu: true,
-            component: './Organization/Edit'
+            component: './Organization/Users'
           },
-
+          {
+            path: '/organization/:organization/users/create',
+            name: 'userscreate',
+            hideInMenu: true,
+            component: './Organization/UserCreate'
+          },
+          {
+            path: '/organization/:organization/users/:user_id/edit',
+            name: 'usersedit',
+            hideInMenu: true,
+            component: './Organization/UserEdit'
+          },
         ]
       },
-    
+
+
       {
         path: '/account',
         name: 'account',

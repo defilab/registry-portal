@@ -44,6 +44,8 @@ export default {
   'menu.organization': '企业管理',
   'menu.view': '查看',
   'menu.view.info': '基本信息',
-  'menu.view.management': '用户管理',
+  'menu.view.users': '用户管理',
+  'menu.view.userscreate': '新建用户',
+  'menu.view.usersedit': '用户编辑',
 
 };

@@ -1,58 +1,54 @@
-import { Button, Card, Form, Input } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { FormattedMessage } from 'umi/locale';
-import { fetchOrganization, updateOrganization } from '../../services/api';
-import { usePromise } from '@/utils/hooks';
 
+
+import { Button, Card, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import { FormattedMessage } from 'umi/locale';
+import { createUsers } from '../../services/api';
 
 const Create = Form.create()(({ form, history }) => {
 
   const { getFieldDecorator } = form;
-  const [data, loading, exec] = usePromise(fetchOrganization, []);
-  const namespace = window.location.pathname.split('/')[2]
   const [submitting, setSubmitting] = useState(false)
-
+  const namespace = window.location.pathname.split('/')[2]
 
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         setSubmitting(true)
-        updateOrganization({ name: values.name, namespace: values.namespace })
-          .then(() => {
-            setSubmitting(false)
-            history.push(`/organization`)
-          })
+        createUsers({
+          username: values.name,
+          password: values.password,
+          namespace
+        }).then(() => {
+          setSubmitting(false)
+
+          history.push(`/organization/${namespace}/users`)
+        })
       }
     });
   };
 
-  useEffect(() => {
-    exec(namespace);
-  }, []);
-
   return (
     <Card
       bordered={false}
-      title='编辑企业信息'
-      loading={loading}
+      title='新建用户'
     >
       <Form onSubmit={handleSubmit} labelCol={{ span: 7 }} wrapperCol={{ span: 12 }}>
-        <Form.Item label="名称">
+        <Form.Item label="用户名">
           {getFieldDecorator('name', {
-            initialValue: data.name,
             rules: [
-              { required: true, message: '请输入名称' }
+              { required: true, message: '请输入用户名' }
             ]
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="标识">
-          {getFieldDecorator('namespace', {
-            initialValue: data.namespace,
+        <Form.Item label="密码">
+          {getFieldDecorator('password', {
+            initialValue: '',
             rules: [
-              { required: true, message: '请输入标记' }
+              { required: true, message: '请输入密码' }
             ]
-          })(<Input disabled={true} />)}
+          })(<Input />)}
         </Form.Item>
         <Form.Item wrapperCol={{ span: 10, offset: 7 }}>
           <Button type="primary" htmlType="submit" loading={submitting}>
@@ -63,6 +59,5 @@ const Create = Form.create()(({ form, history }) => {
     </Card>
   );
 });
-
 
 export default Create;

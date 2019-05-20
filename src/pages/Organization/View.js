@@ -11,8 +11,8 @@ class SearchList extends Component {
       case 'info':
         router.push(`${match.url}/info`);
         break;
-      case 'management':
-        router.push(`${match.url}/management`);
+      case 'users':
+        router.push(`${match.url}/users`);
         break;
       default:
         break;
@@ -26,19 +26,17 @@ class SearchList extends Component {
         tab: '基本信息',
       },
       {
-        key: 'management',
+        key: 'users',
         tab: '用户管理',
       },
-
     ];
 
-    const { match, children, location } = this.props;
+    const { children, location } = this.props;
 
     return (
       <PageHeaderWrapper
-
         tabList={tabList}
-        tabActiveKey={location.pathname.replace(`${match.url}/`, '')}
+        tabActiveKey={location.pathname.split('/')[3]}
         onTabChange={this.handleTabChange}
       >
         {children}

@@ -7,7 +7,7 @@ import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Account.less';
 import { fetchOrganization } from '../../services/api';
-
+ 
 const { Description } = DescriptionList;
 
 @connect(({ loading, user, project }) => ({
@@ -31,7 +31,8 @@ class Account extends PureComponent {
     });
 
     this.setState({ loading: true });
-    fetchOrganization().then((resp) => {
+    const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+    fetchOrganization(namespace).then((resp) => {
       this.setState({
         organization: resp,
       });

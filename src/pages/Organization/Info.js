@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
 import { Card, Col, Row } from 'antd';
 import { formatMessage } from 'umi/locale';
 import DescriptionList from '@/components/DescriptionList';
@@ -31,7 +30,8 @@ class Account extends PureComponent {
     });
 
     this.setState({ loading: true });
-    fetchOrganization().then((resp) => {
+    const namespace=window.location.pathname.split('/')[2]
+    fetchOrganization(namespace).then((resp) => {
       this.setState({
         organization: resp,
       });
@@ -39,23 +39,6 @@ class Account extends PureComponent {
       this.setState({ loading: false });
     });
   }
-
-  onTabChange = key => {
-    const { match } = this.props;
-    switch (key) {
-      case 'articles':
-        router.push(`${match.url}/articles`);
-        break;
-      case 'applications':
-        router.push(`${match.url}/applications`);
-        break;
-      case 'projects':
-        router.push(`${match.url}/projects`);
-        break;
-      default:
-        break;
-    }
-  };
 
   render () {
     const { loading, organization } = this.state;

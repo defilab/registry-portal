@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import { Base64 } from 'js-base64';
 import { stringify } from 'qs';
 
-export async function login (params) {
+export async function login(params) {
   const body = new FormData();
   body.append('grant_type', 'password');
   body.append('username', params.userName);
@@ -27,12 +27,49 @@ export async function login (params) {
   });
 }
 
-export async function register () {
+export async function register() {
   return null;
 }
 
-export async function fetchOrganization () {
-  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+export async function fetchUsers(namespace) {
+  return request(`/organizations/${namespace}/users`);
+}
+
+export async function createUsers(data) {
+  return request(`/users`, {
+    method: 'POST',
+    body: data
+  })
+}
+
+export async function updateUsers(data) {
+  return request(`/users/${data.userId}`, {
+    method: 'PATCH',
+    body: { password: data.password },
+  });
+}
+
+export async function deleteUsers(id) {
+  return request(`/users/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function createOrganization(data) {
+  return request(`/organizations`, {
+    method: 'POST',
+    body: data
+  })
+}
+
+export async function updateOrganization(data) {
+  return request(`/organizations/${data.namespace}`, {
+    method: 'PATCH',
+    body: { name: data.name },
+  });
+}
+
+export async function fetchOrganization(namespace) {
   return request(`/organizations/${namespace}`);
 }
 
@@ -43,32 +80,32 @@ export async function fetchOrganizations() {
   return request(`/organizations?${stringify(params)}`).then(data => data.items);
 }
 
-export async function fetchRequests () {
+export async function fetchRequests() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/transactions/request`).then((data) => data.items);
 }
 
-export async function fetchResponses () {
+export async function fetchResponses() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/transactions/response`).then((data) => data.items);
 }
 
-export async function fetchDataSpecs () {
+export async function fetchDataSpecs() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/specs`).then((data) => data.items);
 }
 
-export async function fetchDataSpec (canonicalName) {
+export async function fetchDataSpec(canonicalName) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/specs/${canonicalName}`);
 }
 
-export async function fetchTransactions () {
+export async function fetchTransactions() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/transactions/balance`).then((data) => data.items);
 }
 
-export async function createDataSpec (data) {
+export async function createDataSpec(data) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/specs`, {
     method: 'POST',
@@ -76,7 +113,7 @@ export async function createDataSpec (data) {
   });
 }
 
-export async function updateDataSpec (data) {
+export async function updateDataSpec(data) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/specs/blacklist`, {
     method: 'PATCH',
@@ -84,26 +121,26 @@ export async function updateDataSpec (data) {
   });
 }
 
-export async function fetchPlatformDataSpecs () {
+export async function fetchPlatformDataSpecs() {
   return request(`/organizations/platform/specs`).then((data) => data.items);
 }
 
-export async function downloadFile (url) {
+export async function downloadFile(url) {
   return request(url);
 }
 
-export async function fetchActiveCert () {
+export async function fetchActiveCert() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/certs`).then((data) => data.items)
 }
 
-export async function fetchFields () {
+export async function fetchFields() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/fields`).then((data) => data.items);
 }
 
-export async function createField (data) {
-  const { user: { currentUser: { namespace } } } = window.g_app._store.getState(); 
+export async function createField(data) {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/fields`, {
     method: 'POST',
     body: data
