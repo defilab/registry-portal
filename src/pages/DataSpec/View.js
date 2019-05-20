@@ -4,6 +4,8 @@ import { Card, Col, Row } from 'antd';
 import { formatMessage } from 'umi/locale';
 import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import FieldsTable from '@/components/Field/FieldsTable';
+import { parseSchema, SchemaType } from '@/utils/schema';
 
 const { Description } = DescriptionList;
 
@@ -14,35 +16,46 @@ class View extends PureComponent {
   state = {
     data: {
       public: false,
-      properties: {
-      },
       state: 'offline'
     },
+    requestSchema: {},
+    responseSchema: {}
   };
 
-  componentDidMount () {
+  componentDidMount() {
     const { dispatch, match } = this.props;
     dispatch({
       type: 'dataSpec/single',
       payload: { spec: match.params.spec },
       callback: (data) => this.setState({
-        data: {
-          ...data,
-          properties: data.properties ? data.properties : {}
-        },
+        data,
+        requestSchema: parseSchema(data.definition.qualifiers),
+        responseSchema: parseSchema(data.definition.responses)
       }),
     });
   }
 
-  render () {
-    const { data } = this.state;
+  responseTableFields() {
+    const { responseSchema } = this.state;
+    if (responseSchema.type === 'object') {
+      return responseSchema.properties;
+    }
+    if (responseSchema.type === 'array' && responseSchema.items.type === 'object') {
+      return responseSchema.items.properties;
+    }
+
+    return [];
+  }
+
+  render() {
+    const { data, requestSchema, responseSchema } = this.state;
     const { loading } = this.props;
     return (
       <GridContent>
         <Row gutter={24}>
           <Col>
             <Card
-              title={formatMessage({ id: 'spec.interface' })}
+              title="数据接口详情"
               bordered={false}
               loading={loading}
             >
@@ -50,25 +63,30 @@ class View extends PureComponent {
                 <Description term="ID">{data.id}</Description>
                 <Description term={formatMessage({ id: 'spec.name' })}>{data.name}</Description>
                 <Description term={formatMessage({ id: 'spec.canonical-name' })}>{data.canonical_name}</Description>
-                <Description term={formatMessage({ id: 'spec.price' })}>{data.price} DFT</Description>
+                <Description term={formatMessage({ id: 'spec.price' })}>{data.price / 100.0} 元</Description>
                 <Description term={formatMessage({ id: 'spec.description' })}>
-                  {data.properties.description}
-                </Description>
-                <Description term={formatMessage({ id: 'spec.scenario' })}>
-                  {data.properties.scenario}
-                </Description>
-                <Description term={formatMessage({ id: 'spec.scale' })}>
-                  {data.properties.scale ? formatMessage({ id: `spec.scale-${data.properties.scale}` }) : ''}
-                </Description>
-                <Description term={formatMessage({ id: 'spec.update-frequency' })}>
-                  {data.properties.updateFrequency}
-                </Description>
-                <Description term={formatMessage({ id: 'spec.public' })}>{data.public ? formatMessage({ id: 'yes' }) :
-                  formatMessage({ id: 'no' })}
+                  {data.description}
                 </Description>
                 <Description term={formatMessage({ id: 'spec.status' })}>
                   {formatMessage({ id: `spec.status-${data.state}` })}
                 </Description>
+                <Description term="引用" style={{ display: data.reference ? 'block' : 'none' }}>
+                  {data.reference}
+                </Description>
+                <div style={{ display: data.reference ? 'none' : 'block' }}>
+                  <Description term="自定义字段" style={{ display: data.reference ? 'none' : 'block' }} />
+                  <div style={{ marginLeft: '18px', marginRight: '18px' }}>
+                    <div>请求</div>
+                    <FieldsTable fields={requestSchema.properties} editable={false} />
+                    <div style={{ height: '18px' }} />
+                    <div>返回结果 (<span style={{ fontWeight: 'normal' }}><SchemaType schema={responseSchema} /></span>)</div>
+                    <FieldsTable
+                      fields={this.responseTableFields()}
+                      editable={false}
+                      style={{ display: responseSchema.type === 'object' || (responseSchema.type === 'array' && responseSchema.items.type === 'object') }}
+                    />
+                  </div>
+                </div>
               </DescriptionList>
             </Card>
           </Col>

@@ -1,10 +1,11 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { Button, Card, Divider, Table } from 'antd';
 import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './TableList.less';
+import { formatDatetime } from '@/utils/datatime';
 
 @connect(({ dataSpec, loading }) => ({
   dataSpec,
@@ -33,48 +34,32 @@ class List extends PureComponent {
       dataIndex: 'state',
     },
     {
-      title: formatMessage({ id: 'spec.public' }),
-      key: 'public',
-      dataIndex: 'public',
-    },
-    {
       title: formatMessage({ id: 'spec.creation-time' }),
-      key: 'creation-time',
-      dataIndex: 'creationTime',
-    },
-    {
-      title: formatMessage({ id: 'spec.review-status' }),
-      key: 'review-state',
-      render: (text, record) => formatMessage({ id: `spec.review-${record.reviewState}` }),
+      key: 'createdAt',
+      dataIndex: 'createdAt',
     },
     {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
-        <Fragment>
-          {
-            record.reviewState === 'accepted' ?
-              <Fragment>
-                <Link to={`/data-specs/${record.spec}`}>{formatMessage({ id: 'view' })}</Link>
-                <Divider type="vertical" />
-                <Link to={`/data-specs/${record.spec}/edit`}>{formatMessage(
-                  { id: 'edit' })}
-                </Link>
-              </Fragment> :
-              ''
-          }
-        </Fragment>
+        <>
+          <Link to={`/data-specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
+          <Divider type="vertical" />
+          <Link to={`/data-specs/${record.id}/edit`}>{formatMessage(
+            { id: 'edit' })}
+          </Link>
+        </>
       ),
     },
   ];
 
-  componentDidMount () {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'dataSpec/list',
     });
   }
 
-  render () {
+  render() {
     const showNewSpecForm = () => router.push('/data-specs/create');
     const { dataSpec, loading } = this.props;
     const dataSource = dataSpec.dataSpecs.map((item) => ({
@@ -83,13 +68,11 @@ class List extends PureComponent {
       spec: 'blacklist',
       name: item.name,
       state: formatMessage({ id: `spec.status-${item.state}` }),
-      public: item.public ? formatMessage({ id: `yes` }) : formatMessage({ id: `no` }),
-      creationTime: new Date(item.created_at).toLocaleString(),
-      canonicalName: item.canonical_name,
-      reviewState: item.reviewState,
+      createdAt: formatDatetime(item.created_at),
+      canonicalName: item.canonical_name
     }));
     return (
-      <Card title={formatMessage({ id: 'menu.data-specs' })}>
+      <Card title="数据接口列表">
         <div className={styles.tableList}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={showNewSpecForm}>

@@ -1,45 +1,22 @@
 import DescriptionList from '@/components/DescriptionList';
 import { fetchField } from '@/services/api';
-import { Card, Table } from 'antd';
+import { Card } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { formatMessage } from 'umi/locale';
 import NavLink from 'umi/navlink';
-import { parseSubFields } from '@/utils/schema';
+import { parseObjectProperties } from '@/utils/schema';
+import FieldsTable from '@/components/Field/FieldsTable';
+import { formatDatetime } from '@/utils/datatime';
 
 const { Description } = DescriptionList;
-
-const SubFields = ({ fields }) => {
-  const columns = [
-    {
-      title: '名称',
-      key: 'name',
-      dataIndex: 'name'
-    },
-    {
-      title: '类型',
-      key: 'type',
-      dataIndex: 'type'
-    },
-    {
-      title: '描述',
-      key: 'description',
-      dataIndex: 'description'
-    }
-  ];
-
-  return (
-    <Table size="small" columns={columns} dataSource={fields} rowKey="name" pagination={false} style={{ width: '600px', marginTop: '16px' }} />
-  );
-};
 
 const View = ({ match }) => {
   const [field, setField] = useState({ definition: {} });
   const [subFields, setSubFields] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
   const populateSubFields = (properties) => {
-    setSubFields(parseSubFields(properties));
+    setSubFields(parseObjectProperties(properties));
   };
 
   useEffect(() => {
@@ -63,11 +40,11 @@ const View = ({ match }) => {
       loading={loading}
     >
       <DescriptionList col="1">
-        <Description term="id">{field.id}</Description>
+        <Description term="ID">{field.id}</Description>
         <Description term="名称">{field.name}</Description>
         <Description term="标识">{field.canonical_name}</Description>
         <Description term="描述">{field.description}</Description>
-        <Description term="创建时间">{field.created_at}</Description>
+        <Description term="创建时间">{formatDatetime(field.created_at)}</Description>
         <Description term="类型">
           {field.definition.type ? formatMessage({ id: `spec.field.type.${field.definition.type}` }) : (
             <NavLink to={`/fields/${parseCanonicalName(field.definition.$ref)}`}>
@@ -78,7 +55,7 @@ const View = ({ match }) => {
       </DescriptionList>
       {
         field.definition.type === 'object' && (
-          <SubFields fields={subFields} />
+          <FieldsTable editable={false} fields={subFields} />
         )
       }
     </Card>

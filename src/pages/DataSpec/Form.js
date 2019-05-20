@@ -1,9 +1,11 @@
-import { usePromise } from '@/utils/hooks';
-import { Button, Card, Form, Input, InputNumber, Radio, Select, notification } from 'antd';
-import React, { useEffect } from 'react';
-import { formatMessage, FormattedMessage } from 'umi/locale';
+import FieldsTable from '@/components/Field/FieldsTable';
 import * as api from '@/services/api';
-import styles from './form.less';
+import { usePromise } from '@/utils/hooks';
+import { Button, Card, Form, Input, InputNumber, notification, Radio, Select, Row, Col } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { formatMessage, FormattedMessage } from 'umi/locale';
+import { formatSchema, parseSchema } from '@/utils/schema';
+import ReferenceSelect from '@/components/ReferenceSelect';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -28,6 +30,41 @@ const submitFormLayout = {
   }
 };
 
+const responseTypes = [
+  {
+    name: '数字',
+    value: 'number'
+  },
+  {
+    name: '字符串',
+    value: 'string'
+  },
+  {
+    name: '布尔值',
+    value: 'boolean'
+  },
+  {
+    name: '日期',
+    value: 'date'
+  },
+  {
+    name: '时间戳',
+    value: 'timestamp'
+  },
+  {
+    name: '对象',
+    value: 'object'
+  },
+  {
+    name: '引用',
+    value: 'reference'
+  },
+  {
+    name: '数组',
+    value: 'array'
+  }
+]
+
 const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName }) => {
   const [platformDataSpecs, fetchingPlatformDataSpecs, fetchPlatformDataSpecs] =
     usePromise(api.fetchPlatformDataSpecs, []);
@@ -37,6 +74,10 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
       message: error.message
     });
   });
+  const [references, fetchingReferences, fetchReferences] = usePromise(api.fetchAllFields, []);
+  const [requestFields, setRequestFields] = useState([]);
+  const [responseFields, setResponseFields] = useState([]);
+  const [responseArrayFields, setResponseArrayFields] = useState([]);
 
   useEffect(() => {
     fetchPlatformDataSpecs();
@@ -46,93 +87,166 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
   }, []);
 
   useEffect(() => {
+    fetchReferences();
+  }, []);
+
+  useEffect(() => {
     if (mode === 'edit' && dataSpec) {
-      const { properties } = dataSpec;
+      const requestSchema = parseSchema(dataSpec.definition.qualifiers);
+      setRequestFields(requestSchema.properties);
+      const responseSchema = parseSchema(dataSpec.definition.responses);
       form.setFieldsValue({
+        id: dataSpec.id,
         name: dataSpec.name,
-        canonical_name: dataSpec.canonical_name,
-        price: dataSpec.price,
-        description: properties && properties.description,
-        scenario: properties && properties.scenario,
-        scale: properties && properties.scale,
-        scaleUnit: properties && properties.scaleUnit,
-        updateFrequency: properties && properties.updateFrequency,
+        canonicalName: dataSpec.canonical_name,
+        price: dataSpec.price / 100.0,
+        description: dataSpec.description,
         state: dataSpec.state,
-        public: dataSpec.public
+        specReference: dataSpec.reference,
+        useCustomFields: dataSpec.reference !== undefined,
+        responseReference: responseSchema.type === 'reference' ? responseSchema.reference : undefined,
+        responseType: responseSchema.type,
+        responseArrayItemType: responseSchema.type === 'array' ? responseSchema.items.type : undefined,
+        responseArrayItemReference: responseSchema.type === 'array' && responseSchema.items.type === 'reference' ? responseSchema.items.reference : undefined
       });
+      if (responseSchema.type === 'object') {
+        setResponseFields(responseSchema.properties);
+      }
+      if (responseSchema.type === 'array' && responseSchema.items.type === 'object') {
+        setResponseArrayFields(responseSchema.items.properties);
+      }
     }
   }, [dataSpec]);
 
-  useEffect(() => {
-    form.setFieldsValue({
-      canonical_name: 'blacklist'
-    });
-  }, [platformDataSpecs]);
+  const { getFieldDecorator, getFieldValue } = form;
 
-  const { getFieldDecorator } = form;
+  const formValuesToSchemaData = formValues => {
+    const result = {
+      type: formValues.responseType
+    };
+
+    switch (formValues.responseType) {
+      case 'object':
+        result.properties = responseFields
+        break;
+      case 'array':
+        result.items = { type: formValues.responseArrayItemType }
+        switch (formValues.responseArrayItemType) {
+          case 'object':
+            result.items.properties = responseArrayFields
+            break;
+          case 'reference':
+            result.items.reference = formValues.responseArrayItemReference
+            break;
+          default:
+        }
+        break;
+      case 'reference':
+        result.reference = formValues.responseReference
+        break;
+      default:
+    }
+
+    return result;
+  };
+
+  const formatDefinition = formValues =>
+    (
+      {
+        qualifiers: formatSchema({
+          type: 'object',
+          properties: requestFields
+        }),
+        responses: formatSchema(formValuesToSchemaData(formValues))
+      }
+    );
 
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        submit({
-          name: values.name,
-          canonical_name: values.canonical_name,
-          reference: values.canonical_name,
-          state: values.state,
-          public: values.public,
-          price: values.price,
-          region: values.region,
-          properties: {
+        if (!values.useCustomFields) {
+          const data = {
+            name: values.name,
+            state: values.state,
+            price: values.price * 100,
             description: values.description,
-            scenario: values.scenario,
-            scale: values.scale,
-            scaleUnit: values.scaleUnit,
-            updateFrequency: values.updateFrequency
+            reference: values.specReference
           }
-        });
+          submit(data);
+        } else {
+          const data = {
+            name: values.name,
+            state: values.state,
+            price: values.price * 100,
+            description: values.description,
+            canonical_name: values.canonicalName,
+            definition: formatDefinition(values)
+          }
+          submit(data);
+        }
       }
     });
   };
+
+  const onUseCustomFieldsChange = () => {
+    form.setFieldsValue({
+      canonicalName: undefined
+    });
+  };
+
+  const onRequestFieldAdded = (field) => setRequestFields(oldFields => [...oldFields, field]);
+  const onRequestFieldRemoved = (index) => setRequestFields(oldFields => oldFields.slice(0, index).concat(oldFields.slice(index + 1)));
+  const onResponseFieldAdded = (field) => setResponseFields(oldFields => [...oldFields, field]);
+  const onResponseFieldRemoved = (index) => setResponseFields(oldFields => oldFields.slice(0, index).concat(oldFields.slice(index + 1)));
+  const onResponseArrayFieldAdded = (field) => setResponseArrayFields(oldFields => [...oldFields, field]);
+  const onResponseArrayFieldRemoved = (index) => setResponseArrayFields(oldFields => oldFields.slice(0, index).concat(oldFields.slice(index + 1)));
 
   return (
     <Card
       bordered={false}
       title={formatMessage({ id: mode === 'create' ? 'spec.new' : 'spec.edit' })}
-      loading={fetchingPlatformDataSpecs || fetchingDataSpec}
+      loading={fetchingPlatformDataSpecs || fetchingDataSpec || fetchingReferences}
     >
-      <Form onSubmit={handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.name' })}>
+      <Form onSubmit={handleSubmit} style={{ marginTop: 8 }}>
+        <FormItem {...formItemLayout} label="ID" style={{ display: mode === 'edit' ? 'block' : 'none' }}>
+          {getFieldDecorator('id')(<Input disabled />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label="名称">
           {getFieldDecorator('name', {
             rules: [
               {
                 required: true,
-                message: 'required'
+                message: '名称不能为空'
               }
             ]
           })(<Input />)}
         </FormItem>
-        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.use-custom-fields' })}>
-          {getFieldDecorator('useCustomFields', { initialValue: false })
-          (
-            <Radio.Group>
-              <Radio value>{formatMessage({ id: 'yes' })}</Radio>
-              <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
-            </Radio.Group>
-          )}
-        </FormItem>
-        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.canonical-name' })}>
-          {getFieldDecorator('canonical_name', {
+        <FormItem {...formItemLayout} label="标识" style={{ display: getFieldValue('useCustomFields') ? 'block' : 'none' }}>
+          {getFieldDecorator('canonicalName', {
             rules: [
               {
-                required: true
+                required: getFieldValue('useCustomFields'),
+                message: '标识不能为空'
               }
             ]
           })(
-            <Select>
+            <Input disabled={mode === 'edit'} />
+          )}
+        </FormItem>
+        <FormItem {...formItemLayout} label="引用接口" style={{ display: getFieldValue('useCustomFields') ? 'none' : 'block' }}>
+          {getFieldDecorator('specReference', {
+            rules: [
+              {
+                required: !getFieldValue('useCustomFields'),
+                message: '引用接口不能为空'
+              }
+            ]
+          })(
+            <Select disabled={mode === 'edit'}>
               {
                 platformDataSpecs.map(
-                  (item) => (<Option value={item.canonical_name} key={item.id}>{item.canonical_name}</Option>))
+                  (item) => (<Option value={`${item.namespace}.${item.canonical_name}`} key={item.id}>{item.name}</Option>))
               }
             </Select>
           )}
@@ -145,108 +259,167 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             </span>
           }
         >
-          {getFieldDecorator('price')(<InputNumber />)} DFT
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={
-            <span>
-              <FormattedMessage id="spec.description" />
-              <em className={styles.optional}>
-                <FormattedMessage id="form.optional" />
-              </em>
-            </span>
-          }
-        >
-          {getFieldDecorator('description')(<TextArea
-            style={{ minHeight: 32 }}
-            rows={4}
-            placeholder={formatMessage({ id: 'spec.description-hint' })}
-          />)}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={
-            <span>
-              <FormattedMessage id="spec.scenario" />
-              <em className={styles.optional}>
-                <FormattedMessage id="form.optional" />
-              </em>
-            </span>
-          }
-        >
-          {getFieldDecorator('scenario')(<TextArea
-            style={{ minHeight: 32 }}
-            rows={4}
-            placeholder={formatMessage({ id: 'spec.scenario-hint' })}
-          />)}
-        </FormItem>
-        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.region' })}>
-          {getFieldDecorator('region', {
-            initialValue: 'PH',
+          {getFieldDecorator('price', {
             rules: [
               {
-                required: true
+                required: true,
+                message: '价格不能为空'
+              }
+            ]
+          })(<InputNumber />)} 元
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label={formatMessage({ id: 'spec.description' })}
+        >
+          {getFieldDecorator('description', {
+            rules: [
+              {
+                required: true,
+                message: '描述不能为空'
               }
             ]
           })(
-            <Select />
+            <TextArea
+              style={{ minHeight: 32 }}
+              rows={4}
+            />
           )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={
-            <span>
-              <FormattedMessage id="spec.scale" />
-              <em className={styles.optional}>
-                <FormattedMessage id="form.optional" />
-              </em>
-            </span>
-          }
-        >
-          {getFieldDecorator('scale')(
-            <Input
-              addonAfter={
-                getFieldDecorator('scaleUnit', { initialValue: '1000' })(
-                  <Select style={{ width: '160px' }}>
-                    <Option value="1000">{formatMessage({ id: 'spec.scale-1000' })}</Option>
-                    <Option value="1000000">{formatMessage({ id: 'spec.scale-1000000' })}</Option>
-                    <Option value="1000000000">{formatMessage({ id: 'spec.scale-1000000000' })}</Option>
-                  </Select>
-                )
-              }
-            />)}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={
-            <span>
-              <FormattedMessage id="spec.update-frequency" />
-              <em className={styles.optional}>
-                <FormattedMessage id="form.optional" />
-              </em>
-            </span>
-          }
-        >
-          {getFieldDecorator('updateFrequency')(<InputNumber />)} {formatMessage({ id: 'spec.every-n-days' })}
         </FormItem>
         <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.status' })}>
-          {getFieldDecorator('state', { initialValue: 'online' })
-          (
-            <Radio.Group>
-              <Radio value="online">{formatMessage({ id: 'spec.status-online' })}</Radio>
-              <Radio value="offline">{formatMessage({ id: 'spec.status-offline' })}</Radio>
-            </Radio.Group>
-          )}
+          {getFieldDecorator('state', {
+            initialValue: 'online', rules: [
+              {
+                required: true,
+                message: '姿态不能为空'
+              }
+            ]
+          })
+            (
+              <Radio.Group>
+                <Radio value="online">{formatMessage({ id: 'spec.status-online' })}</Radio>
+                <Radio value="offline">{formatMessage({ id: 'spec.status-offline' })}</Radio>
+              </Radio.Group>
+            )}
         </FormItem>
-        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.public' })}>
-          {getFieldDecorator('public', { initialValue: true })
-          (
-            <Radio.Group>
-              <Radio value>{formatMessage({ id: 'yes' })}</Radio>
-              <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
-            </Radio.Group>
-          )}
+        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.use-custom-fields' })}>
+          {getFieldDecorator('useCustomFields', {
+            initialValue: false, rules: [
+              {
+                required: true,
+                message: '是否使用自定义字段不能为空'
+              }
+            ]
+          })
+            (
+              <Radio.Group onChange={onUseCustomFieldsChange}>
+                <Radio value>{formatMessage({ id: 'yes' })}</Radio>
+                <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
+              </Radio.Group>
+            )
+          }
+          <div style={{ display: getFieldValue('useCustomFields') ? 'block' : 'none' }}>
+            <div>请求:</div>
+            <FieldsTable
+              title="字段"
+              fields={requestFields}
+              references={references}
+              editable
+              onFieldAdded={onRequestFieldAdded}
+              onFieldRemoved={onRequestFieldRemoved}
+            />
+            <div style={{ marginTop: '32px' }}>返回结果:</div>
+            <Row type="flex" gutter={10}>
+              <Col span={8}>
+                <Form.Item>
+                  {
+                    getFieldDecorator('responseType', {
+                      rules: [
+                        {
+                          required: getFieldValue('useCustomFields')
+                        }
+                      ]
+                    })(
+                      <Select placeholder="返回类型">
+                        {
+                          responseTypes.map(type => <Option value={type.value} key={type.value}>{type.name}</Option>)
+                        }
+                      </Select>
+                    )
+                  }
+                </Form.Item>
+              </Col>
+              <Col span={8} style={{ display: getFieldValue('responseType') === 'array' ? 'block' : 'none' }}>
+                <Form.Item>
+                  {
+                    getFieldDecorator('responseArrayItemType', {
+                      rules: [
+                        {
+                          required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'array'
+                        }
+                      ]
+                    })(
+                      <Select placeholder="元素类型">
+                        {
+                          responseTypes.filter(type => type.value !== 'array').map(type => <Option value={type.value} key={type.value}>{type.name}</Option>)
+                        }
+                      </Select>
+                    )
+                  }
+                </Form.Item>
+              </Col>
+              <Col span={8} style={{ display: getFieldValue('responseType') === 'reference' ? 'block' : 'none' }}>
+                <Form.Item>
+                  {
+                    getFieldDecorator('responseReference', {
+                      rules: [
+                        {
+                          required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'reference'
+                        }
+                      ]
+                    })(<ReferenceSelect references={references} placeholder="引用类型" />)
+                  }
+                </Form.Item>
+              </Col>
+              <Col span={8} style={{ display: getFieldValue('responseType') === 'array' && getFieldValue('responseArrayItemType') === 'reference' ? 'block' : 'none' }}>
+                <Form.Item>
+                  {
+                    getFieldDecorator('responseArrayItemReference', {
+                      rules: [
+                        {
+                          required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'array' && getFieldValue('arrayElementType')
+                        }
+                      ]
+                    })(<ReferenceSelect references={references} placeholder="引用类型" />)
+                  }
+                </Form.Item>
+              </Col>
+            </Row>
+            {
+              getFieldValue('responseType') === 'object' && (
+                <FieldsTable
+                  title="字段"
+                  fields={responseFields}
+                  references={references}
+                  editable
+                  onFieldAdded={onResponseFieldAdded}
+                  onFieldRemoved={onResponseFieldRemoved}
+                />
+              )
+            }
+            {
+              (getFieldValue('responseType') === 'array' && getFieldValue('responseArrayItemType') === 'object') && (
+                <FieldsTable
+                  title="字段"
+                  fields={responseArrayFields}
+                  references={references}
+                  editable
+                  onFieldAdded={onResponseArrayFieldAdded}
+                  onFieldRemoved={onResponseArrayFieldRemoved}
+                />
+              )
+            }
+          </div>
         </FormItem>
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit" loading={submitting}>

@@ -5,6 +5,8 @@ import Link from 'umi/link';
 import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
 import styles from './List.less';
+import { formatDatetime } from '@/utils/datatime';
+import { parseSchema, SchemaType } from '@/utils/schema';
 
 const List = () => {
   const [fields, setFields] = useState([]);
@@ -29,9 +31,17 @@ const List = () => {
       dataIndex: 'canonical_name'
     },
     {
+      title: '类型',
+      key: 'type',
+      render: (text, record) => (
+        <SchemaType schema={record.definition} />
+      )
+    },
+    {
       title: '创建时间',
       key: 'createdAt',
-      dataIndex: 'created_at'
+      dataIndex: 'created_at',
+      render: (text) => formatDatetime(text)
     },
     {
       title: formatMessage({ id: 'spec.operations' }),
@@ -51,11 +61,16 @@ const List = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetchAllFields().then(setFields).finally(() => setLoading(false));
+    fetchAllFields().then(data => {
+      setFields(data.map(field => ({
+        ...field,
+        definition: parseSchema(field.definition)
+      })))
+    }).finally(() => setLoading(false));
   }, []);
 
   return (
-    <Card title={formatMessage({ id: 'menu.data-specs' })}>
+    <Card title="字段列表">
       <div className={styles.tableList}>
         <div className={styles.tableListOperator}>
           <Button icon="plus" type="primary" onClick={showNewFiledForm}>

@@ -1,7 +1,7 @@
 export default {
   'spec.order-number': '订单号',
-  'spec.name': '数据接口名称',
-  'spec.canonical-name': '规范名称',
+  'spec.name': '名称',
+  'spec.canonical-name': '标识',
   'spec.data-type': '数据类型',
   'spec.price': '价格',
   'spec.request-time': '请求时间',
@@ -30,7 +30,7 @@ export default {
   'spec.review-reviewing': '审核中',
   'spec.operations': '操作',
   'spec.interface': '数据接口',
-  'spec.description': '数据描述',
+  'spec.description': '描述',
   'spec.scenario': '应用场景',
   'spec.scale': '量级',
   'spec.update-frequency': '更新频率',
