@@ -10,7 +10,7 @@ import PasswordResetForm from './PasswordResetForm';
 
 const { Description } = DescriptionList;
 // eslint-disable-next-line no-underscore-dangle
-const { user: { currentUser: { name, namespace } } } = window.g_app._store.getState();
+const { user: { currentUser: { name } } } = window.g_app._store.getState();
 
 @connect(({ loading, user, project }) => ({
   currentUser: user.currentUser,
@@ -93,43 +93,40 @@ class Account extends PureComponent {
               </Card>
             </Col>
           </Row>
-          {
-            namespace !== 'platform' &&
-            <Row gutter={24}>
-              <Col>
-                <Card
-                  title={formatMessage({ id: 'account.financial-info' })}
-                  bordered={false}
-                  className={styles.card}
-                  loading={loading}
-                >
-                  <DescriptionList style={{ marginBottom: 24 }} col="2">
-                    <Description term={formatMessage({ id: 'account.balance' })}>
-                      {organization.balance} 元
-                    </Description>
-                    <Description term={formatMessage({ id: 'account.expense-today' })}>
-                      {organization.expense.today} 元
-                    </Description>
-                    <Description term={formatMessage({ id: 'account.expense-this-month' })}>
-                      {organization.expense.month} 元
-                    </Description>
-                    <Description term={formatMessage({ id: 'account.expense-total' })}>
-                      {organization.expense.total} 元
-                    </Description>
-                    <Description term={formatMessage({ id: 'account.income-today' })}>
-                      {organization.income.today} 元
-                    </Description>
-                    <Description term={formatMessage({ id: 'account.income-this-month' })}>
-                      {organization.income.month} 元
-                    </Description>
-                    <Description term={formatMessage({ id: 'account.income-total' })}>
-                      {organization.income.total} 元
-                    </Description>
-                  </DescriptionList>
-                </Card>
-              </Col>
-            </Row>
-          }
+          <Row gutter={24}>
+            <Col>
+              <Card
+                title={formatMessage({ id: 'account.financial-info' })}
+                bordered={false}
+                className={styles.card}
+                loading={loading}
+              >
+                <DescriptionList style={{ marginBottom: 24 }} col="2">
+                  <Description term={formatMessage({ id: 'account.balance' })}>
+                    {organization.balance} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.expense-today' })}>
+                    {organization.expense.today} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.expense-this-month' })}>
+                    {organization.expense.month} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.expense-total' })}>
+                    {organization.expense.total} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.income-today' })}>
+                    {organization.income.today} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.income-this-month' })}>
+                    {organization.income.month} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.income-total' })}>
+                    {organization.income.total} 元
+                  </Description>
+                </DescriptionList>
+              </Card>
+            </Col>
+          </Row>
           <PasswordResetForm
             visible={isPasswordDialogVisible}
             ref={this.passwordFormRef}

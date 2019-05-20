@@ -14,6 +14,9 @@ const List = () => {
 
   const showNewFiledForm = () => router.push('/fields/create');
 
+  // eslint-disable-next-line no-underscore-dangle
+  const { user: { currentUser } } = window.g_app._store.getState();
+
   const columns = [
     {
       title: 'ID',
@@ -23,7 +26,15 @@ const List = () => {
     {
       title: '名称',
       key: 'name',
-      dataIndex: 'name'
+      dataIndex: 'name',
+      render: (text, record) => (
+        <span>
+          {text}
+          {
+            record.namespace !== currentUser.namespace && <span style={{ color: 'rgba(0,0,0,.25)' }}> (平台字段)</span>
+          }
+        </span>
+      )
     },
     {
       title: '标识',
@@ -50,10 +61,15 @@ const List = () => {
           <Link to={`/fields/${record.id}`}>
             {formatMessage({ id: 'view' })}
           </Link>
-          <Divider type="vertical" />
-          <Link to={`/fields/${record.id}/edit`}>
-            {formatMessage({ id: 'edit' })}
-          </Link>
+          {
+            record.namespace === currentUser.namespace &&
+            <>
+              <Divider type="vertical" />
+              <Link to={`/fields/${record.id}/edit`}>
+                {formatMessage({ id: 'edit' })}
+              </Link>
+            </>
+          }
         </>
       ),
     }

@@ -13,7 +13,6 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
-    authority: ['requester', 'provider', 'admin'],
     routes: [
       // dashboard
       { path: '/', redirect: '/account' },
@@ -21,49 +20,59 @@ export default [
         path: '/account',
         name: 'account',
         icon: 'user',
-        component: './Account/Account'
+        component: './Account/Account',
+        authority: ['requester', 'provider']
       },
       {
         path: '/fields',
         name: 'fields',
         icon: 'api',
-        component: './Field/List'
+        component: './Field/List',
+        authority: ['provider', 'admin']
       },
       {
         path: '/fields/create',
-        component: './Field/Create'
+        component: './Field/Create',
+        authority: ['provider', 'admin']
       },
       {
         path: '/fields/:id',
-        component: './Field/View'
+        component: './Field/View',
+        authority: ['requester', 'provider', 'admin']
       },
       {
         path: '/fields/:id/edit',
-        component: './Field/Edit'
+        component: './Field/Edit',
+        authority: ['provider', 'admin']
       },
       {
         path: '/data-specs',
         name: 'data-specs',
         icon: 'api',
         component: './DataSpec/List',
+        authority: ['requester', 'provider', 'admin'],
       },
       {
         path: '/data-specs/create',
         component: './DataSpec/Create',
+        authority: ['provider', 'admin'],
       },
       {
         path: '/data-specs/:spec',
         component: './DataSpec/View',
+        authority: ['requester', 'provider', 'admin'],
       },
       {
         path: '/data-specs/:spec/edit',
         component: './DataSpec/Edit',
+        authority: ['provider', 'admin'],
       },
       {
         path: '/downloads',
         name: 'downloads',
         icon: 'file',
         component: './Downloads',
+        authority: ['requester', 'provider'],
       },
       {
         component: '404',

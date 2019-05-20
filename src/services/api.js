@@ -125,7 +125,20 @@ export async function updateField(id, data) {
   });
 }
 
+function compareField(a, b) {
+  if (a.created_at > b.created_at) { return -1; }
+  if (a.created_at < b.created_at) { return 1; }
+  return 0;
+}
+
 export async function fetchAllFields() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-  return request(`/organizations/${namespace}/fields?include=platform`).then((data) => data.items);
+  return request(`/organizations/${namespace}/fields?include=platform`).then(data => {
+    const platformFields = data.items.filter(field => field.namespace === 'platform');
+    platformFields.sort(compareField);
+    const nonPlatformFields = data.items.filter(field => field.namespace !== 'platform');
+    nonPlatformFields.sort(compareField);
+
+    return platformFields.concat(nonPlatformFields);
+  });
 }
