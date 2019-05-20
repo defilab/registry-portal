@@ -9,6 +9,8 @@ import FieldsTable from '@/components/Field/FieldsTable';
 import { formatDatetime } from '@/utils/datatime';
 
 const { Description } = DescriptionList;
+// eslint-disable-next-line no-underscore-dangle
+const { user: { currentUser } } = window.g_app._store.getState();
 
 const View = ({ match }) => {
   const [field, setField] = useState({ definition: {} });
@@ -45,6 +47,9 @@ const View = ({ match }) => {
         <Description term="标识">{field.canonical_name}</Description>
         <Description term="描述">{field.description}</Description>
         <Description term="创建时间">{formatDatetime(field.created_at)}</Description>
+        {
+          currentUser.namespace !== 'platform' && <Description term="平台字段">{field.namespace === 'platform' ? '是' : '否'}</Description>
+        }
         <Description term="类型">
           {field.definition.type ? formatMessage({ id: `spec.field.type.${field.definition.type}` }) : (
             <NavLink to={`/fields/${parseCanonicalName(field.definition.$ref)}`}>

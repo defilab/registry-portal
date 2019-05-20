@@ -62,6 +62,10 @@ export async function fetchDataSpecs() {
   return request(`/organizations/${namespace}/specs`).then((data) => data.items);
 }
 
+export async function fetchAllDataSpecs() {
+  return request(`/specs`).then((data) => data.items);
+}
+
 export async function fetchDataSpec(canonicalName) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/specs/${canonicalName}`);

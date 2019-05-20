@@ -39,6 +39,7 @@ export default {
   'menu.transactions': '交易记录',
   'menu.fields': '字段管理',
   'menu.data-specs': '数据接口管理',
+  'menu.data-specs-all': '数据接口列表',
   'menu.data-usage': '响应记录',
   'menu.downloads': '文件下载',
 };

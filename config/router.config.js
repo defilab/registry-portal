@@ -53,6 +53,13 @@ export default [
         authority: ['requester', 'provider', 'admin'],
       },
       {
+        path: '/data-specs/all',
+        name: 'data-specs-all',
+        icon: 'api',
+        component: './DataSpec/All',
+        authority: ['requester', 'provider', 'admin'],
+      },
+      {
         path: '/data-specs/create',
         component: './DataSpec/Create',
         authority: ['provider', 'admin'],
