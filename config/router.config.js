@@ -74,7 +74,7 @@ export default [
         name: 'account',
         icon: 'user',
         component: './Account/Account',
-        authority: ['requester', 'provider']
+        authority: ['requester', 'provider', 'admin']
       },
       {
         path: '/fields',
@@ -132,7 +132,7 @@ export default [
         name: 'downloads',
         icon: 'file',
         component: './Downloads',
-        authority: ['requester', 'provider'],
+        authority: ['requester', 'provider', 'admin'],
       },
       {
         component: '404',

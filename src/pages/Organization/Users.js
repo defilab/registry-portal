@@ -1,10 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Table, Button, Divider, Menu, Modal } from 'antd';
+import { Card, Table, Button, Divider, Modal, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { fetchUsers, deleteUsers } from '../../services/api';
+import { fetchUsers, deleteUsers } from '@/services/api';
 import styles from './TableList.less';
+import handleError from '@/utils/handleError'
 
 class List extends PureComponent {
   state = {
@@ -35,7 +36,13 @@ class List extends PureComponent {
                   onOk: () => deleteUsers(record.id).then(() => {
                     const namespace = window.location.pathname.split('/')[2]
                     window.history.push(`/organization/${namespace}/users`)
-                  }),
+                  }).catch((error) => {
+                    handleError(error).then((data) => {
+                      message.error(data)
+                    }).catch(() => {
+                      message.error('解析错误或未知错误')
+                    })
+                  })
                 });
               }}
             >
@@ -54,9 +61,6 @@ class List extends PureComponent {
     const namespace = window.location.pathname.split('/')[2]
     fetchUsers(namespace).then(data => {
       this.setState({
-        loading: false,
-      })
-      this.setState({
         dataSource: data.items.map((item) => ({
           name: item.username,
           key: item.id,
@@ -65,7 +69,14 @@ class List extends PureComponent {
 
         }))
       })
+    }).catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
     })
+      .finally(() => this.setState({ loading: false }))
   }
 
   render() {

@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Button, Card, Table } from 'antd';
+import { Button, Card, Table, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
 import Link from 'umi/link';
 import styles from './TableList.less';
 import { formatDatetime } from '@/utils/datatime';
 import { fetchAllDataSpecs } from '@/services/api';
+import handleError from '@/utils/handleError'
 
 class List extends PureComponent {
   state = {
@@ -59,9 +60,17 @@ class List extends PureComponent {
 
     fetchAllDataSpecs().then(data => this.setState({
       dataSpecs: data
-    })).finally(() => this.setState({
-      loading: false
-    }));
+    }))
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => this.setState({
+        loading: false
+      }));
   }
 
   render() {

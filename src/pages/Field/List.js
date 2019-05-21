@@ -1,5 +1,5 @@
 import { fetchAllFields } from '@/services/api';
-import { Button, Card, Divider, Table } from 'antd';
+import { Button, Card, Divider, Table, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Link from 'umi/link';
 import { formatMessage } from 'umi/locale';
@@ -7,6 +7,7 @@ import router from 'umi/router';
 import styles from './List.less';
 import { formatDatetime } from '@/utils/datatime';
 import { parseSchema, SchemaType } from '@/utils/schema';
+import handleError from '@/utils/handleError'
 
 const List = () => {
   const [fields, setFields] = useState([]);
@@ -82,7 +83,15 @@ const List = () => {
         ...field,
         definition: parseSchema(field.definition)
       })))
-    }).finally(() => setLoading(false));
+    })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (

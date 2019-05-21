@@ -1,9 +1,8 @@
-
-
-import { Button, Card, Form, Input } from 'antd';
+import { Button, Card, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
 import { FormattedMessage } from 'umi/locale';
-import { createUsers } from '../../services/api';
+import { createUsers } from '@/services/api';
+import handleError from '@/utils/handleError'
 
 const Create = Form.create()(({ form, history }) => {
 
@@ -21,10 +20,15 @@ const Create = Form.create()(({ form, history }) => {
           password: values.password,
           namespace
         }).then(() => {
-          setSubmitting(false)
-
           history.push(`/organization/${namespace}/users`)
+        }).catch((error) => {
+          handleError(error).then((data) => {
+            message.error(data)
+          }).catch(() => {
+            message.error('解析错误或未知错误')
+          })
         })
+          .finally(() => setSubmitting(false))
       }
     });
   };

@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './View.less';
-import { fetchOrganization } from '../../services/api';
+import { fetchOrganization } from '@/services/api';
+import handleError from '@/utils/handleError'
 
 const { Description } = DescriptionList;
 
@@ -23,24 +24,29 @@ class Account extends PureComponent {
     loading: false,
   };
 
-  componentDidMount () {
+  componentDidMount() {
+    this.setState({ loading: true });
+    const namespace = window.location.pathname.split('/')[2]
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
     });
 
-    this.setState({ loading: true });
-    const namespace=window.location.pathname.split('/')[2]
     fetchOrganization(namespace).then((resp) => {
       this.setState({
         organization: resp,
       });
-    }).finally(() => {
-      this.setState({ loading: false });
-    });
+    }).catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
+    })
+      .finally(() => this.setState({ loading: false }))
   }
 
-  render () {
+  render() {
     const { loading, organization } = this.state;
     return (
       <GridContent>
@@ -67,18 +73,24 @@ class Account extends PureComponent {
             >
               <DescriptionList style={{ marginBottom: 24 }} col="2">
                 <Description term={formatMessage({ id: 'account.balance' })}>{organization.balance} DFT</Description>
-                <Description
-                  term={formatMessage({ id: 'account.expense-today' })}>{organization.expense.today} DFT</Description>
-                <Description term={formatMessage(
-                  { id: 'account.expense-this-month' })}>{organization.expense.month} DFT</Description>
-                <Description
-                  term={formatMessage({ id: 'account.expense-total' })}>{organization.expense.total} DFT</Description>
-                <Description
-                  term={formatMessage({ id: 'account.income-today' })}>{organization.income.today} DFT</Description>
-                <Description term={formatMessage({ id: 'account.income-this-month' })}>{organization.income.month} DFT
+                <Description term={formatMessage({ id: 'account.expense-today' })}>
+                  {organization.expense.today} DFT
                 </Description>
-                <Description
-                  term={formatMessage({ id: 'account.income-total' })}>{organization.income.total} DFT</Description>
+                <Description term={formatMessage({ id: 'account.expense-this-month' })}>
+                  {organization.expense.month} DFT
+                </Description>
+                <Description term={formatMessage({ id: 'account.expense-total' })}>
+                  {organization.expense.total} DFT
+                </Description>
+                <Description term={formatMessage({ id: 'account.income-today' })}>
+                  {organization.income.today} DFT
+                </Description>
+                <Description term={formatMessage({ id: 'account.income-this-month' })}>
+                  {organization.income.month} DFT
+                </Description>
+                <Description term={formatMessage({ id: 'account.income-total' })}>
+                  {organization.income.total} DFT
+                </Description>
               </DescriptionList>
             </Card>
           </Col>

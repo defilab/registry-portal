@@ -5,6 +5,7 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import { downloadFile, fetchActiveCert } from '@/services/api';
 import styles from './style.less';
 import { getToken } from '../../utils/token';
+import handleError from '@/utils/handleError'
 
 // eslint-disable-next-line no-underscore-dangle
 const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
@@ -23,7 +24,13 @@ class Account extends PureComponent {
   componentDidMount() {
     fetchActiveCert().then((certs) => this.setState({
       certUploaded: certs.length > 0,
-    }));
+    })).catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
+    });
   }
 
   uploadProps = (url) => ({
@@ -90,9 +97,17 @@ class Account extends PureComponent {
     });
     downloadFile(certFileUrl).then((blob) => {
       this.triggerBlobDownload(blob, 'cert.pem');
-    }).finally(() => this.setState({
-      downloadingCertFile: false,
-    }));
+    })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => this.setState({
+        downloadingCertFile: false,
+      }));
   };
 
   downloadLedgerFiles = () => {
@@ -101,9 +116,17 @@ class Account extends PureComponent {
     });
     downloadFile(ledgerFilesUrl).then((blob) => {
       this.triggerBlobDownload(blob, 'ledger_files.zip');
-    }).finally(() => this.setState({
-      downloadingLedgerFiles: false,
-    }));
+    })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => this.setState({
+        downloadingLedgerFiles: false,
+      }));
   };
 
   render() {

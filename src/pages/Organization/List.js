@@ -1,11 +1,12 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card, Table, Button, Divider } from 'antd';
+import { Card, Table, Button, Divider, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
 import moment from 'moment';
-import { fetchOrganizations } from '../../services/api';
+import { fetchOrganizations } from '@/services/api';
 import styles from './TableList.less';
+import handleError from '@/utils/handleError'
 
 class List extends PureComponent {
   state = {
@@ -37,15 +38,13 @@ class List extends PureComponent {
     },
     {
       title: formatMessage({ id: 'organization.operations' }),
-      render: (text, record) => {
-        return (
-          <Fragment>
-            <Link to={`/organization/${record.namespace}`}>{formatMessage({ id: 'view' })}</Link>
-            <Divider type="vertical" />
-            <Link to={`/organization/${record.namespace}/edit`}>{formatMessage({ id: 'edit' })}</Link>
-          </Fragment>
-        )
-      },
+      render: (record) => (
+        <Fragment>
+          <Link to={`/organization/${record.namespace}`}>{formatMessage({ id: 'view' })}</Link>
+          <Divider type="vertical" />
+          <Link to={`/organization/${record.namespace}/edit`}>{formatMessage({ id: 'edit' })}</Link>
+        </Fragment>
+      )
     },
   ];
 
@@ -55,9 +54,6 @@ class List extends PureComponent {
     });
     fetchOrganizations()
       .then(data => {
-        this.setState({
-          loading: false,
-        })
         this.setState({
           dataSource: data.map((item, index) => ({
             key: index,
@@ -69,6 +65,14 @@ class List extends PureComponent {
           })),
         });
       })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => this.setState({ loading: false }))
   }
 
   render() {

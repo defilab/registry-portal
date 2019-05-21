@@ -1,12 +1,13 @@
 import DescriptionList from '@/components/DescriptionList';
 import { fetchField } from '@/services/api';
-import { Card } from 'antd';
+import { Card, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { formatMessage } from 'umi/locale';
 import NavLink from 'umi/navlink';
 import { parseObjectProperties } from '@/utils/schema';
 import FieldsTable from '@/components/Field/FieldsTable';
 import { formatDatetime } from '@/utils/datatime';
+import handleError from '@/utils/handleError'
 
 const { Description } = DescriptionList;
 // eslint-disable-next-line no-underscore-dangle
@@ -29,7 +30,15 @@ const View = ({ match }) => {
       if (result.definition.type === 'object') {
         populateSubFields(result.definition.properties);
       }
-    }).finally(() => setLoading(false));
+    })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => setLoading(false));
   }, [match]);
 
   const parseCanonicalName = ref =>

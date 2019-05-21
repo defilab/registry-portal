@@ -3,10 +3,11 @@ import { Alert, Form, message } from 'antd';
 import React, { useState } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import styles from './Login.less';
-import { login } from '../../services/api'
+import { login } from '@/services/api'
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 import { setToken } from '@/utils/token';
+import handleError from '@/utils/handleError'
 
 const { UserName, Password, Submit } = Login;
 
@@ -18,7 +19,6 @@ const LoginPage = Form.create()((props) => {
     if (!err) {
       setSubmitting(true)
       login({ ...values, type: 'account' }).then((data) => {
-        setSubmitting(false)
         if (data.status === 'ok') {
           setToken(data.token);
           reloadAuthorized();
@@ -40,10 +40,15 @@ const LoginPage = Form.create()((props) => {
           props.history.push(redirect || "/")
         }
       })
-        .catch(() => {
-          setSubmitting(false)
-          message.error('用户名或密码错误');
+        .catch((error) => {
+          handleError(error).then((data) => {
+            message.error(data)
+          }).catch(() => {
+            message.error('解析错误或未知错误')
+          })
         })
+        .finally(() => setSubmitting(false))
+
     }
   };
 

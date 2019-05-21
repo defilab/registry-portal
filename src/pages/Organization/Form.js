@@ -1,59 +1,55 @@
-import { Button, Card, Form, Input, Select } from 'antd';
 import React, { useEffect } from 'react';
-import { FormattedMessage } from 'umi/locale';
-import { createField } from '@/services/api';
-import { fetchOrganization } from '../../services/api';
+import { Button, Card, Form, Input, message } from 'antd';
+import { FormattedMessage, formatMessage } from 'umi/locale';
+import { fetchOrganization } from '@/services/api';
 import { usePromise } from '@/utils/hooks';
+import handleError from '@/utils/handleError'
 
-const { Option } = Select;
-
-const fieldTypes = {
-  requester: '请求方',
-  provider: '发送方',
-  admin: '系统管理员',
-}
-
-const FieldForm = Form.create()(({ form, mode }) => {
-
-  const { getFieldDecorator } = form;
-
-  const formatData = (data) => (
-    {
-      name: data.name,
-      canonical_name: data.canonicalName,
-      description: data.description,
-    }
-  );
+const DataSpecForm = Form.create()(({ form, mode, onSubmit }) => {
+  const { getFieldDecorator } = form
+  const [fetchData, fetching, execFetch] = usePromise(fetchOrganization);
+  const [, submitting, submit] = usePromise(onSubmit, undefined);
+  const namespace = window.location.pathname.split('/')[2]
 
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
-      if (err) {
-        return;
+      if (!err) {
+        submit({ name: values.name, namespace: values.namespace })
       }
-      const data = formatData(values);
-      createField(data);
     });
   };
 
-  const [data, loading, exec] = usePromise(fetchOrganization, []);
-
   useEffect(() => {
     if (mode === 'edit') {
-      exec();
+      execFetch(namespace).catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      });
     }
   }, []);
+
+  useEffect(() => {
+    if (fetchData) {
+      form.setFieldsValue({
+        name: fetchData.name,
+        namespace: fetchData.namespace,
+      });
+    }
+  }, [fetchData]);
 
   return (
     <Card
       bordered={false}
-      title={mode === 'create' ? '新建企业信息' : '编辑企业信息'}
-      loading={loading}
+      title={formatMessage({ id: mode === 'edit' ? 'organization.edit' : 'organization.new' })}
+      loading={fetching}
     >
       <Form onSubmit={handleSubmit} labelCol={{ span: 7 }} wrapperCol={{ span: 12 }}>
         <Form.Item label="名称">
           {getFieldDecorator('name', {
-            initialValue: data.name,
             rules: [
               { required: true, message: '请输入名称' }
             ]
@@ -61,30 +57,13 @@ const FieldForm = Form.create()(({ form, mode }) => {
         </Form.Item>
         <Form.Item label="标识">
           {getFieldDecorator('namespace', {
-            initialValue: data.namespace,
             rules: [
               { required: true, message: '请输入标记' }
             ]
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item label="角色">
-          <div>
-            {getFieldDecorator('role', {
-              initialValue: fieldTypes[data.roles ? data.roles[0] : ''],
-              rules: [{ required: true }],
-            })(
-              <Select>
-                {
-                  Object.keys(fieldTypes)
-                    .map(type => <Option value={fieldTypes[type]} key={type}>{fieldTypes[type]}</Option>
-                    )
-                }
-              </Select>
-            )}
-          </div>
+          })(<Input disabled={mode === 'edit'} />)}
         </Form.Item>
         <Form.Item wrapperCol={{ span: 10, offset: 7 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={submitting}>
             <FormattedMessage id="form.save" />
           </Button>
         </Form.Item>
@@ -93,5 +72,4 @@ const FieldForm = Form.create()(({ form, mode }) => {
   );
 });
 
-export default FieldForm;
-
+export default DataSpecForm;

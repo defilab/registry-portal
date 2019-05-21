@@ -1,6 +1,6 @@
 import { message } from 'antd';
-import { formatMessage } from 'umi/locale';
 import { fetchDataSpec, fetchDataSpecs, createDataSpec, updateDataSpec } from '@/services/api';
+import handleError from '@/utils/handleError'
 
 export default {
   namespace: 'dataSpec',
@@ -10,18 +10,36 @@ export default {
   },
 
   effects: {
-    * single ({ payload, callback }, { call }) {
-      const data = yield call(fetchDataSpec, payload.spec);
-      callback(data);
+    * single({ payload, callback }, { call }) {
+      try {
+        const data = yield call(fetchDataSpec, payload.spec);
+        callback(data);
+      }
+      catch (error) {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      }
     },
-    * list (_, { call, put }) {
-      const data = yield call(fetchDataSpecs);
-      yield put({
-        type: 'updateDataSpecs',
-        payload: data,
-      });
+    * list(_, { call, put }) {
+      try {
+        const data = yield call(fetchDataSpecs);
+        yield put({
+          type: 'updateDataSpecs',
+          payload: data,
+        });
+      }
+      catch (error) {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      }
     },
-    * create ({ payload, callback }, { call }) {
+    * create({ payload, callback }, { call }) {
       try {
         yield call(createDataSpec, {
           ...payload,
@@ -30,10 +48,14 @@ export default {
         callback();
         message.success('Success');
       } catch (error) {
-        message.error('Sorry, this spec type can only be created once');
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
       }
     },
-    * update ({ payload, callback }, { call }) {
+    * update({ payload, callback }, { call }) {
       try {
         yield call(updateDataSpec, {
           ...payload,
@@ -42,13 +64,17 @@ export default {
         callback();
         message.success('Success');
       } catch (error) {
-        message.error(formatMessage({id : 'spec.edit-error'}));
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
       }
     },
   },
 
   reducers: {
-    updateDataSpecs (_, action) {
+    updateDataSpecs(_, action) {
       return {
         dataSpecs: action.payload,
       };

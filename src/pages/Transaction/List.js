@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Card, Table, Tabs } from 'antd';
+import { Card, Table, Tabs, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import { fetchTransactions } from '../../services/api';
+import handleError from '@/utils/handleError'
 
 class List extends PureComponent {
   state = {
@@ -37,7 +38,7 @@ class List extends PureComponent {
     }
   ];
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
       loading: true
     });
@@ -51,12 +52,20 @@ class List extends PureComponent {
         time: new Date(item.timestamp * 1000).toLocaleString(),
         state: formatMessage({ id: 'spec.transaction-success' })
       }))
-    })).finally(() => this.setState({
-      loading: false
-    }));
+    }))
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => this.setState({
+        loading: false
+      }));
   }
 
-  render () {
+  render() {
     const { dataSource, loading } = this.state;
     return (
       <Card title={formatMessage({ id: 'menu.transactions' })}>

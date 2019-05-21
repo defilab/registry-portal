@@ -7,6 +7,7 @@ import React, { PureComponent } from 'react';
 import { formatMessage } from 'umi/locale';
 import styles from './Account.less';
 import PasswordResetForm from './PasswordResetForm';
+import handleError from '@/utils/handleError'
 
 const { Description } = DescriptionList;
 // eslint-disable-next-line no-underscore-dangle
@@ -42,9 +43,17 @@ class Account extends PureComponent {
       this.setState({
         organization: resp,
       });
-    }).finally(() => {
-      this.setState({ loading: false });
-    });
+    })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      })
+      .finally(() => {
+        this.setState({ loading: false });
+      });
   }
 
   showChangePasswordDialog = () => {
@@ -70,6 +79,13 @@ class Account extends PureComponent {
 
       changePassword(values.oldPassword, values.newPassword)
         .then(() => message.success('密码修改成功'))
+        .catch((error) => {
+          handleError(error).then((data) => {
+            message.error(data)
+          }).catch(() => {
+            message.error('解析错误或未知错误')
+          })
+        })
       this.hidePasswordDialog();
     });
   };

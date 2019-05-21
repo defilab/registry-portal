@@ -1,11 +1,12 @@
 import FieldsTable from '@/components/Field/FieldsTable';
 import * as api from '@/services/api';
 import { usePromise } from '@/utils/hooks';
-import { Button, Card, Form, Input, InputNumber, notification, Radio, Select, Row, Col } from 'antd';
+import { Button, Card, Form, Input, InputNumber, notification, Radio, Select, Row, Col, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { formatSchema, parseSchema } from '@/utils/schema';
 import ReferenceSelect from '@/components/ReferenceSelect';
+import handleError from '@/utils/handleError'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -80,14 +81,32 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
   const [responseArrayFields, setResponseArrayFields] = useState([]);
 
   useEffect(() => {
-    fetchPlatformDataSpecs();
+    fetchPlatformDataSpecs().catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
+    });
     if (mode === 'edit') {
-      fetchDataSpec();
+      fetchDataSpec().catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('解析错误或未知错误')
+        })
+      });
     }
   }, []);
 
   useEffect(() => {
-    fetchReferences();
+    fetchReferences().catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
+    });
   }, []);
 
   useEffect(() => {
@@ -173,7 +192,13 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             description: values.description,
             reference: values.specReference
           }
-          submit(data);
+          submit(data).catch((error) => {
+            handleError(error).then((data) => {
+              message.error(data)
+            }).catch(() => {
+              message.error('解析错误或未知错误')
+            })
+          });
         } else {
           const data = {
             name: values.name,
@@ -183,7 +208,13 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             canonical_name: values.canonicalName,
             definition: formatDefinition(values)
           }
-          submit(data);
+          submit(data).catch((error) => {
+            handleError(error).then((data) => {
+              message.error(data)
+            }).catch(() => {
+              message.error('解析错误或未知错误')
+            })
+          });
         }
       }
     });

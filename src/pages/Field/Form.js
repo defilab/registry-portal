@@ -2,11 +2,12 @@
 import ReferenceSelect from '@/components/ReferenceSelect';
 import { createField, fetchAllFields, fetchField, updateField } from '@/services/api';
 import { fieldTypes, parseObjectProperties } from '@/utils/schema';
-import { Button, Card, Form, Input, Select } from 'antd';
+import { Button, Card, Form, Input, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import FieldsTable from '@/components/Field/FieldsTable';
+import handleError from '@/utils/handleError'
 
 const { Option } = Select;
 
@@ -115,12 +116,26 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
       if (mode === 'create') {
         createField(data)
           .then((result) => router.push(`/fields/${result.id}`))
-          .catch(() => setSubmitting(false));
+          .catch((error) => {
+            setSubmitting(false)
+            handleError(error).then((data) => {
+              message.error(data)
+            }).catch(() => {
+              message.error('解析错误或未知错误')
+            })
+          })
       } else if (mode === 'edit') {
         delete data.canonical_name;
         updateField(form.getFieldValue('id'), data)
           .then((result) => router.push(`/fields/${result.id}`))
-          .catch(() => setSubmitting(false));
+          .catch((error) => {
+            setSubmitting(false)
+            handleError(error).then((data) => {
+              message.error(data)
+            }).catch(() => {
+              message.error('解析错误或未知错误')
+            })
+          })
       }
     });
   };
@@ -146,12 +161,27 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
         if (field.definition.type === 'object') {
           populateSubFields(field.definition.properties);
         }
-      }).finally(() => setLoading(false));
+      })
+        .catch((error) => {
+          setLoading(false)
+          handleError(error).then((data) => {
+            message.error(data)
+          }).catch(() => {
+            message.error('解析错误或未知错误')
+          })
+        })
+        .finally(() => setLoading(false));
     }
   }, []);
 
   useEffect(() => {
-    fetchAllFields().then(setReferences);
+    fetchAllFields().then(setReferences).catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
+    });
   }, []);
 
   return (

@@ -1,8 +1,9 @@
-import { Button, Card, Form, Input } from 'antd';
+import { Button, Card, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'umi/locale';
-import { fetchUsers, updateUsers } from '../../services/api';
+import { fetchUsers, updateUsers } from '@/services/api';
 import { usePromise } from '@/utils/hooks';
+import handleError from '@/utils/handleError'
 
 const Create = Form.create()(({ form, history }) => {
 
@@ -21,9 +22,15 @@ const Create = Form.create()(({ form, history }) => {
           password: values.password,
           userId,
         }).then(() => {
-          setSubmitting(false)
           history.push(`/organization/${namespace}/users`)
+        }).catch((error) => {
+          handleError(error).then((data) => {
+            message.error(data)
+          }).catch(() => {
+            message.error('解析错误或未知错误')
+          })
         })
+          .finally(() => setSubmitting(false))
       }
     });
   };
@@ -31,7 +38,13 @@ const Create = Form.create()(({ form, history }) => {
   const [data, loading, exec] = usePromise(fetchUsers, []);
 
   useEffect(() => {
-    exec(namespace);
+    exec(namespace).catch((error) => {
+      handleError(error).then((data) => {
+        message.error(data)
+      }).catch(() => {
+        message.error('解析错误或未知错误')
+      })
+    });
 
   }, []);
   let dataSource = ''
@@ -53,7 +66,7 @@ const Create = Form.create()(({ form, history }) => {
             rules: [
               { required: true, message: '请输入用户名' }
             ]
-          })(<Input disabled={true} />)}
+          })(<Input disabled />)}
         </Form.Item>
         <Form.Item label="密码">
           {getFieldDecorator('password', {
