@@ -1,10 +1,10 @@
 import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import { Card, Col, Row, message } from 'antd';
+import { changePassword, fetchOrganization } from '@/services/api';
+import { Card, Col, message, Row } from 'antd';
 import { connect } from 'dva';
 import React, { PureComponent } from 'react';
 import { formatMessage } from 'umi/locale';
-import { fetchOrganization, changePassword } from '../../services/api';
 import styles from './Account.less';
 import PasswordResetForm from './PasswordResetForm';
 
@@ -36,7 +36,9 @@ class Account extends PureComponent {
     });
 
     this.setState({ loading: true });
-    fetchOrganization().then((resp) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+    fetchOrganization(namespace).then((resp) => {
       this.setState({
         organization: resp,
       });

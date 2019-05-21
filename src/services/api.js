@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import request from '@/utils/request';
 import { Base64 } from 'js-base64';
+import { stringify } from 'qs';
 
 export async function login(params) {
   const body = new FormData();
@@ -42,9 +43,53 @@ export async function changePassword(oldPassword, newPassword) {
   });
 }
 
-export async function fetchOrganization() {
-  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+export async function fetchUsers(namespace) {
+  return request(`/organizations/${namespace}/users`);
+}
+
+export async function createUsers(data) {
+  return request(`/users`, {
+    method: 'POST',
+    body: data
+  })
+}
+
+export async function updateUsers(data) {
+  return request(`/users/${data.userId}`, {
+    method: 'PATCH',
+    body: { password: data.password },
+  });
+}
+
+export async function deleteUsers(id) {
+  return request(`/users/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function createOrganization(data) {
+  return request(`/organizations`, {
+    method: 'POST',
+    body: data
+  })
+}
+
+export async function updateOrganization(data) {
+  return request(`/organizations/${data.namespace}`, {
+    method: 'PATCH',
+    body: { name: data.name },
+  });
+}
+
+export async function fetchOrganization(namespace) {
   return request(`/organizations/${namespace}`);
+}
+
+export async function fetchOrganizations() {
+  const params = {
+    page_size: 100,
+  };
+  return request(`/organizations?${stringify(params)}`).then(data => data.items);
 }
 
 export async function fetchRequests() {

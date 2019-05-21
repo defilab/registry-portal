@@ -15,7 +15,60 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/account' },
+      { path: '/', redirect: '/organization' },
+      {
+        path: '/organization',
+        name: 'organization',
+        icon: 'user',
+        component: './Organization/List'
+      },
+      {
+        path: '/organization/create',
+        component: './Organization/Create'
+      },
+      {
+        path: '/organization/:organization/edit',
+        component: './Organization/Edit'
+      },
+      {
+        path: '/organization/:organization',
+        component: './Organization/View',
+        hideInMenu: true,
+        name: 'view',
+        routes: [
+          {
+            path: '/organization/:organization',
+
+            redirect: '/organization/:organization/info',
+          },
+          {
+            path: '/organization/:organization/info',
+            name: 'info',
+            hideInMenu: true,
+            component: './Organization/Info'
+          },
+          {
+            path: '/organization/:organization/users',
+            name: 'users',
+            hideInMenu: true,
+            component: './Organization/Users'
+          },
+          {
+            path: '/organization/:organization/users/create',
+            name: 'userscreate',
+            hideInMenu: true,
+            component: './Organization/UserCreate'
+          },
+          {
+            path: '/organization/:organization/users/:user_id/edit',
+            name: 'usersedit',
+            hideInMenu: true,
+            component: './Organization/UserEdit'
+          },
+        ]
+      },
+
+
       {
         path: '/account',
         name: 'account',
