@@ -21,43 +21,41 @@ class List extends PureComponent {
     },
     {
       title: formatMessage({ id: 'organization.operations' }),
-      render: (record) => {
-        return (
-          <Fragment>
-            <Link to={`/organization/${record.namespace}/users/${record.key}/edit`}>{formatMessage({ id: 'edit' })}</Link>
-            <Divider type="vertical" />
-            <a
-              onClick={() => {
-                Modal.confirm({
-                  title: '删除任务',
-                  content: '确定删除该任务吗？',
-                  okText: '确认',
-                  cancelText: '取消',
-                  onOk: () => deleteUsers(record.id).then(() => {
-                    const namespace = window.location.pathname.split('/')[2]
-                    window.history.push(`/organization/${namespace}/users`)
-                  }).catch((error) => {
-                    handleError(error)
-                      .then((data) => message.error(data))
-                      .catch(() => message.error('解析错误或未知错误'))
-                  })
-                });
-              }}
-            >
-              {formatMessage({ id: 'delete' })}
-            </a>
-          </Fragment>
-        )
-      }
+      render: (record) => (
+        <Fragment>
+          <Link to={`/organization/${record.namespace}/users/${record.key}/edit`}>{formatMessage({ id: 'edit' })}</Link>
+          <Divider type="vertical" />
+          <a
+            onClick={() => {
+              Modal.confirm({
+                title: '删除任务',
+                content: '确定删除该任务吗？',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => deleteUsers(record.id).then(() => {
+                  const { match } = this.props;
+                  window.history.push(`/organization/${match.params.namespace}/users`)
+                }).catch((error) => {
+                  handleError(error)
+                    .then((data) => message.error(data))
+                    .catch(() => message.error('解析错误或未知错误'))
+                })
+              });
+            }}
+          >
+            {formatMessage({ id: 'delete' })}
+          </a>
+        </Fragment>
+      )
     }
   ];
 
   componentDidMount() {
+    const { match } = this.props;
     this.setState({
       loading: true,
     });
-    const namespace = window.location.pathname.split('/')[2]
-    fetchUsers(namespace).then(data => {
+    fetchUsers(match.params.namespace).then(data => {
       this.setState({ loading: false })
       this.setState({
         dataSource: data.items.map((item) => ({
@@ -65,7 +63,6 @@ class List extends PureComponent {
           key: item.id,
           id: item.id,
           namespace: item.namespace
-
         }))
       })
     }).catch((error) => {

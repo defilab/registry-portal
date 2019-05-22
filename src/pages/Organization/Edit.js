@@ -1,11 +1,11 @@
 import React from 'react';
-import DataSpecForm from './Form';
+import OrganizitionForm from './Form';
 
-const Create = ({ match }) => (
-  <DataSpecForm
-    organization={match.params.organization}
+const Edit = ({ match }) => (
+  <OrganizitionForm
+    namespace={match.params.namespace}
     mode="edit"
   />
 );
 
-export default Create;
+export default Edit;

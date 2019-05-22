@@ -1,11 +1,12 @@
 import React from 'react';
-import DataSpecForm from './UserForm';
+import UserForm from './UserForm';
 
-const Create = ({ match }) => (
-  <DataSpecForm
-    organization={match.params.organization}
+const UserEdit = ({ match }) => (
+  <UserForm
+    namespace={match.params.namespace}
+    userId={match.params.userId}
     mode="edit"
   />
 );
 
-export default Create;
+export default UserEdit;

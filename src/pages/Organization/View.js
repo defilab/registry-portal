@@ -21,7 +21,7 @@ class SearchList extends Component {
   };
 
   render() {
-    const { children, location } = this.props;
+    const { children, location, match } = this.props;
     const tabList = [
       {
         key: 'info',
@@ -36,7 +36,7 @@ class SearchList extends Component {
     return (
       <PageHeaderWrapper
         tabList={tabList}
-        tabActiveKey={location.pathname.split('/')[3]}
+        tabActiveKey={location.pathname.replace(`${match.url}/`, '')}
         onTabChange={this.handleTabChange}
       >
         {children}

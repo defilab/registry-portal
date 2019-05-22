@@ -27,40 +27,40 @@ export default [
         component: './Organization/Create'
       },
       {
-        path: '/organization/:organization/edit',
+        path: '/organization/:namespace/edit',
         component: './Organization/Edit'
       },
       {
-        path: '/organization/:organization',
+        path: '/organization/:namespace',
         component: './Organization/View',
         hideInMenu: true,
         name: 'view',
         routes: [
           {
-            path: '/organization/:organization',
+            path: '/organization/:namespace',
 
-            redirect: '/organization/:organization/info',
+            redirect: '/organization/:namespace/info',
           },
           {
-            path: '/organization/:organization/info',
+            path: '/organization/:namespace/info',
             name: 'info',
             hideInMenu: true,
             component: './Organization/Info'
           },
           {
-            path: '/organization/:organization/users',
+            path: '/organization/:namespace/users',
             name: 'users',
             hideInMenu: true,
             component: './Organization/Users'
           },
           {
-            path: '/organization/:organization/users/create',
+            path: '/organization/:namespace/users/create',
             name: 'userscreate',
             hideInMenu: true,
             component: './Organization/UserCreate'
           },
           {
-            path: '/organization/:organization/users/:user_id/edit',
+            path: '/organization/:namespace/users/:userId/edit',
             name: 'usersedit',
             hideInMenu: true,
             component: './Organization/UserEdit'

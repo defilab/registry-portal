@@ -1,9 +1,9 @@
 import React from 'react';
-import DataSpecForm from './Form';
+import OrganizitionForm from './Form';
 
 const Create = ({ match }) => (
-  <DataSpecForm
-    organization={match.params.organization}
+  <OrganizitionForm
+    namespace={match.params.namespace}
     mode="new"
   />
 );

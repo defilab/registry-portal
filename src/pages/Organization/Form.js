@@ -5,7 +5,7 @@ import { fetchOrganization, updateOrganization, createOrganization } from '@/ser
 import handleError from '@/utils/handleError'
 import router from 'umi/router';
 
-const DataSpecForm = Form.create()(({ form, mode, organization }) => {
+const OrganizitionForm = Form.create()(({ form, mode, namespace }) => {
   const { getFieldDecorator } = form
   const [submitting, setSubmitting] = useState(false);
   const [fetching, setFetching] = useState(false);
@@ -17,7 +17,7 @@ const DataSpecForm = Form.create()(({ form, mode, organization }) => {
       if (!err) {
         setSubmitting(true)
         if (mode === 'edit') {
-          updateOrganization({ name: values.name, namespace: values.namespace })
+          updateOrganization(values)
             .then(() => {
               setSubmitting(false)
               router.push('/organization')
@@ -30,7 +30,7 @@ const DataSpecForm = Form.create()(({ form, mode, organization }) => {
             })
         }
         else {
-          createOrganization({ name: values.name, namespace: values.namespace })
+          createOrganization(values)
             .then(() => {
               setSubmitting(false)
               router.push('/organization')
@@ -49,7 +49,7 @@ const DataSpecForm = Form.create()(({ form, mode, organization }) => {
   useEffect(() => {
     if (mode === 'edit') {
       setFetching(true)
-      fetchOrganization(organization)
+      fetchOrganization(namespace)
         .then((data) => {
           setFetchData(data)
           setFetching(false)
@@ -103,4 +103,4 @@ const DataSpecForm = Form.create()(({ form, mode, organization }) => {
   );
 });
 
-export default DataSpecForm;
+export default OrganizitionForm;

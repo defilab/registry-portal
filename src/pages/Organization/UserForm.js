@@ -6,9 +6,8 @@ import { usePromise } from '@/utils/hooks';
 import handleError from '@/utils/handleError'
 import router from 'umi/router';
 
-const Create = Form.create()(({ form, mode, organization }) => {
+const UserForm = Form.create()(({ form, mode, namespace, userId }) => {
   const { getFieldDecorator } = form;
-  const userId = window.location.pathname.split('/')[4]
   const [submitting, setSubmitting] = useState(false)
   const [dataSource, loading, exec] = usePromise(fetchUsers)
 
@@ -24,7 +23,7 @@ const Create = Form.create()(({ form, mode, organization }) => {
             userId,
           }).then(() => {
             setSubmitting(false)
-            router.push(`/organization/${organization}/users`)
+            router.push(`/organization/${namespace}/users`)
           }).catch((error) => {
             setSubmitting(false)
             handleError(error)
@@ -36,10 +35,10 @@ const Create = Form.create()(({ form, mode, organization }) => {
           createUsers({
             username: values.name,
             password: values.password,
-            namespace: organization
+            namespace,
           }).then(() => {
             setSubmitting(false)
-            router.push(`/organization/${organization}/users`)
+            router.push(`/organization/${namespace}/users`)
           }).catch((error) => {
             setSubmitting(false)
             handleError(error)
@@ -53,7 +52,7 @@ const Create = Form.create()(({ form, mode, organization }) => {
 
   useEffect(() => {
     if (mode === 'edit') {
-      exec(organization).catch((error) => {
+      exec(namespace).catch((error) => {
         handleError(error)
           .then((data) => message.error(data))
           .catch(() => message.error('解析错误或未知错误'))
@@ -95,4 +94,4 @@ const Create = Form.create()(({ form, mode, organization }) => {
   );
 });
 
-export default Create;
+export default UserForm;

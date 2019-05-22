@@ -15,7 +15,8 @@ const { Description } = DescriptionList;
   currentUserLoading: loading.effects['user/fetchCurrent'],
   project,
 }))
-class Account extends PureComponent {
+
+class Info extends PureComponent {
   state = {
     organization: {
       expense: {},
@@ -25,13 +26,12 @@ class Account extends PureComponent {
   };
 
   componentDidMount() {
-    const namespace = window.location.pathname.split('/')[2]
-    const { dispatch } = this.props;
+    const { dispatch, match } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
     });
     this.setState({ loading: true });
-    fetchOrganization(namespace).then((resp) => {
+    fetchOrganization(match.params.namespace).then((resp) => {
       this.setState({ loading: false })
       this.setState({ organization: resp });
     })
@@ -97,5 +97,5 @@ class Account extends PureComponent {
   }
 }
 
-export default Account;
+export default Info;
 
