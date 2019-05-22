@@ -25,25 +25,22 @@ class Account extends PureComponent {
   };
 
   componentDidMount() {
-    this.setState({ loading: true });
     const namespace = window.location.pathname.split('/')[2]
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
     });
-
+    this.setState({ loading: true });
     fetchOrganization(namespace).then((resp) => {
-      this.setState({
-        organization: resp,
-      });
-    }).catch((error) => {
-      handleError(error).then((data) => {
-        message.error(data)
-      }).catch(() => {
-        message.error('解析错误或未知错误')
-      })
+      this.setState({ loading: false })
+      this.setState({ organization: resp });
     })
-      .finally(() => this.setState({ loading: false }))
+      .catch((error) => {
+        this.setState({ loading: false })
+        handleError(error)
+          .then((data) => message.error(data))
+          .catch(() => message.error('解析错误或未知错误'))
+      })
   }
 
   render() {

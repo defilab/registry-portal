@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import { formatMessage } from 'umi/locale';
 
 @connect()
 class SearchList extends Component {
@@ -20,18 +21,17 @@ class SearchList extends Component {
   };
 
   render() {
+    const { children, location } = this.props;
     const tabList = [
       {
         key: 'info',
-        tab: '基本信息',
+        tab: formatMessage({ id: 'menu.view.info' }),
       },
       {
         key: 'users',
-        tab: '用户管理',
+        tab: formatMessage({ id: 'menu.view.users' }),
       },
     ];
-
-    const { children, location } = this.props;
 
     return (
       <PageHeaderWrapper

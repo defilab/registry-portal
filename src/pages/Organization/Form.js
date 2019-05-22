@@ -1,39 +1,70 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Input, message } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi/locale';
-import { fetchOrganization } from '@/services/api';
-import { usePromise } from '@/utils/hooks';
+import { fetchOrganization, updateOrganization, createOrganization } from '@/services/api';
 import handleError from '@/utils/handleError'
+import router from 'umi/router';
 
-const DataSpecForm = Form.create()(({ form, mode, onSubmit }) => {
+const DataSpecForm = Form.create()(({ form, mode, organization }) => {
   const { getFieldDecorator } = form
-  const [fetchData, fetching, execFetch] = usePromise(fetchOrganization);
-  const [, submitting, submit] = usePromise(onSubmit, undefined);
-  const namespace = window.location.pathname.split('/')[2]
+  const [submitting, setSubmitting] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [fetchData, setFetchData] = useState();
 
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        submit({ name: values.name, namespace: values.namespace })
+        setSubmitting(true)
+        if (mode === 'edit') {
+          updateOrganization({ name: values.name, namespace: values.namespace })
+            .then(() => {
+              setSubmitting(false)
+              router.push('/organization')
+            })
+            .catch((error) => {
+              setSubmitting(false)
+              handleError(error)
+                .then((data) => message.error(data))
+                .catch(() => message.error('解析错误或未知错误'))
+            })
+        }
+        else {
+          createOrganization({ name: values.name, namespace: values.namespace })
+            .then(() => {
+              setSubmitting(false)
+              router.push('/organization')
+            })
+            .catch((error) => {
+              setSubmitting(false)
+              handleError(error)
+                .then((data) => message.error(data))
+                .catch(() => message.error('解析错误或未知错误'))
+            })
+        }
       }
     });
   };
 
   useEffect(() => {
     if (mode === 'edit') {
-      execFetch(namespace).catch((error) => {
-        handleError(error).then((data) => {
-          message.error(data)
-        }).catch(() => {
-          message.error('解析错误或未知错误')
+      setFetching(true)
+      fetchOrganization(organization)
+        .then((data) => {
+          setFetchData(data)
+          setFetching(false)
         })
-      });
+        .catch((error) => {
+          setFetching(false)
+          handleError(error)
+            .then((data) => message.error(data))
+            .catch(() => message.error('解析错误或未知错误'))
+        })
     }
   }, []);
 
   useEffect(() => {
-    if (fetchData) {
+    if (mode === 'edit' && fetchData) {
       form.setFieldsValue({
         name: fetchData.name,
         namespace: fetchData.namespace,

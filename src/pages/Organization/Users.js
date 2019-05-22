@@ -4,7 +4,7 @@ import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { fetchUsers, deleteUsers } from '@/services/api';
-import styles from './TableList.less';
+import styles from './List.less';
 import handleError from '@/utils/handleError'
 
 class List extends PureComponent {
@@ -37,16 +37,14 @@ class List extends PureComponent {
                     const namespace = window.location.pathname.split('/')[2]
                     window.history.push(`/organization/${namespace}/users`)
                   }).catch((error) => {
-                    handleError(error).then((data) => {
-                      message.error(data)
-                    }).catch(() => {
-                      message.error('解析错误或未知错误')
-                    })
+                    handleError(error)
+                      .then((data) => message.error(data))
+                      .catch(() => message.error('解析错误或未知错误'))
                   })
                 });
               }}
             >
-              删除
+              {formatMessage({ id: 'delete' })}
             </a>
           </Fragment>
         )
@@ -60,6 +58,7 @@ class List extends PureComponent {
     });
     const namespace = window.location.pathname.split('/')[2]
     fetchUsers(namespace).then(data => {
+      this.setState({ loading: false })
       this.setState({
         dataSource: data.items.map((item) => ({
           name: item.username,
@@ -70,13 +69,13 @@ class List extends PureComponent {
         }))
       })
     }).catch((error) => {
+      this.setState({ loading: false })
       handleError(error).then((data) => {
         message.error(data)
       }).catch(() => {
         message.error('解析错误或未知错误')
       })
     })
-      .finally(() => this.setState({ loading: false }))
   }
 
   render() {

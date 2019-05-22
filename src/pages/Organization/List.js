@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import moment from 'moment';
 import { fetchOrganizations } from '@/services/api';
-import styles from './TableList.less';
+import styles from './List.less';
 import handleError from '@/utils/handleError'
 
 class List extends PureComponent {
@@ -49,11 +49,10 @@ class List extends PureComponent {
   ];
 
   componentDidMount() {
-    this.setState({
-      loading: true,
-    });
+    this.setState({ loading: true, });
     fetchOrganizations()
       .then(data => {
+        this.setState({ loading: false })
         this.setState({
           dataSource: data.map((item, index) => ({
             key: index,
@@ -66,13 +65,11 @@ class List extends PureComponent {
         });
       })
       .catch((error) => {
-        handleError(error).then((data) => {
-          message.error(data)
-        }).catch(() => {
-          message.error('解析错误或未知错误')
-        })
+        this.setState({ loading: false })
+        handleError(error)
+          .then((data) => message.error(data))
+          .catch(() => message.error('解析错误或未知错误'))
       })
-      .finally(() => this.setState({ loading: false }))
   }
 
   render() {

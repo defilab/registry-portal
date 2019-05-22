@@ -47,6 +47,6 @@ export default {
   'menu.view.info': '基本信息',
   'menu.view.users': '用户管理',
   'menu.view.userscreate': '新建用户',
-  'menu.view.usersedit': '用户编辑',
+  'menu.view.usersedit': '编辑用户',
 
 };
