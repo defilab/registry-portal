@@ -42,7 +42,8 @@ const FieldsTable = ({ title, fields, references, editable, onFieldAdded, onFiel
   const formValuesToSchemaData = formValues => {
     const result = {
       name: formValues.name,
-      type: formValues.type
+      type: formValues.type,
+      description: formValues.description
     };
 
     switch (formValues.type) {
@@ -70,7 +71,6 @@ const FieldsTable = ({ title, fields, references, editable, onFieldAdded, onFiel
       if (err) {
         return;
       }
-
 
       onFieldAdded(formValuesToSchemaData(values));
       form.resetFields();

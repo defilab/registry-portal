@@ -69,7 +69,7 @@ export function formatSchema(data) {
       break;
     case 'timestamp':
       result.type = 'string';
-      result.format = 'data-time';
+      result.format = 'date-time';
       break;
     case 'object':
       result.type = 'object';
@@ -109,6 +109,7 @@ export function parseSchema(schema) {
           result.type = 'timestamp';
           break;
         default:
+          result.type = 'string'
       }
       break;
     case 'boolean':
@@ -152,7 +153,7 @@ export function SchemaType({ schema }) {
     case 'array':
       return <>数组[<SchemaType schema={schema.items} />]</>;
     case 'reference':
-      return <Link to={`/fields/${schema.reference.substr(schema.reference.lastIndexOf('/') + 1)}`}>引用</Link>;
+      return <Link to={`/data/fields/${schema.reference.substr(schema.reference.lastIndexOf('/') + 1)}`}>引用</Link>;
     default:
       return '未知类型';
   }

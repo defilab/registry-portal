@@ -15,117 +15,111 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/organization' },
+      { path: '/', redirect: '/organizations' },
       {
-        path: '/organization',
-        name: 'organization',
+        path: '/organizations',
+        name: 'organizations',
         icon: 'user',
-        component: './Organization/List'
+        component: './Organization/List',
+        authority: ['admin']
       },
       {
-        path: '/organization/create',
-        component: './Organization/Create'
+        path: '/organizations/create',
+        component: './Organization/Create',
+        authority: ['admin']
       },
       {
-        path: '/organization/:organization/edit',
-        component: './Organization/Edit'
+        path: '/organizations/:namespace/edit',
+        component: './Organization/Edit',
+        authority: ['admin']
       },
       {
-        path: '/organization/:organization',
+        path: '/organizations/:namespace',
         component: './Organization/View',
-        hideInMenu: true,
-        name: 'view',
         routes: [
           {
-            path: '/organization/:organization',
-
-            redirect: '/organization/:organization/info',
-          },
-          {
-            path: '/organization/:organization/info',
-            name: 'info',
-            hideInMenu: true,
+            path: '/organizations/:namespace',
             component: './Organization/Info'
           },
           {
-            path: '/organization/:organization/users',
-            name: 'users',
-            hideInMenu: true,
+            path: '/organizations/:namespace/users',
             component: './Organization/Users'
           },
           {
-            path: '/organization/:organization/users/create',
-            name: 'userscreate',
-            hideInMenu: true,
+            path: '/organizations/:namespace/users/create',
             component: './Organization/UserCreate'
           },
           {
-            path: '/organization/:organization/users/:user_id/edit',
-            name: 'usersedit',
-            hideInMenu: true,
+            path: '/organizations/:namespace/users/:user_id/edit',
             component: './Organization/UserEdit'
           },
-        ]
+        ],
+        authority: ['admin']
       },
-
-
       {
         path: '/account',
         name: 'account',
         icon: 'user',
         component: './Account/Account',
-        authority: ['requester', 'provider', 'admin']
+        authority: ['requester', 'provider']
       },
       {
-        path: '/fields',
-        name: 'fields',
+        path: '/data',
+        name: 'data',
         icon: 'api',
-        component: './Field/List',
-        authority: ['provider', 'admin']
-      },
-      {
-        path: '/fields/create',
-        component: './Field/Create',
-        authority: ['provider', 'admin']
-      },
-      {
-        path: '/fields/:id',
-        component: './Field/View',
-        authority: ['requester', 'provider', 'admin']
-      },
-      {
-        path: '/fields/:id/edit',
-        component: './Field/Edit',
-        authority: ['provider', 'admin']
-      },
-      {
-        path: '/data-specs',
-        name: 'data-specs',
-        icon: 'api',
-        component: './DataSpec/List',
-        authority: ['requester', 'provider', 'admin'],
-      },
-      {
-        path: '/data-specs/all',
-        name: 'data-specs-all',
-        icon: 'api',
-        component: './DataSpec/All',
-        authority: ['requester', 'provider', 'admin'],
-      },
-      {
-        path: '/data-specs/create',
-        component: './DataSpec/Create',
-        authority: ['provider', 'admin'],
-      },
-      {
-        path: '/data-specs/:spec',
-        component: './DataSpec/View',
-        authority: ['requester', 'provider', 'admin'],
-      },
-      {
-        path: '/data-specs/:spec/edit',
-        component: './DataSpec/Edit',
-        authority: ['provider', 'admin'],
+        routes: [
+          {
+            path: '/data/fields',
+            name: 'fields',
+            icon: 'api',
+            component: './Field/List',
+            authority: ['provider', 'admin']
+          },
+          {
+            path: '/data/fields/create',
+            component: './Field/Create',
+            authority: ['provider', 'admin']
+          },
+          {
+            path: '/data/fields/:id',
+            component: './Field/View',
+            authority: ['requester', 'provider', 'admin']
+          },
+          {
+            path: '/data/fields/:id/edit',
+            component: './Field/Edit',
+            authority: ['provider', 'admin']
+          },
+          {
+            path: '/data/specs',
+            name: 'specs',
+            icon: 'api',
+            component: './DataSpec/List',
+            authority: ['requester', 'provider', 'admin'],
+          },
+          {
+            path: '/data/all-specs',
+            name: 'all-specs',
+            icon: 'api',
+            component: './DataSpec/All',
+            authority: ['requester', 'provider', 'admin'],
+          },
+          {
+            path: '/data/specs/create',
+            component: './DataSpec/Create',
+            authority: ['provider', 'admin'],
+          },
+          {
+            path: '/data/specs/:spec',
+            component: './DataSpec/View',
+            authority: ['requester', 'provider', 'admin'],
+          },
+          {
+            path: '/data/specs/:spec/edit',
+            component: './DataSpec/Edit',
+            authority: ['provider', 'admin'],
+          }
+        ]
       },
       {
         path: '/downloads',

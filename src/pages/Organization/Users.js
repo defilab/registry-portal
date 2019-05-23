@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { Card, Table, Button, Divider, Modal, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
@@ -21,36 +21,34 @@ class List extends PureComponent {
     },
     {
       title: formatMessage({ id: 'organization.operations' }),
-      render: (record) => {
-        return (
-          <Fragment>
-            <Link to={`/organization/${record.namespace}/users/${record.key}/edit`}>{formatMessage({ id: 'edit' })}</Link>
-            <Divider type="vertical" />
-            <a
-              onClick={() => {
-                Modal.confirm({
-                  title: '删除任务',
-                  content: '确定删除该任务吗？',
-                  okText: '确认',
-                  cancelText: '取消',
-                  onOk: () => deleteUsers(record.id).then(() => {
-                    const namespace = window.location.pathname.split('/')[2]
-                    window.history.push(`/organization/${namespace}/users`)
-                  }).catch((error) => {
-                    handleError(error).then((data) => {
-                      message.error(data)
-                    }).catch(() => {
-                      message.error('解析错误或未知错误')
-                    })
+      render: (record) => (
+        <>
+          <Link to={`/organizations/${record.namespace}/users/${record.key}/edit`}>{formatMessage({ id: 'edit' })}</Link>
+          <Divider type="vertical" />
+          <a
+            onClick={() => {
+              Modal.confirm({
+                title: '删除用户',
+                content: '确定删除该用户吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: () => deleteUsers(record.id).then(() => {
+                  const namespace = window.location.pathname.split('/')[2]
+                  window.history.push(`/organizations/${namespace}/users`)
+                }).catch((error) => {
+                  handleError(error).then((data) => {
+                    message.error(data)
+                  }).catch(() => {
+                    message.error('解析错误或未知错误')
                   })
-                });
-              }}
-            >
-              删除
-            </a>
-          </Fragment>
-        )
-      }
+                })
+              });
+            }}
+          >
+            删除
+          </a>
+        </>
+      )
     }
   ];
 
@@ -83,7 +81,7 @@ class List extends PureComponent {
     const { dataSource, loading } = this.state;
     const showNewSpecForm = () => router.push(`users/create`);
     return (
-      <Card title={formatMessage({ id: 'menu.view.users' })}>
+      <Card title="用户列表">
         <div className={styles.tableList}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={showNewSpecForm}>

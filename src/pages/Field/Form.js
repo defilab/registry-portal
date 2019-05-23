@@ -115,11 +115,11 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
       const data = formatData(values);
       if (mode === 'create') {
         createField(data)
-          .then((result) => router.push(`/fields/${result.id}`))
+          .then((result) => router.push(`/data/fields/${result.id}`))
           .catch((error) => {
             setSubmitting(false)
-            handleError(error).then((data) => {
-              message.error(data)
+            handleError(error).then((msg) => {
+              message.error(msg)
             }).catch(() => {
               message.error('解析错误或未知错误')
             })
@@ -127,11 +127,11 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
       } else if (mode === 'edit') {
         delete data.canonical_name;
         updateField(form.getFieldValue('id'), data)
-          .then((result) => router.push(`/fields/${result.id}`))
+          .then((result) => router.push(`/data/fields/${result.id}`))
           .catch((error) => {
             setSubmitting(false)
-            handleError(error).then((data) => {
-              message.error(data)
+            handleError(error).then((msg) => {
+              message.error(msg)
             }).catch(() => {
               message.error('解析错误或未知错误')
             })

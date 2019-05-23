@@ -29,8 +29,8 @@ class View extends PureComponent {
       payload: { spec: match.params.spec },
       callback: (data) => this.setState({
         data,
-        requestSchema: parseSchema(data.definition.qualifiers),
-        responseSchema: parseSchema(data.definition.responses)
+        requestSchema: data.reference || parseSchema(data.definition.qualifiers),
+        responseSchema: data.reference || parseSchema(data.definition.response)
       }),
     });
   }
@@ -80,11 +80,13 @@ class View extends PureComponent {
                     <FieldsTable fields={requestSchema.properties} editable={false} />
                     <div style={{ height: '18px' }} />
                     <div>返回结果 (<span style={{ fontWeight: 'normal' }}><SchemaType schema={responseSchema} /></span>)</div>
-                    <FieldsTable
-                      fields={this.responseTableFields()}
-                      editable={false}
-                      style={{ display: responseSchema.type === 'object' || (responseSchema.type === 'array' && responseSchema.items.type === 'object') }}
-                    />
+                    {
+                      (responseSchema.type === 'object' || (responseSchema.type === 'array') && responseSchema.items.type === 'object') && <FieldsTable
+                        fields={this.responseTableFields()}
+                        editable={false}
+                        style={{ display: responseSchema.type === 'object' || (responseSchema.type === 'array' && responseSchema.items.type === 'object') }}
+                      />
+                    }
                   </div>
                 </div>
               </DescriptionList>

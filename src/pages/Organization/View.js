@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 import router from 'umi/router';
-import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-@connect()
 class SearchList extends Component {
+  state = {
+    activeTabKey: undefined
+  }
+
+  componentDidMount() {
+    const { location } = this.props; 
+    this.setState({
+      activeTabKey: location.pathname.endsWith('users') ? 'users' : 'info'
+    });
+  }
+
   handleTabChange = key => {
+    this.setState({
+      activeTabKey: key
+    })
     const { match } = this.props;
     switch (key) {
       case 'info':
-        router.push(`${match.url}/info`);
+        router.push(`${match.url}`);
         break;
       case 'users':
         router.push(`${match.url}/users`);
@@ -23,7 +35,7 @@ class SearchList extends Component {
     const tabList = [
       {
         key: 'info',
-        tab: '基本信息',
+        tab: '企业信息',
       },
       {
         key: 'users',
@@ -31,13 +43,15 @@ class SearchList extends Component {
       },
     ];
 
-    const { children, location } = this.props;
+    const { children } = this.props;
+    const { activeTabKey } = this.state;
 
     return (
       <PageHeaderWrapper
         tabList={tabList}
-        tabActiveKey={location.pathname.split('/')[3]}
+        tabActiveKey={activeTabKey}
         onTabChange={this.handleTabChange}
+        hiddenBreadcrumb
       >
         {children}
       </PageHeaderWrapper>

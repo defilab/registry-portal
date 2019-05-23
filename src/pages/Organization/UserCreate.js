@@ -1,6 +1,5 @@
 import { Button, Card, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
-import { FormattedMessage } from 'umi/locale';
 import { createUsers } from '@/services/api';
 import handleError from '@/utils/handleError'
 
@@ -20,7 +19,7 @@ const Create = Form.create()(({ form, history }) => {
           password: values.password,
           namespace
         }).then(() => {
-          history.push(`/organization/${namespace}/users`)
+          history.push(`/organizations/${namespace}/users`)
         }).catch((error) => {
           handleError(error).then((data) => {
             message.error(data)
@@ -56,7 +55,7 @@ const Create = Form.create()(({ form, history }) => {
         </Form.Item>
         <Form.Item wrapperCol={{ span: 10, offset: 7 }}>
           <Button type="primary" htmlType="submit" loading={submitting}>
-            <FormattedMessage id="form.save" />
+            提交
           </Button>
         </Form.Item>
       </Form>

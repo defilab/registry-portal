@@ -103,7 +103,10 @@ class Account extends PureComponent {
                 loading={loading}
               >
                 <DescriptionList style={{ marginBottom: 24 }} col="1">
-                  <Description term={formatMessage({ id: 'account.organization' })}>{organization.name}</Description>
+                  <Description term="企业名称">{organization.name}</Description>
+                  <Description term="企业标识">
+                    {organization.namespace}
+                  </Description>
                   <Description term="当前用户">
                     {name} <a onClick={this.showChangePasswordDialog} style={{ marginLeft: '10px' }}>修改密码</a>
                   </Description>
@@ -120,26 +123,26 @@ class Account extends PureComponent {
                 loading={loading}
               >
                 <DescriptionList style={{ marginBottom: 24 }} col="2">
-                  <Description term={formatMessage({ id: 'account.balance' })}>
-                    {organization.balance} 元
+                  <Description term={formatMessage({ id: 'account.balance' })}>{organization.balance} 元</Description>
+                </DescriptionList>
+                <DescriptionList style={{ marginBottom: 24 }} col="2">
+                  <Description term={formatMessage({ id: 'account.income-today' })}>
+                    {organization.income.today} 元
                   </Description>
                   <Description term={formatMessage({ id: 'account.expense-today' })}>
                     {organization.expense.today} 元
                   </Description>
-                  <Description term={formatMessage({ id: 'account.expense-this-month' })}>
-                    {organization.expense.month} 元
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.expense-total' })}>
-                    {organization.expense.total} 元
-                  </Description>
-                  <Description term={formatMessage({ id: 'account.income-today' })}>
-                    {organization.income.today} 元
-                  </Description>
                   <Description term={formatMessage({ id: 'account.income-this-month' })}>
                     {organization.income.month} 元
                   </Description>
+                  <Description term={formatMessage({ id: 'account.expense-this-month' })}>
+                    {organization.expense.month} 元
+                  </Description>
                   <Description term={formatMessage({ id: 'account.income-total' })}>
                     {organization.income.total} 元
+                  </Description>
+                  <Description term={formatMessage({ id: 'account.expense-total' })}>
+                    {organization.expense.total} 元
                   </Description>
                 </DescriptionList>
               </Card>

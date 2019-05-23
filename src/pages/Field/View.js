@@ -61,7 +61,7 @@ const View = ({ match }) => {
         }
         <Description term="类型">
           {field.definition.type ? formatMessage({ id: `spec.field.type.${field.definition.type}` }) : (
-            <NavLink to={`/fields/${parseCanonicalName(field.definition.$ref)}`}>
+            <NavLink to={`/data/fields/${parseCanonicalName(field.definition.$ref)}`}>
               引用
             </NavLink>
           )}

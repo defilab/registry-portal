@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Button, Card, Form, Input, message } from 'antd';
-import { FormattedMessage, formatMessage } from 'umi/locale';
 import { fetchOrganization } from '@/services/api';
 import { usePromise } from '@/utils/hooks';
 import handleError from '@/utils/handleError'
@@ -44,7 +43,7 @@ const DataSpecForm = Form.create()(({ form, mode, onSubmit }) => {
   return (
     <Card
       bordered={false}
-      title={formatMessage({ id: mode === 'edit' ? 'organization.edit' : 'organization.new' })}
+      title={mode === 'edit' ? '编辑企业信息' : '新建企业'}
       loading={fetching}
     >
       <Form onSubmit={handleSubmit} labelCol={{ span: 7 }} wrapperCol={{ span: 12 }}>
@@ -64,7 +63,7 @@ const DataSpecForm = Form.create()(({ form, mode, onSubmit }) => {
         </Form.Item>
         <Form.Item wrapperCol={{ span: 10, offset: 7 }}>
           <Button type="primary" htmlType="submit" loading={submitting}>
-            <FormattedMessage id="form.save" />
+            提交
           </Button>
         </Form.Item>
       </Form>

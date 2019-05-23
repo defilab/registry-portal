@@ -21,14 +21,14 @@ class List extends PureComponent {
       dataIndex: 'id',
     },
     {
-      title: formatMessage({ id: 'organization.name' }),
+      title: '名称',
       key: 'name',
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'organization.role' }),
-      key: 'role',
-      render: (_, record) => formatMessage({ id: `organization.${record.role[0]}` }),
+      title: '标识',
+      key: 'namespace',
+      dataIndex: 'namespace'
     },
     {
       title: formatMessage({ id: 'organization.creation-time' }),
@@ -40,9 +40,9 @@ class List extends PureComponent {
       title: formatMessage({ id: 'organization.operations' }),
       render: (record) => (
         <Fragment>
-          <Link to={`/organization/${record.namespace}`}>{formatMessage({ id: 'view' })}</Link>
+          <Link to={`/organizations/${record.namespace}`}>{formatMessage({ id: 'view' })}</Link>
           <Divider type="vertical" />
-          <Link to={`/organization/${record.namespace}/edit`}>{formatMessage({ id: 'edit' })}</Link>
+          <Link to={`/organizations/${record.namespace}/edit`}>{formatMessage({ id: 'edit' })}</Link>
         </Fragment>
       )
     },
@@ -77,9 +77,9 @@ class List extends PureComponent {
 
   render() {
     const { dataSource, loading } = this.state;
-    const showNewSpecForm = () => router.push('/organization/create');
+    const showNewSpecForm = () => router.push('/organizations/create');
     return (
-      <Card title={formatMessage({ id: 'menu.organization' })}>
+      <Card title="企业列表">
         <div className={styles.tableList}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={showNewSpecForm}>

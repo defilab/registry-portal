@@ -13,7 +13,7 @@ const List = () => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const showNewFiledForm = () => router.push('/fields/create');
+  const showNewFiledForm = () => router.push('/data/fields/create');
 
   // eslint-disable-next-line no-underscore-dangle
   const { user: { currentUser } } = window.g_app._store.getState();
@@ -59,14 +59,14 @@ const List = () => {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
         <>
-          <Link to={`/fields/${record.id}`}>
+          <Link to={`/data/fields/${record.id}`}>
             {formatMessage({ id: 'view' })}
           </Link>
           {
             record.namespace === currentUser.namespace &&
             <>
               <Divider type="vertical" />
-              <Link to={`/fields/${record.id}/edit`}>
+              <Link to={`/data/fields/${record.id}/edit`}>
                 {formatMessage({ id: 'edit' })}
               </Link>
             </>

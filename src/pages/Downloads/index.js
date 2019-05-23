@@ -9,8 +9,8 @@ import handleError from '@/utils/handleError'
 
 // eslint-disable-next-line no-underscore-dangle
 const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-const certFileUrl = `/organizations/${namespace}/certs/active/download`;
-const certFileUploadUrl = `/organizations/${namespace}/certs`;
+const certFileUrl = `/organizations/${namespace}/certs/download`;
+const certFileUploadUrl = `/organizations/${namespace}/certs/download`;
 const ledgerFilesUrl = `/organizations/${namespace}/ledger/files/download`;
 
 class Account extends PureComponent {
@@ -139,8 +139,8 @@ class Account extends PureComponent {
               title={formatMessage({ id: 'menu.downloads' })}
               bordered={false}
             >
-              <div className={styles.title}>{formatMessage({ id: 'account.cert' })}:</div>
-              <div>
+              <div className={styles.title}>{formatMessage({ id: 'account.cert' })}</div>
+              <div style={{ marginTop: '8px', marginBottom: '8px' }}>
                 {certUploaded ?
                   <Button
                     size="small"
@@ -152,14 +152,27 @@ class Account extends PureComponent {
                   </Button> : ''}
                 {!certUploaded && certUploaded !== undefined ?
                   <Upload {...this.uploadProps(certFileUploadUrl)}>
-                    <Button size="small" loading={uploadingCertFile} style={{ marginTop: '8px', marginBottom: '8px' }}>
+                    <Button size="small" loading={uploadingCertFile}>
                       {formatMessage({ id: 'upload' })}
                     </Button>
                   </Upload> : ''}
-                <div className={styles.description}> {formatMessage({ id: 'refer-doc' })}</div>
+              </div>
+              <div className={styles.description}>
+                请先在本地生成csr文件，再由此处下载对应的pem文件，配置流程详见SDK开发文档。
+                <div>
+                  <div>csr文件生成步骤：</div>
+                  <div style={{ fontFamily: 'monospace', backgroundColor: 'rgba(51, 73, 110, 0.2)', padding: '10px', margin: '8px 0' }}>
+                    openssl genrsa -out private.key 2048 <br />
+                    openssl req -subj &quot;/C=CN/ST=ZYB/L=ZYB/O=ZYB/OU=Tech Department/CN=&#123;namespace&#125;&quot; -new -key private.key -out cert.csr <br />
+                    openssl pkcs8 -topk8 -inform PEM -outform PEM -in private.key -nocrypt &gt; key.pem
+                  </div>
+                  <div>
+                    注：namespace请替换为您所在企业的标识。
+                  </div>
+                </div>
               </div>
               <Divider />
-              <div className={styles.title}>{formatMessage({ id: 'account.ledger-files' })}:</div>
+              <div className={styles.title}>{formatMessage({ id: 'account.ledger-files' })}</div>
               <div>
                 <Button
                   size="small"
@@ -169,7 +182,7 @@ class Account extends PureComponent {
                 >
                   {formatMessage({ id: 'download' })}
                 </Button>
-                <div className={styles.description}> {formatMessage({ id: 'account.ledger-files-description' })}</div>
+                <div className={styles.description}>配置流程详见SDK开发文档。</div>
               </div>
             </Card>
           </Col>

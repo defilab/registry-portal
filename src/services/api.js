@@ -129,12 +129,19 @@ export async function createDataSpec(data) {
   });
 }
 
-export async function updateDataSpec(data) {
+export async function updateDataSpec(id, data) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-  return request(`/organizations/${namespace}/specs/blacklist`, {
+  return request(`/organizations/${namespace}/specs/${id}`, {
     method: 'PATCH',
     body: data,
   });
+}
+
+export async function deleteDataSpec(id) {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+  return request(`/organizations/${namespace}/specs/${id}`, {
+    method: 'DELETE'
+  }); 
 }
 
 export async function fetchPlatformDataSpecs() {
@@ -168,7 +175,8 @@ export async function fetchField(id) {
 }
 
 export async function updateField(id, data) {
-  return request(`/fields/${id}`, {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState(); 
+  return request(`/organizations/${namespace}/fields/${id}`, {
     method: 'PATCH',
     body: data
   });

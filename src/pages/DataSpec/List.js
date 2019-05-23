@@ -6,6 +6,7 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './TableList.less';
 import { formatDatetime } from '@/utils/datatime';
+import { deleteDataSpec } from '@/services/api';
 
 @connect(({ dataSpec, loading }) => ({
   dataSpec,
@@ -42,17 +43,23 @@ class List extends PureComponent {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
         <>
-          <Link to={`/data-specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
+          <Link to={`/data/specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
           <Divider type="vertical" />
-          <Link to={`/data-specs/${record.id}/edit`}>{formatMessage(
+          <Link to={`/data/specs/${record.id}/edit`}>{formatMessage(
             { id: 'edit' })}
           </Link>
+          <Divider type="vertical" />
+          <a onClick={() => deleteDataSpec(record.id).then(this.loadData.bind(this))}>删除</a>
         </>
       ),
     },
   ];
 
   componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
     const { dispatch } = this.props;
     dispatch({
       type: 'dataSpec/list',
@@ -60,7 +67,7 @@ class List extends PureComponent {
   }
 
   render() {
-    const showNewSpecForm = () => router.push('/data-specs/create');
+    const showNewSpecForm = () => router.push('/data/specs/create');
     const { dataSpec, loading } = this.props;
     const dataSource = dataSpec.dataSpecs.map((item) => ({
       key: item.id,

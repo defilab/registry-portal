@@ -48,7 +48,7 @@ class List extends PureComponent {
     {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
-        <Link to={`/data-specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
+        <Link to={`/data/specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
       ),
     },
   ];
@@ -74,7 +74,7 @@ class List extends PureComponent {
   }
 
   render() {
-    const showNewSpecForm = () => router.push('/data-specs/create');
+    const showNewSpecForm = () => router.push('/data/specs/create');
     const { dataSpecs, loading } = this.state;
     const dataSource = dataSpecs.map((item) => ({
       key: item.id,

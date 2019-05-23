@@ -1,6 +1,5 @@
 import { Button, Card, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { FormattedMessage } from 'umi/locale';
 import { fetchUsers, updateUsers } from '@/services/api';
 import { usePromise } from '@/utils/hooks';
 import handleError from '@/utils/handleError'
@@ -22,7 +21,7 @@ const Create = Form.create()(({ form, history }) => {
           password: values.password,
           userId,
         }).then(() => {
-          history.push(`/organization/${namespace}/users`)
+          history.push(`/organizations/${namespace}/users`)
         }).catch((error) => {
           handleError(error).then((data) => {
             message.error(data)
@@ -39,8 +38,8 @@ const Create = Form.create()(({ form, history }) => {
 
   useEffect(() => {
     exec(namespace).catch((error) => {
-      handleError(error).then((data) => {
-        message.error(data)
+      handleError(error).then((msg) => {
+        message.error(msg)
       }).catch(() => {
         message.error('解析错误或未知错误')
       })
@@ -78,7 +77,7 @@ const Create = Form.create()(({ form, history }) => {
         </Form.Item>
         <Form.Item wrapperCol={{ span: 10, offset: 7 }}>
           <Button type="primary" htmlType="submit" loading={submitting}>
-            <FormattedMessage id="form.save" />
+            提交
           </Button>
         </Form.Item>
       </Form>

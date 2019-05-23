@@ -7,10 +7,10 @@ import handleError from '@/utils/handleError'
 const Create = ({ history }) => (
   <DataSpecForm
     onSubmit={(data) =>
-      createDataSpec(data).then(() => history.push('/data-specs'))
+      createDataSpec(data).then(() => history.push('/data/specs'))
         .catch((error) => {
-          handleError(error).then((data) => {
-            message.error(data)
+          handleError(error).then((msg) => {
+            message.error(msg)
           }).catch(() => {
             message.error('解析错误或未知错误')
           })

@@ -85,7 +85,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
       handleError(error).then((data) => {
         message.error(data)
       }).catch(() => {
-        message.error('解析错误或未知错误')
+        message.error('数据加载失败')
       })
     });
     if (mode === 'edit') {
@@ -93,7 +93,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
         handleError(error).then((data) => {
           message.error(data)
         }).catch(() => {
-          message.error('解析错误或未知错误')
+          message.error('数据加载失败')
         })
       });
     }
@@ -104,7 +104,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
       handleError(error).then((data) => {
         message.error(data)
       }).catch(() => {
-        message.error('解析错误或未知错误')
+        message.error('数据加载失败')
       })
     });
   }, []);
@@ -113,7 +113,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
     if (mode === 'edit' && dataSpec) {
       const requestSchema = parseSchema(dataSpec.definition.qualifiers);
       setRequestFields(requestSchema.properties);
-      const responseSchema = parseSchema(dataSpec.definition.responses);
+      const responseSchema = parseSchema(dataSpec.definition.response);
       form.setFieldsValue({
         id: dataSpec.id,
         name: dataSpec.name,
@@ -176,7 +176,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
           type: 'object',
           properties: requestFields
         }),
-        responses: formatSchema(formValuesToSchemaData(formValues))
+        response: formatSchema(formValuesToSchemaData(formValues))
       }
     );
 
@@ -186,21 +186,17 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
       if (!err) {
         if (!values.useCustomFields) {
           const data = {
+            id: values.id,
             name: values.name,
             state: values.state,
             price: values.price * 100,
             description: values.description,
             reference: values.specReference
           }
-          submit(data).catch((error) => {
-            handleError(error).then((data) => {
-              message.error(data)
-            }).catch(() => {
-              message.error('解析错误或未知错误')
-            })
-          });
+          submit(data);
         } else {
           const data = {
+            id: values.id,
             name: values.name,
             state: values.state,
             price: values.price * 100,
@@ -208,13 +204,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             canonical_name: values.canonicalName,
             definition: formatDefinition(values)
           }
-          submit(data).catch((error) => {
-            handleError(error).then((data) => {
-              message.error(data)
-            }).catch(() => {
-              message.error('解析错误或未知错误')
-            })
-          });
+          submit(data);
         }
       }
     });
