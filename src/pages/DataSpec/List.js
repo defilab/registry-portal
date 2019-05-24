@@ -1,12 +1,13 @@
+import { deleteDataSpec } from '@/services/api';
+import { formatDatetime } from '@/utils/datatime';
+import handleError from '@/utils/handleError';
+import { Button, Card, Divider, message, Modal, Table } from 'antd';
+import { connect } from 'dva';
 import React, { PureComponent } from 'react';
-import { Button, Card, Divider, Table } from 'antd';
+import Link from 'umi/link';
 import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
-import Link from 'umi/link';
-import { connect } from 'dva';
 import styles from './TableList.less';
-import { formatDatetime } from '@/utils/datatime';
-import { deleteDataSpec } from '@/services/api';
 
 @connect(({ dataSpec, loading }) => ({
   dataSpec,
@@ -35,6 +36,12 @@ class List extends PureComponent {
       dataIndex: 'state',
     },
     {
+      title: '活跃',
+      key: 'alive',
+      dataIndex: 'alive',
+      render: (text, record) => record.alive ? '是' : '否'
+    },
+    {
       title: formatMessage({ id: 'spec.creation-time' }),
       key: 'createdAt',
       dataIndex: 'createdAt',
@@ -49,7 +56,30 @@ class List extends PureComponent {
             { id: 'edit' })}
           </Link>
           <Divider type="vertical" />
-          <a onClick={() => deleteDataSpec(record.id).then(this.loadData.bind(this))}>删除</a>
+          <a
+            onClick={() =>
+              Modal.confirm({
+                title: '删除数据接口',
+                content: '确定删除该数据接口吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: () => deleteDataSpec(record.id)
+                  .then(() => {
+                    message.success('删除成功');
+                  })
+                  .then(this.loadData.bind(this))
+                  .catch((error) => {
+                    handleError(error).then((msg) => {
+                      message.error(msg);
+                    }).catch(() => {
+                      message.error('删除失败');
+                    })
+                  })
+              })
+            }
+          >
+            删除
+          </a>
         </>
       ),
     },
@@ -76,7 +106,8 @@ class List extends PureComponent {
       name: item.name,
       state: formatMessage({ id: `spec.status-${item.state}` }),
       createdAt: formatDatetime(item.created_at),
-      canonicalName: item.canonical_name
+      canonicalName: item.canonical_name,
+      alive: item.alive
     }));
     return (
       <Card title="数据接口列表">

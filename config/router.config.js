@@ -72,7 +72,6 @@ export default [
           {
             path: '/data/fields',
             name: 'fields',
-            icon: 'api',
             component: './Field/List',
             authority: ['provider', 'admin']
           },
@@ -94,15 +93,18 @@ export default [
           {
             path: '/data/specs',
             name: 'specs',
-            icon: 'api',
             component: './DataSpec/List',
             authority: ['requester', 'provider', 'admin'],
           },
           {
             path: '/data/all-specs',
             name: 'all-specs',
-            icon: 'api',
             component: './DataSpec/All',
+            authority: ['requester', 'provider', 'admin'],
+          },
+          {
+            path: '/data/all-specs/:spec',
+            component: './DataSpec/View',
             authority: ['requester', 'provider', 'admin'],
           },
           {
@@ -127,7 +129,7 @@ export default [
         name: 'downloads',
         icon: 'file',
         component: './Downloads',
-        authority: ['requester', 'provider', 'admin'],
+        authority: ['requester', 'provider'],
       },
       {
         component: '404',

@@ -111,9 +111,22 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
 
   useEffect(() => {
     if (mode === 'edit' && dataSpec) {
-      const requestSchema = parseSchema(dataSpec.definition.qualifiers);
-      setRequestFields(requestSchema.properties);
-      const responseSchema = parseSchema(dataSpec.definition.response);
+      let requestSchema = {
+        type: 'object',
+        properties: []
+      };
+      let responseSchema = {};
+      if (!dataSpec.reference) {
+        requestSchema = parseSchema(dataSpec.definition.qualifiers);
+        setRequestFields(requestSchema.properties);
+        responseSchema = parseSchema(dataSpec.definition.response);
+        if (responseSchema.type === 'object') {
+          setResponseFields(responseSchema.properties);
+        }
+        if (responseSchema.type === 'array' && responseSchema.items.type === 'object') {
+          setResponseArrayFields(responseSchema.items.properties);
+        }
+      }
       form.setFieldsValue({
         id: dataSpec.id,
         name: dataSpec.name,
@@ -122,18 +135,12 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
         description: dataSpec.description,
         state: dataSpec.state,
         specReference: dataSpec.reference,
-        useCustomFields: dataSpec.reference !== undefined,
+        useCustomFields: !dataSpec.reference,
         responseReference: responseSchema.type === 'reference' ? responseSchema.reference : undefined,
         responseType: responseSchema.type,
         responseArrayItemType: responseSchema.type === 'array' ? responseSchema.items.type : undefined,
         responseArrayItemReference: responseSchema.type === 'array' && responseSchema.items.type === 'reference' ? responseSchema.items.reference : undefined
       });
-      if (responseSchema.type === 'object') {
-        setResponseFields(responseSchema.properties);
-      }
-      if (responseSchema.type === 'array' && responseSchema.items.type === 'object') {
-        setResponseArrayFields(responseSchema.items.properties);
-      }
     }
   }, [dataSpec]);
 

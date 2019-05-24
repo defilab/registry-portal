@@ -1,13 +1,13 @@
-import { fetchAllFields } from '@/services/api';
-import { Button, Card, Divider, Table, message } from 'antd';
+import { fetchAllFields, deleteField } from '@/services/api';
+import { formatDatetime } from '@/utils/datatime';
+import handleError from '@/utils/handleError';
+import { parseSchema, SchemaType } from '@/utils/schema';
+import { Button, Card, Divider, message, Modal, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Link from 'umi/link';
 import { formatMessage } from 'umi/locale';
 import router from 'umi/router';
 import styles from './List.less';
-import { formatDatetime } from '@/utils/datatime';
-import { parseSchema, SchemaType } from '@/utils/schema';
-import handleError from '@/utils/handleError'
 
 const List = () => {
   const [fields, setFields] = useState([]);
@@ -17,6 +17,24 @@ const List = () => {
 
   // eslint-disable-next-line no-underscore-dangle
   const { user: { currentUser } } = window.g_app._store.getState();
+
+  const loadData = () => {
+    setLoading(true);
+    fetchAllFields().then(data => {
+      setFields(data.map(field => ({
+        ...field,
+        definition: parseSchema(field.definition)
+      })))
+    })
+      .catch((error) => {
+        handleError(error).then((data) => {
+          message.error(data)
+        }).catch(() => {
+          message.error('数据加载失败')
+        })
+      })
+      .finally(() => setLoading(false));
+  }
 
   const columns = [
     {
@@ -32,7 +50,7 @@ const List = () => {
         <span>
           {text}
           {
-            record.namespace !== currentUser.namespace && <span style={{ color: 'rgba(0,0,0,.25)' }}> (平台字段)</span>
+            record.namespace !== currentUser.namespace && <span style={{ color: 'rgba(0,0,0,.25)' }}> (通用字段)</span>
           }
         </span>
       )
@@ -69,6 +87,31 @@ const List = () => {
               <Link to={`/data/fields/${record.id}/edit`}>
                 {formatMessage({ id: 'edit' })}
               </Link>
+              <Divider type="vertical" />
+              <a
+                onClick={() =>
+                  Modal.confirm({
+                    title: '删除字段',
+                    content: '确定删除该字段吗？',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk: () => deleteField(record.id)
+                      .then(() => {
+                        message.success('删除成功');
+                      })
+                      .then(loadData)
+                      .catch((error) => {
+                        handleError(error).then((msg) => {
+                          message.error(msg);
+                        }).catch(() => {
+                          message.error('删除失败');
+                        })
+                      })
+                  })
+                }
+              >
+                删除
+              </a>
             </>
           }
         </>

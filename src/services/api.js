@@ -173,6 +173,13 @@ export async function fetchField(id) {
   return request(`/fields/${id}`);
 }
 
+export async function deleteField(id) {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState(); 
+  return request(`/organizations/${namespace}/fields/${id}`, {
+    method: 'DELETE'
+  }); 
+}
+
 export async function updateField(id, data) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState(); 
   return request(`/organizations/${namespace}/fields/${id}`, {

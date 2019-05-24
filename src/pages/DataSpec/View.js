@@ -70,6 +70,9 @@ class View extends PureComponent {
                 <Description term={formatMessage({ id: 'spec.status' })}>
                   {formatMessage({ id: `spec.status-${data.state}` })}
                 </Description>
+                <Description term="活跃">
+                  {data.alive ? '是' : '否'}
+                </Description>
                 <Description term="引用" style={{ display: data.reference ? 'block' : 'none' }}>
                   {data.reference}
                 </Description>

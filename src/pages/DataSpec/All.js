@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Button, Card, Table, message } from 'antd';
+import { Card, Table, message } from 'antd';
 import { formatMessage } from 'umi/locale';
-import router from 'umi/router';
 import Link from 'umi/link';
 import styles from './TableList.less';
-import { formatDatetime } from '@/utils/datatime';
+import { formatDate } from '@/utils/datatime';
 import { fetchAllDataSpecs } from '@/services/api';
 import handleError from '@/utils/handleError'
 
@@ -31,7 +30,7 @@ class List extends PureComponent {
       dataIndex: 'canonicalName',
     },
     {
-      title: 'NS',
+      title: '企业',
       key: 'namespace',
       dataIndex: 'namespace'
     },
@@ -41,6 +40,12 @@ class List extends PureComponent {
       dataIndex: 'state',
     },
     {
+      title: '活跃',
+      key: 'alive',
+      dataIndex: 'alive',
+      render: (text, record) => record.alive ? '是' : '否'
+    },
+    {
       title: formatMessage({ id: 'spec.creation-time' }),
       key: 'createdAt',
       dataIndex: 'createdAt',
@@ -48,7 +53,7 @@ class List extends PureComponent {
     {
       title: formatMessage({ id: 'spec.operations' }),
       render: (text, record) => (
-        <Link to={`/data/specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
+        <Link to={`/data/all-specs/${record.id}`}>{formatMessage({ id: 'view' })}</Link>
       ),
     },
   ];
@@ -74,7 +79,6 @@ class List extends PureComponent {
   }
 
   render() {
-    const showNewSpecForm = () => router.push('/data/specs/create');
     const { dataSpecs, loading } = this.state;
     const dataSource = dataSpecs.map((item) => ({
       key: item.id,
@@ -82,18 +86,14 @@ class List extends PureComponent {
       spec: item.canonical_name,
       name: item.name,
       state: formatMessage({ id: `spec.status-${item.state}` }),
-      createdAt: formatDatetime(item.created_at),
+      createdAt: formatDate(item.created_at),
       canonicalName: item.canonical_name,
-      namespace: item.namespace
+      namespace: item.namespace,
+      alive: item.alive
     }));
     return (
-      <Card title="数据接口列表">
+      <Card title="数据接口查询">
         <div className={styles.tableList}>
-          <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={showNewSpecForm}>
-              {formatMessage({ id: 'new' })}
-            </Button>
-          </div>
           <Table columns={this.columns} dataSource={dataSource} loading={loading} />
         </div>
       </Card>);
