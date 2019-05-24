@@ -22,12 +22,6 @@ const plugins = [
         loadingComponent: './components/PageLoading/index',
         webpackChunkName: true,
       },
-      pwa: {
-        workboxPluginMode: 'InjectManifest',
-        workboxOptions: {
-          importWorkboxFrom: 'local',
-        },
-      },
       ...(!process.env.TEST && os.platform() === 'darwin'
         ? {
             dll: {

@@ -148,17 +148,17 @@ class Account extends PureComponent {
                     onClick={() => this.downloadCertFile()}
                     loading={downloadingCertFile}
                   >
-                    {formatMessage({ id: 'download' })}
+                    下载pem文件
                   </Button> : ''}
                 {!certUploaded && certUploaded !== undefined ?
                   <Upload {...this.uploadProps(certFileUploadUrl)}>
                     <Button size="small" loading={uploadingCertFile}>
-                      {formatMessage({ id: 'upload' })}
+                      上传csr文件
                     </Button>
                   </Upload> : ''}
               </div>
               <div className={styles.description}>
-                请先在本地生成csr文件，再由此处下载对应的pem文件，配置流程详见SDK开发文档。
+                请先在本地生成csr文件，上传后再由此处下载对应的pem文件，配置流程详见SDK开发文档。
                 <div>
                   <div>csr文件生成步骤：</div>
                   <div style={{ fontFamily: 'monospace', backgroundColor: 'rgba(51, 73, 110, 0.2)', padding: '10px', margin: '8px 0' }}>

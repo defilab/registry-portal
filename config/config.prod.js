@@ -1,5 +1,5 @@
 export default {
   define: {
-    API_BASE_URL: 'https://registry.test.defilab.com'
+    API_BASE_URL: 'http://registry.staging.guangzhishu.com'
   },
 };
