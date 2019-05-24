@@ -15,7 +15,11 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/organizations' },
+      {
+        path: '/',
+        component: './Router/view',
+        authority: ['admin', 'provider', 'admin']
+      },
       {
         path: '/organizations',
         name: 'organizations',
