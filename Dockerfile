@@ -1,12 +1,4 @@
-FROM circleci/node:latest-browsers
+FROM nginx:1.15.12
 
-WORKDIR /usr/src/app/
-USER root
-COPY package.json ./
-RUN yarn
-
-COPY ./ ./
-
-RUN npm run test:all
-
-CMD ["npm", "run", "build"]
+COPY nginx /etc/nginx
+COPY dist /usr/share/nginx/html
