@@ -1,5 +1,4 @@
 import { routerRedux } from 'dva/router';
-import { stringify } from 'qs';
 import { login } from '@/services/api';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -52,10 +51,7 @@ export default {
       reloadAuthorized();
       yield put(
         routerRedux.push({
-          pathname: '/user/login',
-          search: stringify({
-            redirect: window.location.href,
-          }),
+          pathname: '/user/login'
         })
       );
     },

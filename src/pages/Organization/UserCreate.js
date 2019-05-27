@@ -45,11 +45,11 @@ const Create = Form.create()(({ form, history }) => {
             ]
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="密码">
+        <Form.Item label="初始密码">
           {getFieldDecorator('password', {
             initialValue: '',
             rules: [
-              { required: true, message: '请输入密码' }
+              { required: true, message: '请输入初始密码' }
             ]
           })(<Input />)}
         </Form.Item>

@@ -10,7 +10,7 @@ class SearchList extends Component {
   componentDidMount() {
     const { location } = this.props; 
     this.setState({
-      activeTabKey: location.pathname.endsWith('users') ? 'users' : 'info'
+      activeTabKey: location.pathname.includes('users') ? 'users' : 'info'
     });
   }
 
