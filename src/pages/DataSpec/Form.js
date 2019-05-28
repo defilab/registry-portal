@@ -250,6 +250,23 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             ]
           })(<Input />)}
         </FormItem>
+        <FormItem {...formItemLayout} label="自定义">
+          {getFieldDecorator('useCustomFields', {
+            initialValue: false, rules: [
+              {
+                required: true,
+                message: '该选项不能为空'
+              }
+            ]
+          })
+            (
+              <Radio.Group onChange={onUseCustomFieldsChange}>
+                <Radio value>{formatMessage({ id: 'yes' })}</Radio>
+                <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
+              </Radio.Group>
+            )
+          }
+        </FormItem>
         <FormItem {...formItemLayout} label="标识" style={{ display: getFieldValue('useCustomFields') ? 'block' : 'none' }}>
           {getFieldDecorator('canonicalName', {
             rules: [
@@ -330,24 +347,9 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
               </Radio.Group>
             )}
         </FormItem>
-        <FormItem {...formItemLayout} label={formatMessage({ id: 'spec.use-custom-fields' })}>
-          {getFieldDecorator('useCustomFields', {
-            initialValue: false, rules: [
-              {
-                required: true,
-                message: '是否使用自定义字段不能为空'
-              }
-            ]
-          })
-            (
-              <Radio.Group onChange={onUseCustomFieldsChange}>
-                <Radio value>{formatMessage({ id: 'yes' })}</Radio>
-                <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
-              </Radio.Group>
-            )
-          }
-          <div style={{ display: getFieldValue('useCustomFields') ? 'block' : 'none' }}>
-            <div>请求:</div>
+        <FormItem {...formItemLayout} label="自定义字段" style={{ display: getFieldValue('useCustomFields') ? 'block' : 'none' }}>
+          <div>
+            <div style={{ fontWeight: 'bold' }}>请求</div>
             <FieldsTable
               title="字段"
               fields={requestFields}
@@ -356,7 +358,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
               onFieldAdded={onRequestFieldAdded}
               onFieldRemoved={onRequestFieldRemoved}
             />
-            <div style={{ marginTop: '32px' }}>返回结果:</div>
+            <div style={{ fontWeight: 'bold', marginTop: '32px' }}>返回结果</div>
             <Row type="flex" gutter={10}>
               <Col span={8}>
                 <Form.Item>

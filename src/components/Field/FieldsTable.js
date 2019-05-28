@@ -89,7 +89,7 @@ const FieldsTable = ({ title, fields, references, editable, onFieldAdded, onFiel
       <div>
         <div style={{ marginBottom: '4px' }}>
           {
-            title && <span style={{ fontSize: '15px', fontWeight: 'bold', marginRight: '8px' }}>{title}</span>
+            title && <span style={{ marginRight: '8px' }}>{title}</span>
           }
           {
           editable && <Icon type="plus" onClick={() => setDialogVisible(true)} style={{ color: 'blue' }} />

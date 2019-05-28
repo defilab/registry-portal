@@ -3,7 +3,7 @@ export default function handleError(error) {
   return error.response.json().then((data) => {
     switch (data.error) {
       case "DuplicateEntry":
-        return '企业名称或标识已存在';
+        return '名称或标识已存在';
 
       case "RegistryException":
         return '注册异常';
@@ -27,7 +27,7 @@ export default function handleError(error) {
         return '时间戳已过期';
 
       case 'BasicAuthFailed':
-        return '基本身份验证失败';
+        return '身份验证失败';
 
       case 'InvalidSignature':
         return '签名无效';
@@ -51,7 +51,7 @@ export default function handleError(error) {
         return '不应该更新只读列';
 
       case 'AlreadyHaveActiveCert':
-        return '已经有活动证书';
+        return '证书已存在';
 
       case 'InvalidEmailAddress':
         return '无效的邮件地址';
@@ -84,7 +84,7 @@ export default function handleError(error) {
         return '双重输入';
 
       case 'LegerAccountAlreadyExists':
-        return '分类帐帐户已存在';
+        return 'Ledger帐户已存在';
 
       case 'ExecuteCommandError':
         return '执行命令错误';

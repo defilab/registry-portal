@@ -26,7 +26,7 @@ const Create = Form.create()(({ form, history }) => {
           handleError(error).then((data) => {
             message.error(data)
           }).catch(() => {
-            message.error('解析错误或未知错误')
+            message.error('未知错误')
           })
         })
           .finally(() => setSubmitting(false))
@@ -41,7 +41,7 @@ const Create = Form.create()(({ form, history }) => {
       handleError(error).then((msg) => {
         message.error(msg)
       }).catch(() => {
-        message.error('解析错误或未知错误')
+        message.error('未知错误')
       })
     });
 
@@ -67,11 +67,11 @@ const Create = Form.create()(({ form, history }) => {
             ]
           })(<Input disabled />)}
         </Form.Item>
-        <Form.Item label="密码">
+        <Form.Item label="新密码">
           {getFieldDecorator('password', {
             initialValue: '',
             rules: [
-              { required: true, message: '请输入密码' }
+              { required: true, message: '请输入新密码' }
             ]
           })(<Input />)}
         </Form.Item>

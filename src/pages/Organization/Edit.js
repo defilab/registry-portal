@@ -8,12 +8,12 @@ const Create = ({ history }) => (
   <DataSpecForm
     mode="edit"
     onSubmit={(data) =>
-      updateOrganization(data).then(() => history.push('/organizations'))
+      updateOrganization(data).then((org) => history.push(`/organizations/${org.namespace}`))
         .catch((error) => {
           handleError(error).then((msg) => {
             message.error(msg)
           }).catch(() => {
-            message.error('解析错误或未知错误')
+            message.error('未知错误')
           })
         })
     }

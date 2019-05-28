@@ -25,7 +25,7 @@ const DataSpecForm = Form.create()(({ form, mode, onSubmit }) => {
         handleError(error).then((data) => {
           message.error(data)
         }).catch(() => {
-          message.error('解析错误或未知错误')
+          message.error('未知错误')
         })
       });
     }
