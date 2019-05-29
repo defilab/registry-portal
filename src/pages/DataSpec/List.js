@@ -1,5 +1,5 @@
 import { deleteDataSpec } from '@/services/api';
-import { formatDatetime } from '@/utils/datatime';
+import { formatDate } from '@/utils/datetime';
 import handleError from '@/utils/handleError';
 import { Button, Card, Divider, message, Modal, Table } from 'antd';
 import { connect } from 'dva';
@@ -105,7 +105,7 @@ class List extends PureComponent {
       spec: 'blacklist',
       name: item.name,
       state: formatMessage({ id: `spec.status-${item.state}` }),
-      createdAt: formatDatetime(item.created_at),
+      createdAt: formatDate(item.created_at),
       canonicalName: item.canonical_name,
       alive: item.alive
     }));

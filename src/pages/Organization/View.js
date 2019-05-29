@@ -1,24 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import router from 'umi/router';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-class SearchList extends Component {
-  state = {
-    activeTabKey: undefined
-  }
+const OrganizationLayout = ({ match, location, children }) => {
+  const [activeTabKey, setActiveTabKey] = useState();
 
-  componentDidMount() {
-    const { location } = this.props; 
-    this.setState({
-      activeTabKey: location.pathname.includes('users') ? 'users' : 'info'
-    });
-  }
+  useEffect(() => {
+    setActiveTabKey(location.pathname.includes('users') ? 'users' : 'info');
+  }, [location]);
 
-  handleTabChange = key => {
-    this.setState({
-      activeTabKey: key
-    })
-    const { match } = this.props;
+  const handleTabChange = key => {
+    setActiveTabKey(key);
     switch (key) {
       case 'info':
         router.push(`${match.url}`);
@@ -31,33 +23,28 @@ class SearchList extends Component {
     }
   };
 
-  render() {
-    const tabList = [
-      {
-        key: 'info',
-        tab: '企业信息',
-      },
-      {
-        key: 'users',
-        tab: '用户管理',
-      },
-    ];
+  const tabList = [
+    {
+      key: 'info',
+      tab: '企业信息',
+    },
+    {
+      key: 'users',
+      tab: '用户管理',
+    },
+  ];
 
-    const { children } = this.props;
-    const { activeTabKey } = this.state;
+  return (
+    <PageHeaderWrapper
+      tabList={tabList}
+      tabActiveKey={activeTabKey}
+      onTabChange={handleTabChange}
+      hiddenBreadcrumb
+    >
+      {children}
+    </PageHeaderWrapper>
+  )
+};
 
-    return (
-      <PageHeaderWrapper
-        tabList={tabList}
-        tabActiveKey={activeTabKey}
-        onTabChange={this.handleTabChange}
-        hiddenBreadcrumb
-      >
-        {children}
-      </PageHeaderWrapper>
-    );
-  }
-}
-
-export default SearchList;
+export default OrganizationLayout;
 

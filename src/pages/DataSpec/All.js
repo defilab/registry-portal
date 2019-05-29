@@ -3,7 +3,7 @@ import { Card, Table, message } from 'antd';
 import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
 import styles from './TableList.less';
-import { formatDate } from '@/utils/datatime';
+import { formatDate } from '@/utils/datetime';
 import { fetchAllDataSpecs } from '@/services/api';
 import handleError from '@/utils/handleError'
 

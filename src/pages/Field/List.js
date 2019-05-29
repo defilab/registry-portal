@@ -1,5 +1,5 @@
 import { fetchAllFields, deleteField } from '@/services/api';
-import { formatDatetime } from '@/utils/datatime';
+import { formatDate } from '@/utils/datetime';
 import handleError from '@/utils/handleError';
 import { parseSchema, SchemaType } from '@/utils/schema';
 import { Button, Card, Divider, message, Modal, Table } from 'antd';
@@ -71,7 +71,7 @@ const List = () => {
       title: '创建时间',
       key: 'createdAt',
       dataIndex: 'created_at',
-      render: (text) => formatDatetime(text)
+      render: (text) => formatDate(text)
     },
     {
       title: formatMessage({ id: 'spec.operations' }),

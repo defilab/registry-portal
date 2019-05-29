@@ -10,8 +10,6 @@ import PasswordResetForm from './PasswordResetForm';
 import handleError from '@/utils/handleError'
 
 const { Description } = DescriptionList;
-// eslint-disable-next-line no-underscore-dangle
-const { user: { currentUser: { name } } } = window.g_app._store.getState();
 
 @connect(({ loading, user, project }) => ({
   currentUser: user.currentUser,
@@ -92,6 +90,9 @@ class Account extends PureComponent {
 
   render() {
     const { loading, organization, isPasswordDialogVisible } = this.state;
+    // eslint-disable-next-line no-underscore-dangle
+    const { user: { currentUser: { name } } } = window.g_app._store.getState();
+
     return (
       <div>
         <GridContent>

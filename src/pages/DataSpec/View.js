@@ -83,6 +83,7 @@ class View extends PureComponent {
                     <FieldsTable fields={requestSchema.properties} editable={false} />
                     <div style={{ height: '18px' }} />
                     <div>返回结果 (<span style={{ fontWeight: 'normal' }}><SchemaType schema={responseSchema} /></span>)</div>
+                    <div style={{fontSize: '13px'}}>{responseSchema.description}</div>
                     {
                       (responseSchema.type === 'object' || (responseSchema.type === 'array') && responseSchema.items.type === 'object') && <FieldsTable
                         fields={this.responseTableFields()}

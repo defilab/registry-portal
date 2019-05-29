@@ -6,7 +6,7 @@ import { formatMessage } from 'umi/locale';
 import NavLink from 'umi/navlink';
 import { parseObjectProperties } from '@/utils/schema';
 import FieldsTable from '@/components/Field/FieldsTable';
-import { formatDatetime } from '@/utils/datatime';
+import { formatDate } from '@/utils/datetime';
 import handleError from '@/utils/handleError'
 
 const { Description } = DescriptionList;
@@ -55,7 +55,7 @@ const View = ({ match }) => {
         <Description term="名称">{field.name}</Description>
         <Description term="标识">{field.canonical_name}</Description>
         <Description term="描述">{field.description}</Description>
-        <Description term="创建时间">{formatDatetime(field.created_at)}</Description>
+        <Description term="创建时间">{formatDate(field.created_at)}</Description>
         {
           currentUser.namespace !== 'platform' && <Description term="平台字段">{field.namespace === 'platform' ? '是' : '否'}</Description>
         }

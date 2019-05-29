@@ -136,6 +136,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
         state: dataSpec.state,
         specReference: dataSpec.reference,
         useCustomFields: !dataSpec.reference,
+        responseDescription: responseSchema.description,
         responseReference: responseSchema.type === 'reference' ? responseSchema.reference : undefined,
         responseType: responseSchema.type,
         responseArrayItemType: responseSchema.type === 'array' ? responseSchema.items.type : undefined,
@@ -148,7 +149,8 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
 
   const formValuesToSchemaData = formValues => {
     const result = {
-      type: formValues.responseType
+      type: formValues.responseType,
+      description: formValues.responseDescription
     };
 
     switch (formValues.responseType) {
@@ -260,7 +262,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             ]
           })
             (
-              <Radio.Group onChange={onUseCustomFieldsChange}>
+              <Radio.Group onChange={onUseCustomFieldsChange} disabled={mode === 'edit'}>
                 <Radio value>{formatMessage({ id: 'yes' })}</Radio>
                 <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
               </Radio.Group>
@@ -311,7 +313,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                 message: '价格不能为空'
               }
             ]
-          })(<InputNumber />)} 元
+          })(<InputNumber disabled={mode === 'edit'} />)} 元
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -354,11 +356,20 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
               title="字段"
               fields={requestFields}
               references={references}
-              editable
+              editable={mode !== 'edit'}
               onFieldAdded={onRequestFieldAdded}
               onFieldRemoved={onRequestFieldRemoved}
             />
             <div style={{ fontWeight: 'bold', marginTop: '32px' }}>返回结果</div>
+            <FormItem>
+              {getFieldDecorator('responseDescription')(
+                <TextArea
+                  placeholder="返回结果描述"
+                  style={{ minHeight: 32 }}
+                  rows={4}
+                />
+              )}
+            </FormItem>
             <Row type="flex" gutter={10}>
               <Col span={8}>
                 <Form.Item>
@@ -370,7 +381,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                         }
                       ]
                     })(
-                      <Select placeholder="返回类型">
+                      <Select placeholder="返回类型" disabled={mode === 'edit'}>
                         {
                           responseTypes.map(type => <Option value={type.value} key={type.value}>{type.name}</Option>)
                         }
@@ -389,7 +400,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                         }
                       ]
                     })(
-                      <Select placeholder="元素类型">
+                      <Select placeholder="元素类型" disabled={mode === 'edit'}>
                         {
                           responseTypes.filter(type => type.value !== 'array').map(type => <Option value={type.value} key={type.value}>{type.name}</Option>)
                         }
@@ -407,7 +418,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                           required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'reference'
                         }
                       ]
-                    })(<ReferenceSelect references={references} placeholder="引用类型" />)
+                    })(<ReferenceSelect references={references} placeholder="引用类型" disabled={mode === 'edit'} />)
                   }
                 </Form.Item>
               </Col>
@@ -420,7 +431,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                           required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'array' && getFieldValue('arrayElementType')
                         }
                       ]
-                    })(<ReferenceSelect references={references} placeholder="引用类型" />)
+                    })(<ReferenceSelect references={references} placeholder="引用类型" disabled={mode === 'edit'} />)
                   }
                 </Form.Item>
               </Col>
@@ -431,7 +442,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                   title="字段"
                   fields={responseFields}
                   references={references}
-                  editable
+                  editable={mode !== 'edit'}
                   onFieldAdded={onResponseFieldAdded}
                   onFieldRemoved={onResponseFieldRemoved}
                 />
@@ -443,7 +454,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
                   title="字段"
                   fields={responseArrayFields}
                   references={references}
-                  editable
+                  editable={mode !== 'edit'}
                   onFieldAdded={onResponseArrayFieldAdded}
                   onFieldRemoved={onResponseArrayFieldRemoved}
                 />
