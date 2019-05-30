@@ -8,12 +8,6 @@ import { getToken } from '../../utils/token';
 import handleError from '@/utils/handleError'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-// eslint-disable-next-line no-underscore-dangle
-const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
-const certFileUrl = `/organizations/${namespace}/certs/download`;
-const certFileUploadUrl = `/organizations/${namespace}/certs`;
-const ledgerFilesUrl = `/organizations/${namespace}/ledger/files/download`;
-
 class Account extends PureComponent {
   state = {
     downloadingCertFile: false,
@@ -21,6 +15,15 @@ class Account extends PureComponent {
     certUploaded: undefined,
     uploadingCertFile: false,
   };
+
+  // eslint-disable-next-line no-underscore-dangle
+  namespace = window.g_app._store.getState().user.currentUser.namespace;
+
+  certfileurl = `/organizations/${this.namespace}/certs/download`;
+
+  certfileuploadurl = `/organizations/${this.namespace}/certs`;
+
+  ledgerfilesurl = `/organizations/${this.namespace}/ledger/files/download`;
 
   componentDidMount() {
     fetchActiveCert().then((certs) => this.setState({
@@ -96,7 +99,7 @@ class Account extends PureComponent {
     this.setState({
       downloadingCertFile: true,
     });
-    downloadFile(certFileUrl).then((blob) => {
+    downloadFile(this.certFileUrl).then((blob) => {
       this.triggerBlobDownload(blob, 'cert.pem');
     })
       .catch((error) => {
@@ -115,7 +118,7 @@ class Account extends PureComponent {
     this.setState({
       downloadingLedgerFiles: true,
     });
-    downloadFile(ledgerFilesUrl).then((blob) => {
+    downloadFile(this.ledgerFilesUrl).then((blob) => {
       this.triggerBlobDownload(blob, 'ledger_files.zip');
     })
       .catch((error) => {
@@ -155,7 +158,7 @@ class Account extends PureComponent {
                   }
                   {
                     !certUploaded && certUploaded !== undefined ?
-                      <Upload {...this.uploadProps(certFileUploadUrl)}>
+                      <Upload {...this.uploadProps(this.certFileUploadUrl)}>
                         <Button size="small" loading={uploadingCertFile}>
                           上传csr文件
                         </Button>
@@ -168,11 +171,8 @@ class Account extends PureComponent {
                     <div>csr文件生成步骤：</div>
                     <div style={{ fontFamily: 'monospace', backgroundColor: 'rgba(51, 73, 110, 0.2)', padding: '10px', margin: '8px 0' }}>
                       openssl genrsa -out private.key 2048 <br />
-                      openssl req -subj &quot;/C=CN/ST=ZYB/L=ZYB/O=ZYB/OU=Tech Department/CN=&#123;namespace&#125;&quot; -new -key private.key -out cert.csr <br />
+                      openssl req -subj &quot;/C=CN/ST=ZYB/L=ZYB/O=ZYB/OU=Tech Department/CN={this.namespace}&quot; -new -key private.key -out cert.csr <br />
                       openssl pkcs8 -topk8 -inform PEM -outform PEM -in private.key -nocrypt &gt; key.pem
-                    </div>
-                    <div>
-                      注：&#123;namespace&#125;请替换为您所在企业的标识。
                     </div>
                   </div>
                 </div>
