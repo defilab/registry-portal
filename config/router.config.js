@@ -75,56 +75,77 @@ export default [
           {
             path: '/data/fields',
             name: 'fields',
-            component: './Field/List',
-            authority: ['provider', 'admin']
-          },
-          {
-            path: '/data/fields/create',
-            component: './Field/Create',
-            authority: ['provider', 'admin']
-          },
-          {
-            path: '/data/fields/:id',
-            component: './Field/View',
-            authority: ['requester', 'provider', 'admin']
-          },
-          {
-            path: '/data/fields/:id/edit',
-            component: './Field/Edit',
-            authority: ['provider', 'admin']
+            component: './Field/Layout',
+            authority: ['provider', 'admin'],
+            routes: [
+              {
+                path: '/data/fields',
+                component: './Field/List',
+                authority: ['provider', 'admin']
+              },
+              {
+                path: '/data/fields/create',
+                component: './Field/Create',
+                authority: ['provider', 'admin']
+              },
+              {
+                path: '/data/fields/:id',
+                component: './Field/View',
+                authority: ['requester', 'provider', 'admin']
+              },
+              {
+                path: '/data/fields/:id/edit',
+                component: './Field/Edit',
+                authority: ['provider', 'admin']
+              } 
+            ]
           },
           {
             path: '/data/specs',
             name: 'specs',
-            component: './DataSpec/List',
+            component: './DataSpec/Layout',
             authority: ['requester', 'provider', 'admin'],
+            routes: [
+              {
+                path: '/data/specs',
+                component: './DataSpec/List',
+                authority: ['requester', 'provider', 'admin'], 
+              },
+              {
+                path: '/data/specs/create',
+                component: './DataSpec/Create',
+                authority: ['provider', 'admin'],
+              },
+              {
+                path: '/data/specs/:spec',
+                component: './DataSpec/View',
+                authority: ['requester', 'provider', 'admin'],
+              },
+              {
+                path: '/data/specs/:spec/edit',
+                component: './DataSpec/Edit',
+                authority: ['provider', 'admin'],
+              }
+            ]
           },
           {
             path: '/data/all-specs',
             name: 'all-specs',
-            component: './DataSpec/All',
+            component: './DataSpec/Layout',
             authority: ['requester', 'provider', 'admin'],
+            routes: [
+              {
+                path: '/data/all-specs',
+                component: './DataSpec/All',
+                authority: ['requester', 'provider', 'admin'], 
+              },
+              {
+                path: '/data/all-specs/:spec',
+                component: './DataSpec/View',
+                authority: ['requester', 'provider', 'admin'],
+              },
+            ]
           },
-          {
-            path: '/data/all-specs/:spec',
-            component: './DataSpec/View',
-            authority: ['requester', 'provider', 'admin'],
-          },
-          {
-            path: '/data/specs/create',
-            component: './DataSpec/Create',
-            authority: ['provider', 'admin'],
-          },
-          {
-            path: '/data/specs/:spec',
-            component: './DataSpec/View',
-            authority: ['requester', 'provider', 'admin'],
-          },
-          {
-            path: '/data/specs/:spec/edit',
-            component: './DataSpec/Edit',
-            authority: ['provider', 'admin'],
-          }
         ]
       },
       {

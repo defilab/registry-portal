@@ -6,6 +6,7 @@ import { downloadFile, fetchActiveCert } from '@/services/api';
 import styles from './style.less';
 import { getToken } from '../../utils/token';
 import handleError from '@/utils/handleError'
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 // eslint-disable-next-line no-underscore-dangle
 const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
@@ -132,62 +133,67 @@ class Account extends PureComponent {
   render() {
     const { certUploaded, downloadingCertFile, downloadingLedgerFiles, uploadingCertFile } = this.state;
     return (
-      <GridContent>
-        <Row gutter={24}>
-          <Col>
-            <Card
-              title={formatMessage({ id: 'menu.downloads' })}
-              bordered={false}
-            >
-              <div className={styles.title}>{formatMessage({ id: 'account.cert' })}</div>
-              <div style={{ marginTop: '8px', marginBottom: '8px' }}>
-                {certUploaded ?
-                  <Button
-                    size="small"
-                    style={{ marginRight: '8px' }}
-                    onClick={() => this.downloadCertFile()}
-                    loading={downloadingCertFile}
-                  >
-                    下载pem文件
-                  </Button> : ''}
-                {!certUploaded && certUploaded !== undefined ?
-                  <Upload {...this.uploadProps(certFileUploadUrl)}>
-                    <Button size="small" loading={uploadingCertFile}>
-                      上传csr文件
-                    </Button>
-                  </Upload> : ''}
-              </div>
-              <div className={styles.description}>
-                请先在本地生成csr文件，上传后再由此处下载对应的pem文件，配置流程详见SDK开发文档。
-                <div>
-                  <div>csr文件生成步骤：</div>
-                  <div style={{ fontFamily: 'monospace', backgroundColor: 'rgba(51, 73, 110, 0.2)', padding: '10px', margin: '8px 0' }}>
-                    openssl genrsa -out private.key 2048 <br />
-                    openssl req -subj &quot;/C=CN/ST=ZYB/L=ZYB/O=ZYB/OU=Tech Department/CN=&#123;namespace&#125;&quot; -new -key private.key -out cert.csr <br />
-                    openssl pkcs8 -topk8 -inform PEM -outform PEM -in private.key -nocrypt &gt; key.pem
-                  </div>
+      <PageHeaderWrapper>
+        <GridContent>
+          <Row gutter={24}>
+            <Col>
+              <Card
+                title={formatMessage({ id: 'menu.downloads' })}
+                bordered={false}
+              >
+                <div className={styles.title}>{formatMessage({ id: 'account.cert' })}</div>
+                <div style={{ marginTop: '8px', marginBottom: '8px' }}>
+                  {certUploaded ?
+                    <Button
+                      size="small"
+                      style={{ marginRight: '8px' }}
+                      onClick={() => this.downloadCertFile()}
+                      loading={downloadingCertFile}
+                    >
+                      下载pem文件
+                    </Button> : ''
+                  }
+                  {
+                    !certUploaded && certUploaded !== undefined ?
+                      <Upload {...this.uploadProps(certFileUploadUrl)}>
+                        <Button size="small" loading={uploadingCertFile}>
+                          上传csr文件
+                        </Button>
+                      </Upload> : ''
+                  }
+                </div>
+                <div className={styles.description}>
+                  请先在本地生成csr文件，上传后再由此处下载对应的pem文件，配置流程详见SDK开发文档。
                   <div>
-                    注：&#123;namespace&#125;请替换为您所在企业的标识。
+                    <div>csr文件生成步骤：</div>
+                    <div style={{ fontFamily: 'monospace', backgroundColor: 'rgba(51, 73, 110, 0.2)', padding: '10px', margin: '8px 0' }}>
+                      openssl genrsa -out private.key 2048 <br />
+                      openssl req -subj &quot;/C=CN/ST=ZYB/L=ZYB/O=ZYB/OU=Tech Department/CN=&#123;namespace&#125;&quot; -new -key private.key -out cert.csr <br />
+                      openssl pkcs8 -topk8 -inform PEM -outform PEM -in private.key -nocrypt &gt; key.pem
+                    </div>
+                    <div>
+                      注：&#123;namespace&#125;请替换为您所在企业的标识。
+                    </div>
                   </div>
                 </div>
-              </div>
-              <Divider />
-              <div className={styles.title}>{formatMessage({ id: 'account.ledger-files' })}</div>
-              <div>
-                <Button
-                  size="small"
-                  onClick={() => this.downloadLedgerFiles()}
-                  loading={downloadingLedgerFiles}
-                  style={{ marginTop: '8px', marginBottom: '8px' }}
-                >
-                  {formatMessage({ id: 'download' })}
-                </Button>
-                <div className={styles.description}>配置流程详见SDK开发文档。</div>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-      </GridContent>
+                <Divider />
+                <div className={styles.title}>{formatMessage({ id: 'account.ledger-files' })}</div>
+                <div>
+                  <Button
+                    size="small"
+                    onClick={() => this.downloadLedgerFiles()}
+                    loading={downloadingLedgerFiles}
+                    style={{ marginTop: '8px', marginBottom: '8px' }}
+                  >
+                    {formatMessage({ id: 'download' })}
+                  </Button>
+                  <div className={styles.description}>配置流程详见SDK开发文档。</div>
+                </div>
+              </Card>
+            </Col>
+          </Row>
+        </GridContent>
+      </PageHeaderWrapper>
     );
   }
 }

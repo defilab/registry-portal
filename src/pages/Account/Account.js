@@ -8,6 +8,7 @@ import { formatMessage } from 'umi/locale';
 import styles from './Account.less';
 import PasswordResetForm from './PasswordResetForm';
 import handleError from '@/utils/handleError'
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const { Description } = DescriptionList;
 
@@ -94,7 +95,7 @@ class Account extends PureComponent {
     const { user: { currentUser: { name } } } = window.g_app._store.getState();
 
     return (
-      <div>
+      <PageHeaderWrapper>
         <GridContent>
           <Row gutter={24}>
             <Col>
@@ -156,7 +157,7 @@ class Account extends PureComponent {
             onCancel={this.hidePasswordDialog}
           />
         </GridContent>
-      </div>
+      </PageHeaderWrapper>
     );
   }
 }
