@@ -79,11 +79,12 @@ class View extends PureComponent {
                 <div style={{ display: data.reference ? 'none' : 'block' }}>
                   <Description term="自定义字段" style={{ display: data.reference ? 'none' : 'block' }} />
                   <div style={{ marginLeft: '18px', marginRight: '18px' }}>
-                    <div>请求</div>
+                    <div style={{fontWeight: 'bolder'}}>请求</div>
                     <FieldsTable fields={requestSchema.properties} editable={false} />
                     <div style={{ height: '18px' }} />
-                    <div>返回结果 (<span style={{ fontWeight: 'normal' }}><SchemaType schema={responseSchema} /></span>)</div>
-                    <div style={{fontSize: '13px'}}>{responseSchema.description}</div>
+                    <div style={{fontWeight: 'bolder'}}>返回结果</div>
+                    <div style={{fontSize: '13px', marginTop: '10px'}}>描述：{responseSchema.description}</div>
+                    <div style={{fontSize: '13px', marginTop: '10px'}}>类型：<span style={{ fontWeight: 'normal' }}><SchemaType schema={responseSchema} /></span></div>
                     {
                       (responseSchema.type === 'object' || (responseSchema.type === 'array') && responseSchema.items.type === 'object') && <FieldsTable
                         fields={this.responseTableFields()}

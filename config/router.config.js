@@ -24,23 +24,24 @@ export default [
         path: '/organizations',
         name: 'organizations',
         icon: 'user',
-        component: './Organization/List',
-        authority: ['admin']
-      },
-      {
-        path: '/organizations/create',
-        component: './Organization/Create',
-        authority: ['admin']
-      },
-      {
-        path: '/organizations/:namespace/edit',
-        component: './Organization/Edit',
-        authority: ['admin']
-      },
-      {
-        path: '/organizations/:namespace',
-        component: './Organization/View',
+        component: './Organization/Layout',
+        authority: ['admin'],
         routes: [
+          {
+            path: '/organizations',
+            component: './Organization/List',
+            authority: ['admin']
+          },
+          {
+            path: '/organizations/create',
+            component: './Organization/Create',
+            authority: ['admin']
+          },
+          {
+            path: '/organizations/:namespace/edit',
+            component: './Organization/Edit',
+            authority: ['admin']
+          },
           {
             path: '/organizations/:namespace',
             component: './Organization/Info'
@@ -57,8 +58,7 @@ export default [
             path: '/organizations/:namespace/users/:user_id/edit',
             component: './Organization/UserEdit'
           },
-        ],
-        authority: ['admin']
+        ]
       },
       {
         path: '/account',
