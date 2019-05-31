@@ -1,8 +1,8 @@
-import { fetchAllFields, deleteField } from '@/services/api';
+import { fetchFields, deleteField } from '@/services/api';
 import { formatDate } from '@/utils/datetime';
 import handleError from '@/utils/handleError';
 import { parseSchema, SchemaType } from '@/utils/schema';
-import { Button, Card, Divider, message, Modal, Table } from 'antd';
+import { Button, Card, Divider, message, Modal, Table, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Link from 'umi/link';
 import { formatMessage } from 'umi/locale';
@@ -20,7 +20,7 @@ const List = () => {
 
   const loadData = () => {
     setLoading(true);
-    fetchAllFields().then(data => {
+    fetchFields().then(data => {
       setFields(data.map(field => ({
         ...field,
         definition: parseSchema(field.definition)
@@ -120,30 +120,21 @@ const List = () => {
   ];
 
   useEffect(() => {
-    setLoading(true);
-    fetchAllFields().then(data => {
-      setFields(data.map(field => ({
-        ...field,
-        definition: parseSchema(field.definition)
-      })))
-    })
-      .catch((error) => {
-        handleError(error).then((data) => {
-          message.error(data)
-        }).catch(() => {
-          message.error('未知错误')
-        })
-      })
-      .finally(() => setLoading(false));
+    loadData();
   }, []);
 
   return (
     <Card title="字段列表">
       <div className={styles.tableList}>
         <div className={styles.tableListOperator}>
-          <Button icon="plus" type="primary" onClick={showNewFiledForm}>
-            {formatMessage({ id: 'new' })}
-          </Button>
+          <Row type="flex" justify="middle">
+            <div style={{ flexGrow: 1 }}>
+              <Button icon="plus" type="primary" onClick={showNewFiledForm}>
+                {formatMessage({ id: 'new' })}
+              </Button>
+            </div>
+            <Link to="/data/fields/platform">通用字段</Link>
+          </Row>
         </div>
         <Table columns={columns} dataSource={fields} loading={loading} rowKey="canonical_name" />
       </div>

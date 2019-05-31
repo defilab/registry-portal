@@ -161,6 +161,10 @@ export async function fetchFields() {
   return request(`/organizations/${namespace}/fields`).then((data) => data.items);
 }
 
+export async function fetchPlatformFields() {
+  return request(`/organizations/platform/fields`).then((data) => data.items);
+}
+
 export async function createField(data) {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/fields`, {

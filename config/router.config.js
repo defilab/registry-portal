@@ -89,6 +89,11 @@ export default [
                 authority: ['provider', 'admin']
               },
               {
+                path: '/data/fields/platform',
+                component: './Field/ListPlatform',
+                authority: ['provider', 'admin']
+              },
+              {
                 path: '/data/fields/:id',
                 component: './Field/View',
                 authority: ['requester', 'provider', 'admin']
