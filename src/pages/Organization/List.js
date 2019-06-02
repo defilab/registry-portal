@@ -69,7 +69,7 @@ class List extends PureComponent {
         handleError(error).then((data) => {
           message.error(data)
         }).catch(() => {
-          message.error('未知错误')
+          message.error('网络错误')
         })
       })
       .finally(() => this.setState({ loading: false }))

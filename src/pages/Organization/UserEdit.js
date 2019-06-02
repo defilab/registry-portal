@@ -26,7 +26,7 @@ const Create = Form.create()(({ form, history }) => {
           handleError(error).then((data) => {
             message.error(data)
           }).catch(() => {
-            message.error('未知错误')
+            message.error('网络错误')
           })
         })
           .finally(() => setSubmitting(false))
@@ -41,7 +41,7 @@ const Create = Form.create()(({ form, history }) => {
       handleError(error).then((msg) => {
         message.error(msg)
       }).catch(() => {
-        message.error('未知错误')
+        message.error('网络错误')
       })
     });
 

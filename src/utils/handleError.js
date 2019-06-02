@@ -1,5 +1,9 @@
 export default function handleError(error) {
 
+  if (!error.response) {
+    return Promise.reject(new Error('网络错误'));
+  }
+
   return error.response.json().then((data) => {
     switch (data.error) {
       case "DuplicateEntry":
@@ -96,9 +100,9 @@ export default function handleError(error) {
         return '未找到';
 
       default:
-        throw new Error('不存在')
+        return '未知错误'
     }
   }).catch(() => {
-    throw new Error('解析错误')
+    throw new Error('未知错误')
   })
 }

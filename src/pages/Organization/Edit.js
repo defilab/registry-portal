@@ -13,7 +13,7 @@ const Create = ({ history }) => (
           handleError(error).then((msg) => {
             message.error(msg)
           }).catch(() => {
-            message.error('未知错误')
+            message.error('网络错误')
           })
         })
     }

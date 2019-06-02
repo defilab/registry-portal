@@ -26,6 +26,13 @@ const checkStatus = response => {
     return response;
   }
 
+  if (response.status === 401) {
+    // eslint-disable-next-line no-underscore-dangle
+    window.g_app._store.dispatch({
+      type: 'login/logout',
+    });
+  }
+
   const errortext = codeMessage[response.status] || response.statusText;
   const error = new Error(errortext);
   error.name = response.status;

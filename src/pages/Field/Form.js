@@ -121,7 +121,7 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
             handleError(error).then((msg) => {
               message.error(msg)
             }).catch(() => {
-              message.error('未知错误')
+              message.error('网络错误')
             })
           })
       } else if (mode === 'edit') {
@@ -133,7 +133,7 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
             handleError(error).then((msg) => {
               message.error(msg)
             }).catch(() => {
-              message.error('未知错误')
+              message.error('网络错误')
             })
           })
       }
@@ -167,7 +167,7 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
           handleError(error).then((data) => {
             message.error(data)
           }).catch(() => {
-            message.error('未知错误')
+            message.error('网络错误')
           })
         })
         .finally(() => setLoading(false));
@@ -179,7 +179,7 @@ const FieldForm = Form.create()(({ form, mode, fieldId }) => {
       handleError(error).then((data) => {
         message.error(data)
       }).catch(() => {
-        message.error('未知错误')
+        message.error('网络错误')
       })
     });
   }, []);

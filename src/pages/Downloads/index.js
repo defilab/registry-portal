@@ -19,11 +19,11 @@ class Account extends PureComponent {
   // eslint-disable-next-line no-underscore-dangle
   namespace = window.g_app._store.getState().user.currentUser.namespace;
 
-  certfileurl = `/organizations/${this.namespace}/certs/download`;
+  certFileUrl = `/organizations/${this.namespace}/certs/download`;
 
-  certfileuploadurl = `/organizations/${this.namespace}/certs`;
+  certFileUploadUrl = `/organizations/${this.namespace}/certs`;
 
-  ledgerfilesurl = `/organizations/${this.namespace}/ledger/files/download`;
+  ledgerFilesUrl = `/organizations/${this.namespace}/ledger/files/download`;
 
   componentDidMount() {
     fetchActiveCert().then((certs) => this.setState({
@@ -32,7 +32,7 @@ class Account extends PureComponent {
       handleError(error).then((data) => {
         message.error(data)
       }).catch(() => {
-        message.error('未知错误')
+        message.error('网络错误')
       })
     });
   }
@@ -106,7 +106,7 @@ class Account extends PureComponent {
         handleError(error).then((data) => {
           message.error(data)
         }).catch(() => {
-          message.error('未知错误')
+          message.error('网络错误')
         })
       })
       .finally(() => this.setState({
@@ -125,7 +125,7 @@ class Account extends PureComponent {
         handleError(error).then((data) => {
           message.error(data)
         }).catch(() => {
-          message.error('未知错误')
+          message.error('网络错误')
         })
       })
       .finally(() => this.setState({

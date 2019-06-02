@@ -24,7 +24,7 @@ const List = () => {
         handleError(error).then((data) => {
           message.error(data)
         }).catch(() => {
-          message.error('数据加载失败')
+          message.error('网络错误')
         })
       })
       .finally(() => setLoading(false));
