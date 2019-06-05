@@ -1,11 +1,10 @@
 import FieldsTable from '@/components/Field/FieldsTable';
 import * as api from '@/services/api';
 import { usePromise } from '@/utils/hooks';
-import { Button, Card, Form, Input, InputNumber, notification, Radio, Select, Row, Col, message } from 'antd';
+import { Button, Card, Form, Input, InputNumber, notification, Radio, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { formatSchema, parseSchema } from '@/utils/schema';
-import ReferenceSelect from '@/components/ReferenceSelect';
 import handleError from '@/utils/handleError'
 
 const FormItem = Form.Item;
@@ -31,41 +30,6 @@ const submitFormLayout = {
   }
 };
 
-const responseTypes = [
-  {
-    name: '数字',
-    value: 'number'
-  },
-  {
-    name: '字符串',
-    value: 'string'
-  },
-  {
-    name: '布尔值',
-    value: 'boolean'
-  },
-  {
-    name: '日期',
-    value: 'date'
-  },
-  {
-    name: '时间戳',
-    value: 'timestamp'
-  },
-  {
-    name: '对象',
-    value: 'object'
-  },
-  {
-    name: '引用',
-    value: 'reference'
-  },
-  {
-    name: '数组',
-    value: 'array'
-  }
-]
-
 const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName }) => {
   const [platformDataSpecs, fetchingPlatformDataSpecs, fetchPlatformDataSpecs] =
     usePromise(api.fetchPlatformDataSpecs, []);
@@ -78,7 +42,6 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
   const [references, fetchingReferences, fetchReferences] = usePromise(api.fetchAllFields, []);
   const [requestFields, setRequestFields] = useState([]);
   const [responseFields, setResponseFields] = useState([]);
-  const [responseArrayFields, setResponseArrayFields] = useState([]);
 
   // eslint-disable-next-line no-underscore-dangle
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
@@ -123,12 +86,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
         requestSchema = parseSchema(dataSpec.definition.qualifiers);
         setRequestFields(requestSchema.properties);
         responseSchema = parseSchema(dataSpec.definition.response);
-        if (responseSchema.type === 'object') {
-          setResponseFields(responseSchema.properties);
-        }
-        if (responseSchema.type === 'array' && responseSchema.items.type === 'object') {
-          setResponseArrayFields(responseSchema.items.properties);
-        }
+        setResponseFields(responseSchema.properties);
       }
       form.setFieldsValue({
         id: dataSpec.id,
@@ -138,57 +96,24 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
         description: dataSpec.description,
         state: dataSpec.state,
         specReference: dataSpec.reference,
-        useCustomFields: !dataSpec.reference,
-        responseDescription: responseSchema.description,
-        responseReference: responseSchema.type === 'reference' ? responseSchema.reference : undefined,
-        responseType: responseSchema.type,
-        responseArrayItemType: responseSchema.type === 'array' ? responseSchema.items.type : undefined,
-        responseArrayItemReference: responseSchema.type === 'array' && responseSchema.items.type === 'reference' ? responseSchema.items.reference : undefined
+        useCustomFields: !dataSpec.reference
       });
     }
   }, [dataSpec]);
 
   const { getFieldDecorator, getFieldValue } = form;
 
-  const formValuesToSchemaData = formValues => {
-    const result = {
-      type: formValues.responseType,
-      description: formValues.responseDescription
-    };
-
-    switch (formValues.responseType) {
-      case 'object':
-        result.properties = responseFields
-        break;
-      case 'array':
-        result.items = { type: formValues.responseArrayItemType }
-        switch (formValues.responseArrayItemType) {
-          case 'object':
-            result.items.properties = responseArrayFields
-            break;
-          case 'reference':
-            result.items.reference = formValues.responseArrayItemReference
-            break;
-          default:
-        }
-        break;
-      case 'reference':
-        result.reference = formValues.responseReference
-        break;
-      default:
-    }
-
-    return result;
-  };
-
-  const formatDefinition = formValues =>
+  const formatDefinition = () =>
     (
       {
         qualifiers: formatSchema({
           type: 'object',
           properties: requestFields
         }),
-        response: formatSchema(formValuesToSchemaData(formValues))
+        response: formatSchema({
+          type: 'object',
+          properties: responseFields
+        })
       }
     );
 
@@ -232,8 +157,6 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
   const onRequestFieldRemoved = (index) => setRequestFields(oldFields => oldFields.slice(0, index).concat(oldFields.slice(index + 1)));
   const onResponseFieldAdded = (field) => setResponseFields(oldFields => [...oldFields, field]);
   const onResponseFieldRemoved = (index) => setResponseFields(oldFields => oldFields.slice(0, index).concat(oldFields.slice(index + 1)));
-  const onResponseArrayFieldAdded = (field) => setResponseArrayFields(oldFields => [...oldFields, field]);
-  const onResponseArrayFieldRemoved = (index) => setResponseArrayFields(oldFields => oldFields.slice(0, index).concat(oldFields.slice(index + 1)));
 
   return (
     <Card
@@ -364,105 +287,14 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
               onFieldRemoved={onRequestFieldRemoved}
             />
             <div style={{ fontWeight: 'bold', marginTop: '32px' }}>返回结果</div>
-            <FormItem>
-              {getFieldDecorator('responseDescription')(
-                <TextArea
-                  placeholder="返回结果描述"
-                  style={{ minHeight: 32 }}
-                  rows={4}
-                />
-              )}
-            </FormItem>
-            <Row type="flex" gutter={10}>
-              <Col span={8}>
-                <Form.Item>
-                  {
-                    getFieldDecorator('responseType', {
-                      rules: [
-                        {
-                          required: getFieldValue('useCustomFields')
-                        }
-                      ]
-                    })(
-                      <Select placeholder="返回类型" disabled={mode === 'edit'}>
-                        {
-                          responseTypes.map(type => <Option value={type.value} key={type.value}>{type.name}</Option>)
-                        }
-                      </Select>
-                    )
-                  }
-                </Form.Item>
-              </Col>
-              <Col span={8} style={{ display: getFieldValue('responseType') === 'array' ? 'block' : 'none' }}>
-                <Form.Item>
-                  {
-                    getFieldDecorator('responseArrayItemType', {
-                      rules: [
-                        {
-                          required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'array'
-                        }
-                      ]
-                    })(
-                      <Select placeholder="元素类型" disabled={mode === 'edit'}>
-                        {
-                          responseTypes.filter(type => type.value !== 'array').map(type => <Option value={type.value} key={type.value}>{type.name}</Option>)
-                        }
-                      </Select>
-                    )
-                  }
-                </Form.Item>
-              </Col>
-              <Col span={8} style={{ display: getFieldValue('responseType') === 'reference' ? 'block' : 'none' }}>
-                <Form.Item>
-                  {
-                    getFieldDecorator('responseReference', {
-                      rules: [
-                        {
-                          required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'reference'
-                        }
-                      ]
-                    })(<ReferenceSelect references={references} placeholder="引用类型" disabled={mode === 'edit'} />)
-                  }
-                </Form.Item>
-              </Col>
-              <Col span={8} style={{ display: getFieldValue('responseType') === 'array' && getFieldValue('responseArrayItemType') === 'reference' ? 'block' : 'none' }}>
-                <Form.Item>
-                  {
-                    getFieldDecorator('responseArrayItemReference', {
-                      rules: [
-                        {
-                          required: getFieldValue('useCustomFields') && getFieldValue('responseType') === 'array' && getFieldValue('arrayElementType')
-                        }
-                      ]
-                    })(<ReferenceSelect references={references} placeholder="引用类型" disabled={mode === 'edit'} />)
-                  }
-                </Form.Item>
-              </Col>
-            </Row>
-            {
-              getFieldValue('responseType') === 'object' && (
-                <FieldsTable
-                  title="字段"
-                  fields={responseFields}
-                  references={references}
-                  editable={mode !== 'edit'}
-                  onFieldAdded={onResponseFieldAdded}
-                  onFieldRemoved={onResponseFieldRemoved}
-                />
-              )
-            }
-            {
-              (getFieldValue('responseType') === 'array' && getFieldValue('responseArrayItemType') === 'object') && (
-                <FieldsTable
-                  title="字段"
-                  fields={responseArrayFields}
-                  references={references}
-                  editable={mode !== 'edit'}
-                  onFieldAdded={onResponseArrayFieldAdded}
-                  onFieldRemoved={onResponseArrayFieldRemoved}
-                />
-              )
-            }
+            <FieldsTable
+              title="字段"
+              fields={responseFields}
+              references={references}
+              editable={mode !== 'edit'}
+              onFieldAdded={onResponseFieldAdded}
+              onFieldRemoved={onResponseFieldRemoved}
+            />
           </div>
         </FormItem>
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>

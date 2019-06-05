@@ -5,7 +5,7 @@ import { formatMessage } from 'umi/locale';
 import DescriptionList from '@/components/DescriptionList';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import FieldsTable from '@/components/Field/FieldsTable';
-import { parseSchema, SchemaType } from '@/utils/schema';
+import { parseSchema } from '@/utils/schema';
 
 const { Description } = DescriptionList;
 
@@ -33,18 +33,6 @@ class View extends PureComponent {
         responseSchema: data.reference || parseSchema(data.definition.response)
       }),
     });
-  }
-
-  responseTableFields() {
-    const { responseSchema } = this.state;
-    if (responseSchema.type === 'object') {
-      return responseSchema.properties;
-    }
-    if (responseSchema.type === 'array' && responseSchema.items.type === 'object') {
-      return responseSchema.items.properties;
-    }
-
-    return [];
   }
 
   render() {
@@ -79,19 +67,14 @@ class View extends PureComponent {
                 <div style={{ display: data.reference ? 'none' : 'block' }}>
                   <Description term="自定义字段" style={{ display: data.reference ? 'none' : 'block' }} />
                   <div style={{ marginLeft: '18px', marginRight: '18px' }}>
-                    <div style={{fontWeight: 'bolder'}}>请求</div>
+                    <div style={{ fontWeight: 'bolder' }}>请求</div>
                     <FieldsTable fields={requestSchema.properties} editable={false} />
                     <div style={{ height: '18px' }} />
-                    <div style={{fontWeight: 'bolder'}}>返回结果</div>
-                    <div style={{fontSize: '13px', marginTop: '10px'}}>描述：{responseSchema.description}</div>
-                    <div style={{fontSize: '13px', marginTop: '10px'}}>类型：<span style={{ fontWeight: 'normal' }}><SchemaType schema={responseSchema} /></span></div>
-                    {
-                      (responseSchema.type === 'object' || (responseSchema.type === 'array') && responseSchema.items.type === 'object') && <FieldsTable
-                        fields={this.responseTableFields()}
-                        editable={false}
-                        style={{ display: responseSchema.type === 'object' || (responseSchema.type === 'array' && responseSchema.items.type === 'object') }}
-                      />
-                    }
+                    <div style={{ fontWeight: 'bolder' }}>返回结果</div>
+                    <FieldsTable
+                      fields={responseSchema.properties}
+                      editable={false}
+                    />
                   </div>
                 </div>
               </DescriptionList>

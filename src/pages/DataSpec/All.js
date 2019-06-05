@@ -35,6 +35,11 @@ class List extends PureComponent {
       dataIndex: 'namespace'
     },
     {
+      title: '自定义',
+      key: 'custom',
+      render: (text, record) => record.reference ? "否" : "是"
+    },
+    {
       title: formatMessage({ id: 'spec.status' }),
       key: 'state',
       dataIndex: 'state',
