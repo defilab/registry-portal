@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Card, Col, Row, Button, Upload, message, Divider } from 'antd';
 import { formatMessage } from 'umi/locale';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import { downloadFile, fetchActiveCert } from '@/services/api';
+import { downloadFile, fetchActiveCert, search, deleteCertFile } from '@/services/api';
 import styles from './style.less';
 import { getToken } from '../../utils/token';
 import handleError from '@/utils/handleError'
@@ -12,6 +12,8 @@ class Account extends PureComponent {
   state = {
     downloadingCertFile: false,
     downloadingLedgerFiles: false,
+    deletingCertFile: false,
+    cert: {},
     certUploaded: undefined,
     uploadingCertFile: false,
   };
@@ -27,7 +29,8 @@ class Account extends PureComponent {
 
   componentDidMount() {
     fetchActiveCert().then((certs) => this.setState({
-      certUploaded: certs.length > 0,
+      cert: certs[0],
+      certUploaded: certs.length > 0
     })).catch((error) => {
       handleError(error).then((data) => {
         message.error(data)
@@ -35,6 +38,7 @@ class Account extends PureComponent {
         message.error('网络错误')
       })
     });
+    search();
   }
 
   uploadProps = (url) => ({
@@ -55,6 +59,7 @@ class Account extends PureComponent {
       const { status } = info.file;
       if (status === 'done') {
         this.setState({
+          cert: info.file.response,
           certUploaded: true,
           uploadingCertFile: false,
         });
@@ -133,8 +138,23 @@ class Account extends PureComponent {
       }));
   };
 
+  deleteCertFile = () => {
+    const { cert } = this.state;
+    this.setState({
+      deletingCertFile: true,
+    }); 
+    deleteCertFile(cert.fingerprint).then(() => {
+      this.setState({
+        deletingCertFile: false,
+        certUploaded: false
+      });
+    }).finally(() => this.setState({
+      deletingCertFile: false
+    }));
+  }
+
   render() {
-    const { certUploaded, downloadingCertFile, downloadingLedgerFiles, uploadingCertFile } = this.state;
+    const { certUploaded, downloadingCertFile, downloadingLedgerFiles, uploadingCertFile, deletingCertFile } = this.state;
     return (
       <PageHeaderWrapper>
         <GridContent>
@@ -147,14 +167,24 @@ class Account extends PureComponent {
                 <div className={styles.title}>{formatMessage({ id: 'account.cert' })}</div>
                 <div style={{ marginTop: '8px', marginBottom: '8px' }}>
                   {certUploaded ?
-                    <Button
-                      size="small"
-                      style={{ marginRight: '8px' }}
-                      onClick={() => this.downloadCertFile()}
-                      loading={downloadingCertFile}
-                    >
-                      下载pem文件
-                    </Button> : ''
+                    <span>
+                      <Button
+                        size="small"
+                        style={{ marginRight: '8px' }}
+                        onClick={() => this.downloadCertFile()}
+                        loading={downloadingCertFile}
+                      >
+                        下载pem文件
+                      </Button>
+                      <Button
+                        size="small"
+                        style={{ marginRight: '8px' }}
+                        onClick={() => this.deleteCertFile()}
+                        loading={deletingCertFile}
+                      >
+                        删除
+                      </Button>
+                    </span> : ''
                   }
                   {
                     !certUploaded && certUploaded !== undefined ?

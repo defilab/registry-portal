@@ -80,6 +80,9 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
   const [responseFields, setResponseFields] = useState([]);
   const [responseArrayFields, setResponseArrayFields] = useState([]);
 
+  // eslint-disable-next-line no-underscore-dangle
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+
   useEffect(() => {
     fetchPlatformDataSpecs().catch((error) => {
       handleError(error).then((data) => {
@@ -254,7 +257,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
         </FormItem>
         <FormItem {...formItemLayout} label="自定义">
           {getFieldDecorator('useCustomFields', {
-            initialValue: false, rules: [
+            initialValue: namespace === 'platform', rules: [
               {
                 required: true,
                 message: '该选项不能为空'
@@ -262,7 +265,7 @@ const DataSpecForm = Form.create()(({ form, onSubmit, mode, spec: canonicalName 
             ]
           })
             (
-              <Radio.Group onChange={onUseCustomFieldsChange} disabled={mode === 'edit'}>
+              <Radio.Group onChange={onUseCustomFieldsChange} disabled={mode === 'edit' || namespace === 'platform'}>
                 <Radio value>{formatMessage({ id: 'yes' })}</Radio>
                 <Radio value={false}>{formatMessage({ id: 'no' })}</Radio>
               </Radio.Group>

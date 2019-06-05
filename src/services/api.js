@@ -151,6 +151,13 @@ export async function downloadFile(url) {
   return request(url);
 }
 
+export async function deleteCertFile(fingerPrint) {
+  const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
+  return request(`/organizations/${namespace}/certs/${fingerPrint}`, {
+    method: 'DELETE'
+  }); 
+}
+
 export async function fetchActiveCert() {
   const { user: { currentUser: { namespace } } } = window.g_app._store.getState();
   return request(`/organizations/${namespace}/certs`).then((data) => data.items)
@@ -208,4 +215,8 @@ export async function fetchAllFields() {
 
     return platformFields.concat(nonPlatformFields);
   });
+}
+
+export function search() {
+  return request(`http://47.95.239.39:9200/blockchain_offer_*/_search`);
 }
